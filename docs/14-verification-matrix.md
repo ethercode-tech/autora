@@ -41,7 +41,8 @@ Estado consolidado el 2026-07-20.
   - evidencia: `src/app/(dashboard)/purchases/page.test.tsx`
   - evidencia adicional: `src/app/(dashboard)/production/page.test.tsx`
   - evidencia adicional: `src/app/(dashboard)/pricing/page.test.tsx`
-  - cubre: compras con mensaje distinto para fabricante/reventa y bloqueo explicito de produccion/costos en cuentas de reventa
+  - evidencia adicional: `src/app/(dashboard)/consumptions/page.test.tsx`
+  - cubre: compras con mensaje distinto para fabricante/reventa y bloqueo explicito de produccion, costos y consumos en cuentas de reventa
 - Metricas globales de administracion:
   - evidencia: `src/features/admin/lib/build-admin-dashboard-metrics.test.ts`
 - Calculo de costos:
@@ -52,6 +53,7 @@ Estado consolidado el 2026-07-20.
   - evidencia: `src/features/operations/lib/operation-feedback.test.ts`
 - Dashboard y movimientos economicos:
   - evidencia: `src/features/dashboard/lib/build-dashboard-metrics.test.ts`
+  - evidencia adicional: `src/app/(dashboard)/dashboard/page.test.tsx`
 - Conversion de packs:
   - evidencia: `src/features/inventory/lib/pack-pricing.test.ts`
 - RLS y frontera SaaS declarativa:

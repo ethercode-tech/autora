@@ -52,7 +52,7 @@ export default async function DashboardPage() {
             </div>
           </Card>
         ) : (
-          <EmptyState title="Todavia no hay ventas recientes" description="Cuando registres ventas reales, aparecerán aquí con su impacto económico." />
+          <EmptyState title="Todavia no hay ventas recientes" description="Cuando registres ventas reales, apareceran aqui con su impacto economico." />
         )}
         {metrics.recentMovements.length > 0 ? (
           <Card>
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
             </div>
           </Card>
         ) : (
-          <EmptyState title="Sin movimientos economicos" description="Los ingresos y egresos automáticos aparecerán aquí cuando registres compras o ventas." />
+          <EmptyState title="Sin movimientos economicos" description="Los ingresos y egresos automaticos apareceran aqui cuando registres compras o ventas." />
         )}
       </section>
     </>

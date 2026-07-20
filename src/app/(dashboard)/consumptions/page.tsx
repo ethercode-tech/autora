@@ -21,7 +21,7 @@ export default async function ConsumptionsPage() {
       <PageHeader
         eyebrow="Operaciones"
         title="Consumos manuales"
-        description="Registra pérdidas, pruebas, desperdicios o usos no productivos sin romper la trazabilidad del inventario."
+        description="Registra perdidas, pruebas, desperdicios o usos no productivos sin romper la trazabilidad del inventario."
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nuevo consumo</h3>
@@ -40,7 +40,9 @@ export default async function ConsumptionsPage() {
             <Card key={consumption.id}>
               <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold">{consumption.resources?.name ?? "Recurso"} - {consumption.date}</h3>
+                  <h3 className="text-lg font-semibold">
+                    {consumption.resources?.name ?? "Recurso"} - {consumption.date}
+                  </h3>
                   <p className="text-sm text-autora-ink/70">{consumption.notes || "Sin motivo adicional."}</p>
                 </div>
                 <div className="text-right">
@@ -52,7 +54,7 @@ export default async function ConsumptionsPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="Todavia no hay consumos" description="Los consumos manuales aparecerán aquí con impacto directo sobre el stock de recursos." />
+        <EmptyState title="Todavia no hay consumos" description="Los consumos manuales apareceran aqui con impacto directo sobre el stock de recursos." />
       )}
     </>
   );
