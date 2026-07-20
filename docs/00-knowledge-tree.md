@@ -46,6 +46,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Roadmap tecnico: [10-implementation-roadmap.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/10-implementation-roadmap.md)
 - Decisiones pendientes: [11-open-decisions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/11-open-decisions.md)
 - Convenciones de repositorio: [12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
+- Implementacion actual: [13-current-implementation-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/13-current-implementation-map.md)
 
 ## Regla operativa
 
