@@ -48,6 +48,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Convenciones de repositorio: [12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
 - Implementacion actual: [13-current-implementation-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/13-current-implementation-map.md)
 - Matriz de verificacion: [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
+- Auditoria de requisitos: [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 
 ## Regla operativa
 

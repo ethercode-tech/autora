@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { resolveCommercialStateAfterPayment, resolveProfileStatusAfterSubscriptionCreation } from "@/features/commercial/lib/account-commercial-state";
+import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { accessRequestStatusSchema, accountStatusSchema, paymentSchema, planSchema, subscriptionSchema } from "@/lib/validation/admin";
 import type { ActionResult } from "@/server/actions/auth";
@@ -58,6 +59,9 @@ export async function updateAccessRequestStatus(_: ActionResult, formData: FormD
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "admin.access_request.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la solicitud." };
   }
 
@@ -74,6 +78,10 @@ export async function updateAccessRequestStatus(_: ActionResult, formData: FormD
     .eq("id", parsed.data.requestId);
 
   if (error) {
+    writeStructuredLog("error", "admin.access_request.persist_failed", {
+      message: error.message,
+      requestId: parsed.data.requestId
+    });
     return { success: false, message: "No pudimos actualizar la solicitud." };
   }
 
@@ -83,6 +91,10 @@ export async function updateAccessRequestStatus(_: ActionResult, formData: FormD
   });
 
   revalidatePath("/admin");
+  writeStructuredLog("info", "admin.access_request.updated", {
+    requestId: parsed.data.requestId,
+    status: parsed.data.status
+  });
   return { success: true, message: "Solicitud actualizada." };
 }
 
@@ -93,6 +105,9 @@ export async function updateUserAccountStatus(_: ActionResult, formData: FormDat
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "admin.account_status.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la cuenta." };
   }
 
@@ -101,6 +116,10 @@ export async function updateUserAccountStatus(_: ActionResult, formData: FormDat
   const { error } = await supabase.from("profiles").update({ account_status: parsed.data.accountStatus }).eq("user_id", parsed.data.userId);
 
   if (error) {
+    writeStructuredLog("error", "admin.account_status.persist_failed", {
+      message: error.message,
+      userId: parsed.data.userId
+    });
     return { success: false, message: "No pudimos actualizar el estado de la cuenta." };
   }
 
@@ -109,6 +128,10 @@ export async function updateUserAccountStatus(_: ActionResult, formData: FormDat
   });
 
   revalidatePath("/admin");
+  writeStructuredLog("info", "admin.account_status.updated", {
+    userId: parsed.data.userId,
+    accountStatus: parsed.data.accountStatus
+  });
   return { success: true, message: "Estado de cuenta actualizado." };
 }
 
@@ -122,6 +145,9 @@ export async function createPlan(_: ActionResult, formData: FormData): Promise<A
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "admin.plan.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar el plan." };
   }
 
@@ -136,6 +162,10 @@ export async function createPlan(_: ActionResult, formData: FormData): Promise<A
   });
 
   if (error) {
+    writeStructuredLog("error", "admin.plan.persist_failed", {
+      message: error.message,
+      name: parsed.data.name
+    });
     return { success: false, message: "No pudimos crear el plan." };
   }
 
@@ -146,6 +176,10 @@ export async function createPlan(_: ActionResult, formData: FormData): Promise<A
   });
 
   revalidatePath("/admin");
+  writeStructuredLog("info", "admin.plan.created", {
+    name: parsed.data.name.trim(),
+    currency: parsed.data.currency.toUpperCase()
+  });
   return { success: true, message: "Plan creado." };
 }
 
@@ -160,6 +194,9 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "admin.subscription.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la suscripcion." };
   }
 
@@ -175,6 +212,11 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
   });
 
   if (error) {
+    writeStructuredLog("error", "admin.subscription.persist_failed", {
+      message: error.message,
+      userId: parsed.data.userId,
+      planId: parsed.data.planId
+    });
     return { success: false, message: "No pudimos crear la suscripcion." };
   }
 
@@ -197,6 +239,11 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
   });
 
   revalidatePath("/admin");
+  writeStructuredLog("info", "admin.subscription.created", {
+    userId: parsed.data.userId,
+    planId: parsed.data.planId,
+    status: parsed.data.status
+  });
   return { success: true, message: "Suscripcion creada." };
 }
 
@@ -212,6 +259,9 @@ export async function createPayment(_: ActionResult, formData: FormData): Promis
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "admin.payment.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar el pago." };
   }
 
@@ -229,6 +279,11 @@ export async function createPayment(_: ActionResult, formData: FormData): Promis
   });
 
   if (error) {
+    writeStructuredLog("error", "admin.payment.persist_failed", {
+      message: error.message,
+      userId: parsed.data.userId,
+      subscriptionId: parsed.data.subscriptionId
+    });
     return { success: false, message: "No pudimos registrar el pago." };
   }
 
@@ -242,5 +297,10 @@ export async function createPayment(_: ActionResult, formData: FormData): Promis
   });
 
   revalidatePath("/admin");
+  writeStructuredLog("info", "admin.payment.created", {
+    userId: parsed.data.userId,
+    subscriptionId: parsed.data.subscriptionId,
+    status: parsed.data.status
+  });
   return { success: true, message: "Pago registrado." };
 }

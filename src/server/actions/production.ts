@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { formatProductionError } from "@/features/operations/lib/operation-feedback";
+import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { recipeSchema } from "@/lib/validation/catalog";
 import { productionSchema } from "@/lib/validation/production";
@@ -17,6 +18,9 @@ export async function createRecipe(_: ActionResult, formData: FormData): Promise
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "recipe.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la receta." };
   }
 
@@ -26,6 +30,7 @@ export async function createRecipe(_: ActionResult, formData: FormData): Promise
   } = await supabase.auth.getUser();
 
   if (!user) {
+    writeStructuredLog("warn", "recipe.session_missing");
     return { success: false, message: "Necesitas iniciar sesion para crear recetas." };
   }
 
@@ -41,6 +46,10 @@ export async function createRecipe(_: ActionResult, formData: FormData): Promise
     .single();
 
   if (recipeError || !recipe) {
+    writeStructuredLog("error", "recipe.persist_failed", {
+      message: recipeError?.message ?? "recipe insert failed",
+      productId: parsed.data.productId
+    });
     return { success: false, message: "No pudimos crear la receta." };
   }
 
@@ -52,11 +61,21 @@ export async function createRecipe(_: ActionResult, formData: FormData): Promise
   });
 
   if (recipeItemError) {
+    writeStructuredLog("error", "recipe.items_persist_failed", {
+      message: recipeItemError.message,
+      recipeId: recipe.id,
+      resourceId: parsed.data.resourceId
+    });
     return { success: false, message: "No pudimos guardar los insumos de la receta." };
   }
 
   revalidatePath("/recipes");
   revalidatePath("/production");
+
+  writeStructuredLog("info", "recipe.created", {
+    recipeId: recipe.id,
+    productId: parsed.data.productId
+  });
 
   return { success: true, message: "Receta creada." };
 }
@@ -71,6 +90,9 @@ export async function createProduction(_: ActionResult, formData: FormData): Pro
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "production.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la produccion." };
   }
 
@@ -84,12 +106,23 @@ export async function createProduction(_: ActionResult, formData: FormData): Pro
   });
 
   if (error) {
+    writeStructuredLog("error", "production.persist_failed", {
+      message: error.message,
+      productId: parsed.data.productId,
+      recipeId: parsed.data.recipeId
+    });
     return { success: false, message: formatProductionError(error.message) };
   }
 
   revalidatePath("/production");
   revalidatePath("/results");
   revalidatePath("/dashboard");
+
+  writeStructuredLog("info", "production.created", {
+    productId: parsed.data.productId,
+    recipeId: parsed.data.recipeId,
+    date: parsed.data.date
+  });
 
   return { success: true, message: "Produccion registrada." };
 }

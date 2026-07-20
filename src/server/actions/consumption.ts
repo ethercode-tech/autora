@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { formatConsumptionError } from "@/features/operations/lib/operation-feedback";
+import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { resourceConsumptionSchema } from "@/lib/validation/consumption";
 import type { ActionResult } from "@/server/actions/auth";
@@ -15,6 +16,9 @@ export async function createResourceConsumption(_: ActionResult, formData: FormD
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "consumption.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar el consumo." };
   }
 
@@ -27,12 +31,21 @@ export async function createResourceConsumption(_: ActionResult, formData: FormD
   });
 
   if (error) {
+    writeStructuredLog("error", "consumption.persist_failed", {
+      message: error.message,
+      resourceId: parsed.data.resourceId
+    });
     return { success: false, message: formatConsumptionError(error.message) };
   }
 
   revalidatePath("/consumptions");
   revalidatePath("/results");
   revalidatePath("/dashboard");
+
+  writeStructuredLog("info", "consumption.created", {
+    resourceId: parsed.data.resourceId,
+    date: parsed.data.date
+  });
 
   return { success: true, message: "Consumo registrado." };
 }

@@ -1,0 +1,170 @@
+# Auditoria de requisitos
+
+Estado consolidado el 2026-07-20.
+
+Este documento cruza el objetivo final del producto con evidencia real del repositorio. No redefine exito: muestra que ya esta cubierto, que solo tiene evidencia parcial y que sigue pendiente.
+
+## Resultado operativo esperado
+
+- Solicitud de acceso, aprobacion, activacion, onboarding y guardas comerciales:
+  - evidencia: `src/app/(public)/*`
+  - evidencia: `src/server/actions/auth.ts`
+  - evidencia: `src/server/actions/admin.ts`
+  - evidencia: `src/lib/auth/account-status.ts`
+  - estado: parcial verificado
+- Configuracion, recursos, productos, compras, recetas, produccion, ventas y dashboard:
+  - evidencia: `src/app/(dashboard)/*`
+  - evidencia: `src/server/actions/*`
+  - evidencia: `src/server/queries/catalog.ts`
+  - estado: parcial verificado
+- Alertas de faltantes y consulta del estado real del negocio:
+  - evidencia: `src/features/inventory/lib/calculate-stock.ts`
+  - evidencia: `src/features/dashboard/lib/build-dashboard-metrics.ts`
+  - estado: parcial verificado
+
+## Objetivo funcional del MVP
+
+- Cubierto con implementacion visible:
+  - solicitud y aprobacion de acceso
+  - registro e inicio de sesion
+  - recuperacion de contrasena
+  - configuracion del emprendimiento
+  - gestion de unidades de medida
+  - gestion de recursos
+  - registro de compras
+  - registro de consumos manuales
+  - gestion de productos
+  - gestion de recetas
+  - registro de produccion
+  - calculadora de costos
+  - historial de calculos
+  - registro de ventas
+  - stock automatico de recursos y productos
+  - movimientos economicos
+  - dashboard
+  - exportacion JSON
+  - gestion de suscripcion
+  - panel administrativo
+  - gestion de usuarios y cuentas
+  - gestion de planes
+  - gestion de pagos
+  - metricas globales
+  - auditoria administrativa
+- Evidencia principal:
+  - `docs/13-current-implementation-map.md`
+  - `src/app/(dashboard)/*`
+  - `src/app/admin/page.tsx`
+  - `supabase/migrations/202607200001_initial_schema.sql`
+- Gap:
+  - exportacion sigue solo en JSON
+  - flujo E2E integrado todavia no probado de punta a punta
+
+## Objetivo tecnico
+
+- Persistencia en nube y fuente unica de verdad:
+  - evidencia: clientes Supabase server-side en `src/lib/supabase/*`
+  - evidencia: migraciones en `supabase/migrations/*`
+  - evidencia: busqueda sin dependencias operativas de `localStorage`
+  - estado: cubierto a nivel de arquitectura
+- Aislamiento, roles y RLS:
+  - evidencia: `docs/06-security-rls.md`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - evidencia ejecutable: `tests/rls/rls-smoke.sql`
+  - estado: parcial verificado
+- Validaciones frontend y backend:
+  - evidencia: `src/lib/validation/*`
+  - evidencia: formularios en `src/components/forms/*`
+  - estado: cubierto
+- Operaciones transaccionales, integridad y prevencion de stock negativo:
+  - evidencia: RPC SQL `register_purchase`, `register_resource_consumption`, `register_production`, `register_sale`, `adjust_inventory`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - estado: parcial verificado
+- Tipado estricto, modularidad, manejo de errores y responsive:
+  - evidencia: TypeScript estricto, estructura por dominios y formularios responsivos
+  - evidencia: `src/features/operations/lib/operation-feedback.ts`
+  - estado: cubierto
+- Logs estructurados:
+  - evidencia: `src/lib/observability/structured-log.ts`
+  - evidencia: integraciones en `src/server/actions/admin.ts`, `src/server/actions/operations.ts`, `src/server/actions/consumption.ts`, `src/server/actions/production.ts`, `src/server/actions/pricing.ts`
+  - estado: cubierto de manera inicial
+- Build y despliegue reproducibles:
+  - evidencia: scripts de `package.json`
+  - estado: parcial, falta evidencia de despliegue productivo real
+
+## Objetivo de inventario y economico
+
+- Compra aumenta stock y genera egreso:
+  - evidencia: `supabase/migrations/202607200001_initial_schema.sql`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - estado: verificado declarativamente
+- Consumo manual descuenta stock y deja trazabilidad:
+  - evidencia: `supabase/migrations/202607200002_consumptions_and_pricing.sql`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - estado: verificado declarativamente
+- Produccion valida recursos, descuenta insumos, suma producto y registra costo:
+  - evidencia: `supabase/migrations/202607200003_production_costs.sql`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - estado: verificado declarativamente
+- Venta valida stock, descuenta producto y registra ingreso:
+  - evidencia: `supabase/migrations/202607200001_initial_schema.sql`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - estado: verificado declarativamente
+- Calculadora explicable y reproducible:
+  - evidencia: `src/features/pricing/lib/calculate-price.ts`
+  - evidencia: `src/features/pricing/lib/calculate-price.test.ts`
+  - estado: cubierto
+
+## Criterio final de exito y demostraciones requeridas
+
+1. Datos aislados por usuaria.
+   - evidencia actual: RLS declarativa y smoke SQL preparado
+   - estado: parcial, falta prueba real multiusuario
+2. Compras aumentan stock.
+   - evidencia actual: test declarativo de migracion
+   - estado: parcial, falta ejecucion integrada real
+3. Consumos disminuyen stock.
+   - evidencia actual: RPC y prueba declarativa
+   - estado: parcial, falta ejecucion integrada real
+4. Produccion descuenta recursos y suma productos.
+   - evidencia actual: RPC con costo y prueba declarativa
+   - estado: parcial, falta ejecucion integrada real
+5. Ventas descuentan productos.
+   - evidencia actual: RPC y prueba declarativa
+   - estado: parcial, falta ejecucion integrada real
+6. No se permite vender o producir sin stock suficiente.
+   - evidencia actual: pruebas de invariantes SQL y mensajes operativos
+   - estado: parcial, falta corrida real contra base
+7. Movimientos economicos correctos.
+   - evidencia actual: pruebas declarativas y metricas dashboard
+   - estado: parcial
+8. Alertas en el momento adecuado.
+   - evidencia actual: calculo de stock y dashboard
+   - estado: parcial
+9. Calculos de costos reproducibles.
+   - evidencia actual: pruebas unitarias y persistencia en produccion
+   - estado: cubierto
+10. Dashboard refleja datos reales.
+   - evidencia actual: agregadores probados
+   - estado: parcial, falta E2E con persistencia real
+11. Cuentas bloqueadas no pueden operar.
+   - evidencia actual: guardas y pruebas de estado
+   - estado: parcial
+12. Administracion del ciclo comercial.
+   - evidencia actual: panel admin, acciones y pruebas de transicion comercial
+   - estado: parcial
+13. Operaciones criticas transaccionales.
+   - evidencia actual: RPC SQL atomicas
+   - estado: parcial, falta smoke real de rollback
+14. Flujos principales con pruebas automatizadas.
+   - evidencia actual: unitarias, declarativas y E2E preparados
+   - estado: parcial, falta E2E de punta a punta ejecutado
+15. Despliegue sin datos locales.
+   - evidencia actual: arquitectura server-side con Supabase
+   - estado: parcial, falta evidencia de despliegue productivo
+
+## Siguiente tramo recomendado
+
+- Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
+- Ejecutar smoke multiusuario para demostrar aislamiento RLS.
+- Completar E2E del flujo principal de fabricante y reventa.
+- Registrar evidencia de despliegue reproducible del entorno objetivo.

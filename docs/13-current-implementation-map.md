@@ -32,6 +32,7 @@ Estado consolidado el 2026-07-20.
   - calculadora de costos.
   - resultados y movimientos economicos.
   - exportacion JSON.
+  - observabilidad con logs estructurados en acciones criticas.
 - Administracion:
   - revision de solicitudes.
   - gestion de estado de cuenta.

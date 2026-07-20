@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { savePricingCalculationSchema } from "@/lib/validation/pricing";
 import { calculateSuggestedPrice } from "@/features/pricing/lib/calculate-price";
 import { getPricingPreview } from "@/server/queries/catalog";
@@ -16,20 +17,32 @@ export async function savePricingCalculation(_: ActionResult, formData: FormData
   });
 
   if (!parsed.success) {
+    writeStructuredLog("warn", "pricing.validation_failed", {
+      issue: parsed.error.issues[0]?.message ?? "unknown"
+    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar el calculo." };
   }
 
   const preview = await getPricingPreview(parsed.data.recipeId, parsed.data.producedQuantity);
 
   if (!preview) {
+    writeStructuredLog("warn", "pricing.preview_missing", {
+      recipeId: parsed.data.recipeId
+    });
     return { success: false, message: "No encontramos la receta seleccionada." };
   }
 
   if (preview.lines.length === 0) {
+    writeStructuredLog("warn", "pricing.preview_without_lines", {
+      recipeId: parsed.data.recipeId
+    });
     return { success: false, message: "La receta no tiene insumos configurados." };
   }
 
   if (preview.lines.some((line) => line.unitCost === null)) {
+    writeStructuredLog("warn", "pricing.preview_missing_costs", {
+      recipeId: parsed.data.recipeId
+    });
     return { success: false, message: "Falta costo vigente para al menos un recurso de la receta." };
   }
 
@@ -48,6 +61,7 @@ export async function savePricingCalculation(_: ActionResult, formData: FormData
   } = await supabase.auth.getUser();
 
   if (!user) {
+    writeStructuredLog("warn", "pricing.session_missing");
     return { success: false, message: "Necesitas iniciar sesion para guardar calculos." };
   }
 
@@ -65,10 +79,21 @@ export async function savePricingCalculation(_: ActionResult, formData: FormData
   });
 
   if (error) {
+    writeStructuredLog("error", "pricing.persist_failed", {
+      message: error.message,
+      productId: parsed.data.productId,
+      recipeId: parsed.data.recipeId
+    });
     return { success: false, message: "No pudimos guardar el historial del calculo." };
   }
 
   revalidatePath("/pricing");
+
+  writeStructuredLog("info", "pricing.calculation_saved", {
+    productId: parsed.data.productId,
+    recipeId: parsed.data.recipeId,
+    producedQuantity: parsed.data.producedQuantity
+  });
 
   return { success: true, message: "Calculo guardado en el historial." };
 }
