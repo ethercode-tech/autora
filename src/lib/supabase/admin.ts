@@ -1,9 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
-import { hasServerSupabaseEnv, serverEnv } from "@/lib/config/env";
+import { getServerEnv } from "@/lib/config/env";
 
 export function createSupabaseAdminClient() {
-  if (!hasServerSupabaseEnv() || !serverEnv.success) {
+  const serverEnv = getServerEnv();
+
+  if (!serverEnv.success) {
     throw new Error("Supabase server environment variables are not configured.");
   }
 
