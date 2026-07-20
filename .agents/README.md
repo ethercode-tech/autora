@@ -6,6 +6,8 @@ Esta carpeta define los subagentes recomendados para operar AUTORA como un siste
 
 Cada subagente debe leer primero [../docs/00-knowledge-tree.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/00-knowledge-tree.md) y luego su contexto especifico.
 
+Para una vista consolidada de handoffs, entradas y activacion sugerida, leer tambien [../docs/18-agent-handoff-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/18-agent-handoff-map.md).
+
 ## Orden sugerido de activacion
 
 1. `orchestrator`

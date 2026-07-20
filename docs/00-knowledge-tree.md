@@ -50,6 +50,13 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 4. [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 5. [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
 
+### Si vas a coordinar subagentes o hacer handoffs
+
+1. [../.agents/README.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/.agents/README.md)
+2. [18-agent-handoff-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/18-agent-handoff-map.md)
+3. [12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
+4. [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
+
 ## Mapa rapido
 
 - Producto: [01-product-context.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/01-product-context.md)
@@ -69,6 +76,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Auditoria de requisitos: [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 - Runbook de release: [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 - Evidencia mas reciente: [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
+- Subagentes y handoffs: [18-agent-handoff-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/18-agent-handoff-map.md)
 
 ## Regla operativa
 
