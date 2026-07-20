@@ -14,6 +14,10 @@ const adminCommercialRlsMigration = readFileSync(
   join(process.cwd(), "supabase", "migrations", "202607200004_admin_commercial_rls.sql"),
   "utf8"
 );
+const isAdminRecursionFixMigration = readFileSync(
+  join(process.cwd(), "supabase", "migrations", "202607200005_fix_is_admin_recursion.sql"),
+  "utf8"
+);
 
 describe("RLS migration coverage", () => {
   it("enables row level security on core operational tables", () => {
@@ -114,5 +118,12 @@ describe("RLS migration coverage", () => {
     expect(adminCommercialRlsMigration).toContain("on public.payments");
     expect(adminCommercialRlsMigration).toContain("using (public.is_admin())");
     expect(adminCommercialRlsMigration).toContain("with check (public.is_admin())");
+  });
+
+  it("defines is_admin as a security definer helper to avoid recursive admin RLS checks", () => {
+    expect(isAdminRecursionFixMigration).toContain("create or replace function public.is_admin()");
+    expect(isAdminRecursionFixMigration).toContain("security definer");
+    expect(isAdminRecursionFixMigration).toContain("set search_path = public");
+    expect(isAdminRecursionFixMigration).toContain("from public.admin_users");
   });
 });

@@ -28,6 +28,8 @@ export function buildLiveVerificationIdentity(prefix = "live-check") {
     suffix,
     primaryEmail: `${suffix}-a@autora.local`,
     secondaryEmail: `${suffix}-b@autora.local`,
+    adminEmail: `${suffix}-admin@autora.local`,
+    commercialEmail: `${suffix}-commercial@autora.local`,
     password: `Autora!${randomUUID().slice(0, 12)}`
   };
 }
@@ -82,7 +84,7 @@ async function signInUser(url, anonKey, email, password) {
   };
 }
 
-async function createActiveUser(adminClient, email, password, businessName, businessType) {
+async function createActiveUser(adminClient, email, password, businessName, businessType, accountStatus = "active") {
   const { data, error } = await adminClient.auth.admin.createUser({
     email,
     password,
@@ -98,8 +100,8 @@ async function createActiveUser(adminClient, email, password, businessName, busi
     business_name: businessName,
     currency: "ARS",
     business_type: businessType,
-    account_status: "active",
-    onboarding_completed: true,
+    account_status: accountStatus,
+    onboarding_completed: accountStatus === "active",
     timezone: "America/Argentina/Buenos_Aires"
   });
 
@@ -119,6 +121,26 @@ async function cleanupUsers(adminClient, userIds) {
       // Cleanup should not mask the primary verification result.
     }
   }
+}
+
+async function cleanupArtifacts(adminClient, artifactIds) {
+  const deleteByIds = async (table, ids) => {
+    if (ids.length === 0) {
+      return;
+    }
+
+    try {
+      await adminClient.from(table).delete().in("id", ids);
+    } catch {
+      // Cleanup should not mask the primary verification result.
+    }
+  };
+
+  await deleteByIds("admin_audit_logs", artifactIds.auditLogIds);
+  await deleteByIds("payments", artifactIds.paymentIds);
+  await deleteByIds("subscriptions", artifactIds.subscriptionIds);
+  await deleteByIds("plans", artifactIds.planIds);
+  await deleteByIds("access_requests", artifactIds.accessRequestIds);
 }
 
 export async function runLiveSupabaseVerification({ cwd = process.cwd(), env = process.env } = {}) {
@@ -141,15 +163,214 @@ export async function runLiveSupabaseVerification({ cwd = process.cwd(), env = p
 
   const identity = buildLiveVerificationIdentity();
   const createdUserIds = [];
+  const createdArtifactIds = {
+    accessRequestIds: [],
+    planIds: [],
+    subscriptionIds: [],
+    paymentIds: [],
+    auditLogIds: []
+  };
   const checks = [];
 
   try {
     const userA = await createActiveUser(adminClient, identity.primaryEmail, identity.password, `AUTORA ${identity.suffix} A`, "manufacturer");
     const userB = await createActiveUser(adminClient, identity.secondaryEmail, identity.password, `AUTORA ${identity.suffix} B`, "manufacturer");
-    createdUserIds.push(userA.id, userB.id);
+    const adminUser = await createActiveUser(adminClient, identity.adminEmail, identity.password, `AUTORA ${identity.suffix} ADMIN`, "manufacturer");
+    const commercialUser = await createActiveUser(
+      adminClient,
+      identity.commercialEmail,
+      identity.password,
+      `AUTORA ${identity.suffix} COMMERCIAL`,
+      "reseller",
+      "pending"
+    );
+    createdUserIds.push(userA.id, userB.id, adminUser.id, commercialUser.id);
+
+    const { error: adminRoleError } = await adminClient.from("admin_users").insert({
+      user_id: adminUser.id,
+      role: "admin",
+      active: true
+    });
+
+    if (adminRoleError) {
+      throw new Error(`Could not create admin role: ${adminRoleError.message}`);
+    }
 
     const primary = await signInUser(url, anonKey, identity.primaryEmail, identity.password);
     const secondary = await signInUser(url, anonKey, identity.secondaryEmail, identity.password);
+    const adminSession = await signInUser(url, anonKey, identity.adminEmail, identity.password);
+
+    const { data: accessRequest, error: accessRequestError } = await adminClient
+      .from("access_requests")
+      .insert({
+        email: identity.commercialEmail,
+        name: `Admin Flow ${identity.suffix}`,
+        business_name: `AUTORA ${identity.suffix} Commercial`,
+        status: "pending"
+      })
+      .select("id")
+      .single();
+
+    if (accessRequestError || !accessRequest) {
+      throw new Error(`Could not create access request: ${accessRequestError?.message ?? "missing access request"}`);
+    }
+
+    createdArtifactIds.accessRequestIds.push(accessRequest.id);
+
+    const { data: approvedAccessRequest, error: approveAccessRequestError } = await adminSession.client
+      .from("access_requests")
+      .update({
+        status: "approved",
+        resolved_at: new Date().toISOString(),
+        resolved_by: adminSession.user.id,
+        resolution_notes: `live-${identity.suffix}-approval`
+      })
+      .eq("id", accessRequest.id)
+      .select("id, status, resolved_by")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_approve_access_requests",
+      Boolean(approvedAccessRequest) && !approveAccessRequestError && approvedAccessRequest.status === "approved",
+      approveAccessRequestError?.message ?? `status=${approvedAccessRequest?.status ?? "null"}`
+    );
+
+    const { data: livePlan, error: livePlanError } = await adminSession.client
+      .from("plans")
+      .insert({
+        name: `Plan ${identity.suffix}`,
+        description: "Plan de verificacion live",
+        price: 19990,
+        currency: "ARS",
+        billing_period: "monthly"
+      })
+      .select("id, name")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_create_plans",
+      Boolean(livePlan) && !livePlanError,
+      livePlanError?.message ?? `plan=${livePlan?.name ?? "null"}`
+    );
+
+    createdArtifactIds.planIds.push(livePlan.id);
+
+    const { data: liveSubscription, error: liveSubscriptionError } = await adminSession.client
+      .from("subscriptions")
+      .insert({
+        user_id: commercialUser.id,
+        plan_id: livePlan.id,
+        status: "active",
+        next_billing_at: "2026-08-20"
+      })
+      .select("id, status")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_create_subscriptions",
+      Boolean(liveSubscription) && !liveSubscriptionError,
+      liveSubscriptionError?.message ?? `status=${liveSubscription?.status ?? "null"}`
+    );
+
+    createdArtifactIds.subscriptionIds.push(liveSubscription.id);
+
+    const { data: profileAfterSubscription, error: profileAfterSubscriptionError } = await adminSession.client
+      .from("profiles")
+      .update({ account_status: "approved_pending_payment" })
+      .eq("user_id", commercialUser.id)
+      .eq("account_status", "pending")
+      .select("account_status")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_transition_profile_after_subscription",
+      Boolean(profileAfterSubscription) &&
+        !profileAfterSubscriptionError &&
+        profileAfterSubscription.account_status === "approved_pending_payment",
+      profileAfterSubscriptionError?.message ?? `status=${profileAfterSubscription?.account_status ?? "null"}`
+    );
+
+    const { data: livePayment, error: livePaymentError } = await adminSession.client
+      .from("payments")
+      .insert({
+        user_id: commercialUser.id,
+        subscription_id: liveSubscription.id,
+        amount: 19990,
+        currency: "ARS",
+        status: "confirmed",
+        payment_method: "transfer",
+        external_reference: `live-${identity.suffix}-payment`,
+        paid_at: new Date().toISOString()
+      })
+      .select("id, status")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_create_payments",
+      Boolean(livePayment) && !livePaymentError,
+      livePaymentError?.message ?? `status=${livePayment?.status ?? "null"}`
+    );
+
+    createdArtifactIds.paymentIds.push(livePayment.id);
+
+    const { data: updatedSubscription, error: subscriptionUpdateError } = await adminSession.client
+      .from("subscriptions")
+      .update({
+        status: "active",
+        starts_at: "2026-07-20"
+      })
+      .eq("id", liveSubscription.id)
+      .select("id, status, starts_at")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_update_subscriptions_after_payment",
+      Boolean(updatedSubscription) && !subscriptionUpdateError && updatedSubscription.status === "active",
+      subscriptionUpdateError?.message ?? `status=${updatedSubscription?.status ?? "null"}`
+    );
+
+    const { data: activatedProfile, error: profileActivationError } = await adminSession.client
+      .from("profiles")
+      .update({ account_status: "active" })
+      .eq("user_id", commercialUser.id)
+      .eq("account_status", "approved_pending_payment")
+      .select("account_status")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_activate_profiles_after_payment",
+      Boolean(activatedProfile) && !profileActivationError && activatedProfile.account_status === "active",
+      profileActivationError?.message ?? `status=${activatedProfile?.account_status ?? "null"}`
+    );
+
+    const { data: adminAuditLog, error: adminAuditLogError } = await adminSession.client
+      .from("admin_audit_logs")
+      .insert({
+        admin_user_id: adminSession.user.id,
+        action: "live_verification",
+        entity_type: "payment",
+        entity_id: livePayment.id,
+        previous_data: { status: "pending" },
+        new_data: { status: "confirmed" }
+      })
+      .select("id")
+      .single();
+
+    recordCheck(
+      checks,
+      "admin_can_write_audit_logs",
+      Boolean(adminAuditLog) && !adminAuditLogError,
+      adminAuditLogError?.message ?? "inserted"
+    );
+
+    createdArtifactIds.auditLogIds.push(adminAuditLog.id);
 
     const { data: unit, error: unitError } = await primary.client
       .from("measurement_units")
@@ -508,6 +729,7 @@ export async function runLiveSupabaseVerification({ cwd = process.cwd(), env = p
       checks
     };
   } finally {
+    await cleanupArtifacts(adminClient, createdArtifactIds);
     await cleanupUsers(adminClient, createdUserIds);
   }
 }

@@ -169,7 +169,9 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 12. Administracion del ciclo comercial.
    - evidencia actual: panel admin, acciones y pruebas de transicion comercial
    - evidencia adicional: `supabase/migrations/202607200004_admin_commercial_rls.sql`
-   - estado: parcial, pendiente de reaplicar migracion al proyecto Supabase y verificar el flujo live de admin
+   - evidencia adicional: `supabase/migrations/202607200005_fix_is_admin_recursion.sql`
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` detecto `stack depth limit exceeded` al aprobar solicitudes admin en la base remota previa al fix
+   - estado: parcial, el repo ya corrige escrituras admin y recursion de `public.is_admin()`, pero falta aplicar ambas migraciones al proyecto Supabase y revalidar el flujo live
 13. Operaciones criticas transaccionales.
    - evidencia actual: RPC SQL atomicas
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`

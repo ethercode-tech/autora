@@ -43,8 +43,10 @@ Estado consolidado el 2026-07-20.
   - resultado: checks en verde sobre stock, costos, movimientos economicos, alertas, metricas fuente de dashboard, aislamiento RLS, bloqueo de cuenta y rollback de fallos operativos
 - Correccion RLS del ciclo comercial admin:
   - evidencia: `supabase/migrations/202607200004_admin_commercial_rls.sql`
+  - evidencia complementaria: `supabase/migrations/202607200005_fix_is_admin_recursion.sql`
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - cubre: escritura admin sobre `subscriptions` y `payments`
+  - cubre: evita recursion RLS en `public.is_admin()` al consultar `admin_users`
 - Invariantes SQL de stock, costos y movimientos financieros:
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - cubre: bloqueos por stock insuficiente en venta, produccion, consumo y ajustes
@@ -85,5 +87,6 @@ Estado consolidado el 2026-07-20.
 - No hay todavia E2E del flujo completo de fabricante con persistencia real.
 - No hay todavia E2E del flujo de reventa con persistencia real.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
+ - La verificacion live del 2026-07-20 detecto que el proyecto Supabase remoto todavia responde `stack depth limit exceeded` en la aprobacion admin de solicitudes; eso confirma que la correccion de `public.is_admin()` aun debe aplicarse en la base remota.
  - Falta correr el smoke SQL via Postgres directo si se quiere evidencia adicional a nivel `psql`.
 - La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, pero la persistencia real sigue pendiente de un entorno configurado.
