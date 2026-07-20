@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { resolveCommercialStateAfterPayment, resolveProfileStatusAfterSubscriptionCreation } from "@/features/commercial/lib/account-commercial-state";
+import { resolveCommercialStateAfterPayment, resolveProfilePatchAfterSubscriptionCreation } from "@/features/commercial/lib/account-commercial-state";
 import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { accessRequestStatusSchema, accountStatusSchema, paymentSchema, planSchema, subscriptionSchema } from "@/lib/validation/admin";
@@ -202,6 +202,19 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
 
   await requireAdminSession();
   const supabase = await createSupabaseServerClient();
+  const { data: profile, error: profileLookupError } =
+    parsed.data.status === "active"
+      ? await supabase.from("profiles").select("account_status").eq("user_id", parsed.data.userId).maybeSingle()
+      : { data: null, error: null };
+
+  if (profileLookupError) {
+    writeStructuredLog("error", "admin.subscription.profile_lookup_failed", {
+      message: profileLookupError.message,
+      userId: parsed.data.userId
+    });
+    return { success: false, message: "No pudimos resolver el estado actual de la cuenta." };
+  }
+
   const { error } = await supabase.from("subscriptions").insert({
     user_id: parsed.data.userId,
     plan_id: parsed.data.planId,
@@ -220,16 +233,14 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
     return { success: false, message: "No pudimos crear la suscripcion." };
   }
 
-  const nextProfileStatus = resolveProfileStatusAfterSubscriptionCreation("pending", parsed.data.status);
+  const profileTransition = resolveProfilePatchAfterSubscriptionCreation(profile?.account_status ?? null, parsed.data.status);
 
-  if (nextProfileStatus !== "pending") {
+  if (profileTransition) {
     await supabase
       .from("profiles")
-      .update({
-        account_status: nextProfileStatus
-      })
+      .update(profileTransition.patch)
       .eq("user_id", parsed.data.userId)
-      .eq("account_status", "pending");
+      .eq("account_status", profileTransition.currentStatus);
   }
 
   await logAdminAudit("subscription_created", "subscription", null, null, {

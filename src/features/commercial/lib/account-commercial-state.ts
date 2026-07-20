@@ -21,6 +21,28 @@ export function resolveProfileStatusAfterSubscriptionCreation(currentStatus: Acc
   return currentStatus;
 }
 
+export function resolveProfilePatchAfterSubscriptionCreation(
+  currentStatus: AccountStatus | null,
+  subscriptionStatus: SubscriptionStatus
+) {
+  if (!currentStatus) {
+    return null;
+  }
+
+  const nextStatus = resolveProfileStatusAfterSubscriptionCreation(currentStatus, subscriptionStatus);
+
+  if (nextStatus === currentStatus) {
+    return null;
+  }
+
+  return {
+    currentStatus,
+    patch: {
+      account_status: nextStatus
+    }
+  };
+}
+
 export function resolveCommercialStateAfterPayment(params: {
   profileStatus: AccountStatus;
   paymentStatus: PaymentStatus;

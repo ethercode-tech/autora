@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { resolveCommercialStateAfterPayment, resolveProfileStatusAfterSubscriptionCreation } from "@/features/commercial/lib/account-commercial-state";
+import {
+  resolveCommercialStateAfterPayment,
+  resolveProfilePatchAfterSubscriptionCreation,
+  resolveProfileStatusAfterSubscriptionCreation
+} from "@/features/commercial/lib/account-commercial-state";
 
 describe("resolveProfileStatusAfterSubscriptionCreation", () => {
   it("moves a pending account to approved pending payment when the subscription starts active", () => {
@@ -67,5 +71,22 @@ describe("resolveCommercialStateAfterPayment", () => {
 
     expect(result.subscriptionPatch).toEqual({});
     expect(result.profilePatch).toEqual({});
+  });
+});
+
+describe("resolveProfilePatchAfterSubscriptionCreation", () => {
+  it("returns a guarded patch only when the profile must move forward", () => {
+    expect(resolveProfilePatchAfterSubscriptionCreation("pending", "active")).toEqual({
+      currentStatus: "pending",
+      patch: {
+        account_status: "approved_pending_payment"
+      }
+    });
+  });
+
+  it("returns null when the current profile is already in a non-promotable state or missing", () => {
+    expect(resolveProfilePatchAfterSubscriptionCreation("blocked", "active")).toBeNull();
+    expect(resolveProfilePatchAfterSubscriptionCreation("active", "active")).toBeNull();
+    expect(resolveProfilePatchAfterSubscriptionCreation(null, "active")).toBeNull();
   });
 });

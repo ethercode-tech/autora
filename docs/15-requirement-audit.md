@@ -173,9 +173,11 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia adicional: `src/app/admin/page.test.tsx`
    - evidencia adicional: `src/components/forms/payment-form.test.tsx`
    - evidencia adicional: `src/features/commercial/lib/payment-subscription-selection.test.ts`
+   - evidencia adicional: `src/features/commercial/lib/account-commercial-state.test.ts`
    - evidencia adicional: `supabase/migrations/202607200004_admin_commercial_rls.sql`
    - evidencia adicional: `supabase/migrations/202607200005_fix_is_admin_recursion.sql`
    - evidencia de implementacion: `src/server/actions/admin.ts` deriva `user_id` del pago desde la suscripcion persistida
+   - evidencia de implementacion: `src/server/actions/admin.ts` resuelve la promocion de estado tras crear suscripciones con el `account_status` real del perfil
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` detecto `stack depth limit exceeded` al aprobar solicitudes admin en la base remota previa al fix
    - estado: parcial, el repo ya corrige escrituras admin y recursion de `public.is_admin()`, pero falta aplicar ambas migraciones al proyecto Supabase y revalidar el flujo live
 13. Operaciones criticas transaccionales.
