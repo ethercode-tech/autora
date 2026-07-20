@@ -83,11 +83,12 @@ Resultado local mas reciente:
 - ejecucion live opt-in del flujo reventa el 2026-07-20: `1 passed`
 - readiness live del 2026-07-20: `pnpm test:e2e:live:check` en verde
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
-- auditoria de release del 2026-07-20: `pnpm test:release:check` marco `SUPABASE_DB_URL` o `DATABASE_URL` y `.openai/hosting.json` como faltantes externos
+- auditoria de release del 2026-07-20: `pnpm test:release:check` devolvio `ready=yes`, `live-e2e=ok`, `sql-smoke=ok`, `direct-db-url=present` y `hosting-config=present`
 - baseline del 2026-07-20: `pnpm verify:baseline` en verde con lint, typecheck, `102 passed` en Vitest y build productivo exitoso
 - tests de helpers operativos del 2026-07-20: `4 passed` en `check-live-e2e-readiness.test.ts` y `check-release-readiness.test.ts`
 - tests del runner baseline del 2026-07-20: `3 passed` en `run-baseline-checks.test.ts`
 - tests del runner live del 2026-07-20: `6 passed` en `run-live-e2e.test.ts`
+- la ejecucion directa completa de `pnpm test:sql-smoke` sigue pendiente como evidencia separada; hoy solo esta verificado su readiness
 
 ## Verificacion live actual
 

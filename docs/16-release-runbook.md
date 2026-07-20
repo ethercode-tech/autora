@@ -101,22 +101,23 @@ Consolida:
 
 Al 2026-07-20, el resultado esperado de este workspace es:
 
+- `ready=yes`
 - `live-e2e=ok`
-- `sql-smoke=blocked`
-- `direct-db-url=missing`
+- `sql-smoke=ok`
+- `direct-db-url=present`
 - `hosting-config=present`
 
-Eso significa que el repo ya puede demostrar build productivo, flujos live reales y un target de hosting configurado, pero no puede cerrar release completo desde este workspace mientras falten:
+Eso significa que el repo ya puede demostrar build productivo, flujos live reales, readiness de SQL smoke y un target de hosting configurado. Aun asi, no puede cerrarse el release completo desde este workspace mientras falten:
 
-- `SUPABASE_DB_URL` o `DATABASE_URL`
+- una ejecucion completa y documentada de `pnpm test:sql-smoke`
 - una version productiva publicada sobre el target gestionado del workspace
 
-## Bloqueos externos vigentes al 2026-07-20
+## Bloqueos vigentes al 2026-07-20
 
-1. Base Postgres directa no expuesta al workspace.
+1. No hay evidencia archivada de una corrida completa de smoke SQL por `psql`.
    - impacto:
-     - no pueden correrse los smokes SQL directos,
-     - no pueden aplicarse archivos SQL desde el repo con `pnpm db:apply`.
+     - no puede afirmarse validacion directa por Postgres mas alla del readiness del runner,
+     - no queda una prueba adicional de aislamiento RLS y transaccionalidad a nivel SQL puro.
 2. Workspace con target de hosting gestionado pero sin deploy publicado verificable.
    - impacto:
      - aun no hay evidencia de deploy productivo administrado desde este repositorio,

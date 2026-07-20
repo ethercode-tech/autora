@@ -2,6 +2,14 @@
 
 Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding para cualquier agente o ingeniero nuevo.
 
+## Estado operativo rapido
+
+- Build productivo local verificado el 2026-07-20 con `pnpm build`.
+- Readiness de release verificado el 2026-07-20 con `ready=yes` en `pnpm test:release:check`.
+- Verificacion live contra Supabase real ejecutada el 2026-07-20 con 22 checks en verde.
+- Existe panel admin separado del workspace operativo y scripts de bootstrap para admin y emprendimientos de prueba.
+- Sigue faltando evidencia fuerte de ejecucion completa de `pnpm test:sql-smoke` por `psql`; el readiness del runner ya esta en verde.
+
 ## Lectura minima por objetivo
 
 ### Si vas a definir producto o alcance
@@ -39,13 +47,6 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 3. [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 4. [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 
-### Si vas a preparar release, CI o despliegue
-
-1. [09-testing-strategy.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/09-testing-strategy.md)
-2. [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
-3. [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
-4. [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
-
 ## Mapa rapido
 
 - Producto: [01-product-context.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/01-product-context.md)
@@ -63,7 +64,6 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Implementacion actual: [13-current-implementation-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/13-current-implementation-map.md)
 - Matriz de verificacion: [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
 - Auditoria de requisitos: [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
-- Runbook de release: [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 - Runbook de release: [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 
 ## Regla operativa

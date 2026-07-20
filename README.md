@@ -8,7 +8,7 @@ Estado del repositorio al 2026-07-20:
 - MVP funcional implementado sobre Next.js + Supabase.
 - Panel operativo, panel administrativo, autenticacion y migraciones presentes.
 - Recuperacion de contrasena y exportacion JSON/CSV incluidas.
-- Tests unitarios activos, smokes SQL preparados y suite E2E local validada.
+- Tests unitarios activos, readiness de release en verde y suite E2E local validada.
 
 ## Punto de entrada recomendado
 
@@ -95,7 +95,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
    - solo reventa: `pnpm test:e2e:live:reseller`
 9. Para auditar readiness de release del repositorio:
    - `pnpm test:release:check`
-   - al 2026-07-20 reporta dos bloqueos externos concretos: falta `SUPABASE_DB_URL` o `DATABASE_URL` para smokes SQL directos y falta `.openai/hosting.json` para un target de deploy gestionado desde este workspace
+   - al 2026-07-20 reporta `ready=yes`, `live-e2e=ok`, `sql-smoke=ok`, `direct-db-url=present` y `hosting-config=present`
 
 ## Estado actual
 
@@ -125,16 +125,15 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - E2E live opt-in de fabricante ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - E2E live opt-in de reventa ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
-  - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con live E2E listo y bloqueos externos explicitados para SQL directo y hosting
+  - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con `ready=yes`
   - baseline reproducible `pnpm verify:baseline` ejecutado el 2026-07-20 con lint, typecheck, suite Vitest y build productivo en verde
   - target de hosting del workspace configurado en `.openai/hosting.json` el 2026-07-20
-  - build productivo local ejecutado el 2026-07-20 con `npm run build`
+  - build productivo local ejecutado el 2026-07-20 con `pnpm build`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde
 
 ## Pendientes principales
 
-- Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
-- Exponer `SUPABASE_DB_URL` o `DATABASE_URL` para correr smokes SQL directos por `psql` y aplicar SQL puntual desde el repo cuando haga falta.
+- Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo por `psql`; el repo ya tiene readiness en verde pero falta esa evidencia de ejecucion completa.
 - Publicar una version productiva real usando el target ya configurado en `.openai/hosting.json`.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

@@ -40,6 +40,8 @@ Estado consolidado el 2026-07-20.
   - suscripciones.
   - pagos.
   - auditoria.
+  - bootstrap de usuario admin.
+  - bootstrap de emprendimientos de prueba.
 
 ## Mapa de carpetas
 
@@ -53,6 +55,10 @@ Estado consolidado el 2026-07-20.
 - `src/lib/auth`: sesion, estados de cuenta y guardas de acceso.
 - `src/lib/validation`: esquemas zod compartidos.
 - `supabase/migrations`: esquema, RLS y RPC transaccionales.
+- `scripts/bootstrap-admin.mjs`: alta controlada de administrador inicial.
+- `scripts/bootstrap-business.mjs`: alta controlada de emprendimientos de prueba y datos semilla.
+- `scripts/verify-live-supabase.mjs`: verificacion API real sobre Supabase.
+- `scripts/run-sql-smoke.mjs`: ejecucion de smokes SQL por `psql`.
 
 ## Fuente de verdad por dominio
 
@@ -77,6 +83,7 @@ Estado consolidado el 2026-07-20.
 
 ## Gaps abiertos
 
-- Verificacion SQL directa por `psql` pendiente por ausencia de `SUPABASE_DB_URL` o `DATABASE_URL` en el entorno actual, aunque la verificacion live por API ya cubre aislamiento RLS y flujo comercial.
+- `src/types/database.ts` esta incompleto respecto del esquema real y no debe tratarse como fuente canonica hasta regenerarlo o ampliarlo.
+- Verificacion SQL directa por `psql` pendiente como evidencia de ejecucion completa; el entorno actual ya resuelve readiness y URL directa, pero la corrida total aun no quedo documentada como exitosa.
 - Edicion avanzada de recetas existente solo en alta inicial; falta un flujo de edicion posterior si se requiere.
 - Exportacion CSV agregada; faltan formatos adicionales si se requieren reportes mas especializados.

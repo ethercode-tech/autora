@@ -56,7 +56,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `src/app/admin/page.tsx`
   - `supabase/migrations/202607200001_initial_schema.sql`
 - Gap:
-  - evidencia E2E persistente ya disponible para fabricante y reventa; restan smokes SQL directos por `psql` y evidencia de despliegue productivo
+  - evidencia E2E persistente ya disponible para fabricante y reventa; resta evidencia de ejecucion completa de smokes SQL directos por `psql` y evidencia de despliegue productivo
 
 ## Objetivo tecnico
 
@@ -96,13 +96,13 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia adicional: `src/server/queries/check-release-readiness.test.ts`
   - evidencia adicional: `src/server/queries/run-live-e2e.test.ts`
   - evidencia ejecutada el 2026-07-20: `npm run test:sql-smoke:check` detecta `psql` automaticamente en `C:\Program Files\PostgreSQL\17\bin\psql.exe`
-  - evidencia ejecutada el 2026-07-20: `npm run build` completo sobre Next.js 15.5.20
+  - evidencia ejecutada el 2026-07-20: `pnpm build` completo sobre Next.js 15.5.20
   - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live:check` y `pnpm test:e2e:live`
-  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` explicita bloqueo por ausencia de `SUPABASE_DB_URL` o `DATABASE_URL`
+  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` con `ready=yes`
   - evidencia de hosting gestionado: `.openai/hosting.json`
   - evidencia ejecutada el 2026-07-20: `4 passed` en pruebas de helpers operativos
   - evidencia ejecutada el 2026-07-20: `6 passed` en pruebas del runner live
-  - estado: parcial, falta evidencia de despliegue productivo real y `SUPABASE_DB_URL` para aplicar SQL directo al proyecto remoto
+  - estado: parcial, falta evidencia de despliegue productivo real y de ejecucion completa del smoke SQL directo
 
 ## Objetivo de inventario y economico
 
@@ -206,15 +206,15 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 15. Despliegue sin datos locales.
    - evidencia actual: arquitectura server-side con Supabase
    - evidencia adicional: `src/architecture/storage-boundary.test.ts`
-   - evidencia ejecutada el 2026-07-20: `npm run build`
+   - evidencia ejecutada el 2026-07-20: `pnpm build`
    - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live` construye bundle productivo y verifica ambos flujos principales sobre Supabase real
-   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` deja explicitado que el workspace ya tiene target de hosting pero aun no tiene `SUPABASE_DB_URL` o `DATABASE_URL`
+   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` confirma que el workspace ya tiene target de hosting y readiness en verde
    - estado: parcial, falta evidencia de despliegue productivo y smoke SQL directo
 
 ## Siguiente tramo recomendado
 
 - Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
-- Ejecutar smoke multiusuario para demostrar aislamiento RLS.
+- Ejecutar smoke SQL directo por `psql`, incluyendo el caso multiusuario, para sumar evidencia adicional de aislamiento RLS.
 - Publicar una version productiva real sobre el target ya configurado del workspace.
 
 ## Runner operativo disponible

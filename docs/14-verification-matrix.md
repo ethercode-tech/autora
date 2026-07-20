@@ -116,7 +116,7 @@ Estado consolidado el 2026-07-20.
   - resuelve `psql` desde `PATH`, `PSQL_PATH` o rutas estandar de PostgreSQL en Windows
 - Auditoria consolidada de release:
   - `pnpm test:release:check`
-  - cubre readiness de live E2E, readiness de SQL smoke y bloqueos externos de deploy del workspace
+  - cubre readiness de live E2E, readiness de SQL smoke y configuracion de hosting del workspace
 - Tests de helpers operativos:
   - evidencia: `src/server/queries/check-live-e2e-readiness.test.ts`
   - evidencia adicional: `src/server/queries/check-release-readiness.test.ts`
@@ -128,14 +128,14 @@ Estado consolidado el 2026-07-20.
 ## Gaps todavia abiertos
 
 - La suite E2E local paso el 2026-07-20 con `24 passed`.
-- El build productivo local paso el 2026-07-20 con `npm run build`.
+- El build productivo local paso el 2026-07-20 con `pnpm build`.
  - El readiness de live E2E paso el 2026-07-20 con `pnpm test:e2e:live:check`.
  - El runner unificado de live E2E paso el 2026-07-20 con `pnpm test:e2e:live`, incluyendo build productivo y `2 passed`.
- - La auditoria de release del 2026-07-20 reporto dos bloqueos externos vigentes: falta `SUPABASE_DB_URL` o `DATABASE_URL` y falta `.openai/hosting.json`.
+ - La auditoria de release del 2026-07-20 paso con `ready=yes`, `live-e2e=ok`, `sql-smoke=ok`, `direct-db-url=present` y `hosting-config=present`.
  - Los tests de helpers operativos pasaron el 2026-07-20 con `4 passed`.
  - Los tests del runner live pasaron el 2026-07-20 con `6 passed`.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
- - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.
- - Falta correr el smoke SQL via Postgres directo si se quiere evidencia adicional a nivel `psql`.
+ - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows y la URL directa esta presente.
+ - Falta correr el smoke SQL completo via Postgres directo si se quiere evidencia adicional a nivel `psql`.
 - La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, y los flujos live de fabricante y reventa ya quedaron verificados con persistencia real.
