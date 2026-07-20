@@ -186,7 +186,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - estado: verificado por API real
 14. Flujos principales con pruebas automatizadas.
    - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
-   - evidencia ejecutada el 2026-07-20: `22 passed`, `1 skipped` en Playwright
+   - evidencia ejecutada el 2026-07-20: `24 passed` en Playwright
    - estado: parcial, falta E2E de punta a punta con persistencia real
 15. Despliegue sin datos locales.
    - evidencia actual: arquitectura server-side con Supabase

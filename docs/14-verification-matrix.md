@@ -105,7 +105,7 @@ Estado consolidado el 2026-07-20.
 
 ## Gaps todavia abiertos
 
-- La suite E2E local paso el 2026-07-20 con `22 passed` y `1 skipped`; el skip corresponde a exportacion sin Supabase configurado.
+- La suite E2E local paso el 2026-07-20 con `24 passed`.
 - No hay todavia E2E del flujo completo de fabricante con persistencia real.
 - No hay todavia E2E del flujo de reventa con persistencia real.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.

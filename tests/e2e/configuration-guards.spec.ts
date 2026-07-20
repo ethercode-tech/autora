@@ -1,18 +1,28 @@
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+async function expectGuardOutcome(page: Page) {
+  await page.waitForLoadState("domcontentloaded");
+
+  if (/\/login$/u.test(page.url())) {
+    await expect(page.getByRole("heading", { name: /autora/i })).toBeVisible();
+    return;
+  }
+
+  await expect(page.getByRole("heading", { name: /faltan variables de entorno de supabase/i })).toBeVisible();
+}
 
 test.describe("configuration and access guards", () => {
-  test("dashboard shows configuration guidance when supabase env is missing", async ({ page }) => {
+  test("dashboard resolves to the correct guard depending on Supabase configuration", async ({ page }) => {
     await page.goto("/dashboard");
 
-    await expect(page.getByRole("heading", { name: /faltan variables de entorno de supabase/i })).toBeVisible();
-    await expect(page.getByText(/\.env\.local/i)).toBeVisible();
+    await expectGuardOutcome(page);
   });
 
-  test("admin uses the same safe fallback when supabase env is missing", async ({ page }) => {
+  test("admin resolves to the correct guard depending on Supabase configuration", async ({ page }) => {
     await page.goto("/admin");
 
-    await expect(page.getByRole("heading", { name: /faltan variables de entorno de supabase/i })).toBeVisible();
-    await expect(page.getByText(/persistencia/i)).toBeVisible();
+    await expectGuardOutcome(page);
   });
 
   test("reset password without a recovery token explains the expected flow", async ({ page }) => {

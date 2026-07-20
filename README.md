@@ -106,7 +106,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - bloqueo operativo por estado de cuenta
   - auditoria administrativa
 - Evidencia automatizada actual:
-  - suite E2E local ejecutada el 2026-07-20 con `22 passed` y `1 skipped`
+  - suite E2E local ejecutada el 2026-07-20 con `24 passed`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 14 checks operativos y de RLS en verde
   - verificacion live admin/comercial ejecutada el 2026-07-20 con deteccion de `stack depth limit exceeded` en la base remota antes de aplicar `202607200005_fix_is_admin_recursion.sql`

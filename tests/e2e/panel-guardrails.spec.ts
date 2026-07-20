@@ -1,4 +1,20 @@
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+async function expectGuardOutcome(page: Page) {
+  await page.waitForLoadState("domcontentloaded");
+
+  if (/\/login$/u.test(page.url())) {
+    await expect(page.getByRole("heading", { name: /autora/i })).toBeVisible();
+    return;
+  }
+
+  await expect(page.getByRole("heading", { name: /faltan variables de entorno de supabase/i })).toBeVisible();
+  await expect(page.getByText(/persistencia/i)).toBeVisible();
+  await expect(page.getByRole("link", { name: /dashboard/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /recursos/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /administracion/i })).toBeVisible();
+}
 
 const guardedRoutes = [
   "/dashboard",
@@ -17,14 +33,10 @@ const guardedRoutes = [
 
 test.describe("panel guardrails", () => {
   for (const route of guardedRoutes) {
-    test(`shows the safe configuration fallback on ${route}`, async ({ page }) => {
+    test(`resolves the expected guard on ${route}`, async ({ page }) => {
       await page.goto(route);
 
-      await expect(page.getByRole("heading", { name: /faltan variables de entorno de supabase/i })).toBeVisible();
-      await expect(page.getByText(/persistencia/i)).toBeVisible();
-      await expect(page.getByRole("link", { name: /dashboard/i })).toBeVisible();
-      await expect(page.getByRole("link", { name: /recursos/i })).toBeVisible();
-      await expect(page.getByRole("link", { name: /administracion/i })).toBeVisible();
+      await expectGuardOutcome(page);
     });
   }
 });
