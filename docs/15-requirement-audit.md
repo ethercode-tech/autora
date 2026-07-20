@@ -90,10 +90,12 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia: scripts de `package.json`
   - evidencia adicional: `scripts/apply-sql-files.mjs`
   - evidencia adicional: `scripts/check-live-e2e-readiness.mjs`
+  - evidencia adicional: `scripts/check-release-readiness.mjs`
   - evidencia adicional: `scripts/run-live-e2e.mjs`
   - evidencia ejecutada el 2026-07-20: `npm run test:sql-smoke:check` detecta `psql` automaticamente en `C:\Program Files\PostgreSQL\17\bin\psql.exe`
   - evidencia ejecutada el 2026-07-20: `npm run build` completo sobre Next.js 15.5.20
   - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live:check` y `pnpm test:e2e:live`
+  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` explicita bloqueo por ausencia de `SUPABASE_DB_URL` o `DATABASE_URL` y por falta de `.openai/hosting.json`
   - estado: parcial, falta evidencia de despliegue productivo real y `SUPABASE_DB_URL` para aplicar SQL directo al proyecto remoto
 
 ## Objetivo de inventario y economico
@@ -200,6 +202,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia adicional: `src/architecture/storage-boundary.test.ts`
    - evidencia ejecutada el 2026-07-20: `npm run build`
    - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live` construye bundle productivo y verifica ambos flujos principales sobre Supabase real
+   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` deja explicitado que el workspace aun no tiene `.openai/hosting.json` ni `SUPABASE_DB_URL` o `DATABASE_URL`
    - estado: parcial, falta evidencia de despliegue productivo
 
 ## Siguiente tramo recomendado

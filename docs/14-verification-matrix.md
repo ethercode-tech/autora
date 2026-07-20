@@ -114,6 +114,9 @@ Estado consolidado el 2026-07-20.
   - variantes: `npm run test:sql-smoke:rls`, `npm run test:sql-smoke:multiuser`, `npm run test:sql-smoke:operational`
   - requiere `SUPABASE_DB_URL` o `DATABASE_URL`
   - resuelve `psql` desde `PATH`, `PSQL_PATH` o rutas estandar de PostgreSQL en Windows
+- Auditoria consolidada de release:
+  - `pnpm test:release:check`
+  - cubre readiness de live E2E, readiness de SQL smoke y bloqueos externos de deploy del workspace
 
 ## Gaps todavia abiertos
 
@@ -121,6 +124,7 @@ Estado consolidado el 2026-07-20.
 - El build productivo local paso el 2026-07-20 con `npm run build`.
  - El readiness de live E2E paso el 2026-07-20 con `pnpm test:e2e:live:check`.
  - El runner unificado de live E2E paso el 2026-07-20 con `pnpm test:e2e:live`, incluyendo build productivo y `2 passed`.
+ - La auditoria de release del 2026-07-20 reporto dos bloqueos externos vigentes: falta `SUPABASE_DB_URL` o `DATABASE_URL` y falta `.openai/hosting.json`.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
  - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.

@@ -15,6 +15,7 @@
     "test:e2e:live": "node ./scripts/run-live-e2e.mjs",
     "test:e2e:live:manufacturer": "node ./scripts/run-live-e2e.mjs manufacturer",
     "test:e2e:live:reseller": "node ./scripts/run-live-e2e.mjs reseller",
+    "test:release:check": "node ./scripts/check-release-readiness.mjs",
     "test:sql-smoke:check": "node ./scripts/check-sql-smoke-readiness.mjs",
     "test:sql-smoke": "node ./scripts/run-sql-smoke.mjs all",
     "test:sql-smoke:rls": "node ./scripts/run-sql-smoke.mjs rls",

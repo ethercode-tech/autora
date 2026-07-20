@@ -46,6 +46,7 @@ Estado del repositorio al 2026-07-20:
 - `pnpm test:e2e:live`
 - `pnpm test:e2e:live:manufacturer`
 - `pnpm test:e2e:live:reseller`
+- `pnpm test:release:check`
 - `pnpm test:sql-smoke:check`
 - `pnpm test:sql-smoke`
 - `pnpm test:sql-smoke:rls`
@@ -91,6 +92,9 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
    - ambos flujos: `pnpm test:e2e:live`
    - solo fabricante: `pnpm test:e2e:live:manufacturer`
    - solo reventa: `pnpm test:e2e:live:reseller`
+9. Para auditar readiness de release del repositorio:
+   - `pnpm test:release:check`
+   - al 2026-07-20 reporta dos bloqueos externos concretos: falta `SUPABASE_DB_URL` o `DATABASE_URL` para smokes SQL directos y falta `.openai/hosting.json` para un target de deploy gestionado desde este workspace
 
 ## Estado actual
 
@@ -120,6 +124,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - E2E live opt-in de fabricante ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - E2E live opt-in de reventa ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
+  - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con live E2E listo y bloqueos externos explicitados para SQL directo y hosting
   - build productivo local ejecutado el 2026-07-20 con `npm run build`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde

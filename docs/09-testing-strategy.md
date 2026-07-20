@@ -67,6 +67,7 @@ Cobertura E2E actualmente ejecutada:
 - `pnpm test:e2e:live` para correr fabricante + reventa con build productivo previo
 - `pnpm test:e2e:live:manufacturer` para aislar fabricante
 - `pnpm test:e2e:live:reseller` para aislar reventa
+- `pnpm test:release:check` para consolidar readiness de live E2E, SQL smoke y bloqueos de deploy del workspace
 
 Resultado local mas reciente:
 
@@ -76,6 +77,7 @@ Resultado local mas reciente:
 - ejecucion live opt-in del flujo reventa el 2026-07-20: `1 passed`
 - readiness live del 2026-07-20: `pnpm test:e2e:live:check` en verde
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
+- auditoria de release del 2026-07-20: `pnpm test:release:check` marco `SUPABASE_DB_URL` o `DATABASE_URL` y `.openai/hosting.json` como faltantes externos
 
 ## Verificacion live actual
 
