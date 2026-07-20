@@ -36,6 +36,7 @@ Artefactos ejecutables preparados:
 - `src/architecture/storage-boundary.test.ts`
 - `src/server/queries/check-live-e2e-readiness.test.ts`
 - `src/server/queries/check-release-readiness.test.ts`
+- `src/server/queries/run-live-e2e.test.ts`
 
 ## Seguridad y RLS
 
@@ -81,6 +82,7 @@ Resultado local mas reciente:
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
 - auditoria de release del 2026-07-20: `pnpm test:release:check` marco `SUPABASE_DB_URL` o `DATABASE_URL` y `.openai/hosting.json` como faltantes externos
 - tests de helpers operativos del 2026-07-20: `4 passed` en `check-live-e2e-readiness.test.ts` y `check-release-readiness.test.ts`
+- tests del runner live del 2026-07-20: `6 passed` en `run-live-e2e.test.ts`
 
 ## Verificacion live actual
 

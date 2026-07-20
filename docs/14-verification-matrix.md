@@ -121,6 +121,9 @@ Estado consolidado el 2026-07-20.
   - evidencia: `src/server/queries/check-live-e2e-readiness.test.ts`
   - evidencia adicional: `src/server/queries/check-release-readiness.test.ts`
   - cubre: formato y semantica de los resumentes de readiness/release
+- Tests del runner live:
+  - evidencia: `src/server/queries/run-live-e2e.test.ts`
+  - cubre: seleccion de suites y construccion del entorno para `pnpm test:e2e:live`
 
 ## Gaps todavia abiertos
 
@@ -130,6 +133,7 @@ Estado consolidado el 2026-07-20.
  - El runner unificado de live E2E paso el 2026-07-20 con `pnpm test:e2e:live`, incluyendo build productivo y `2 passed`.
  - La auditoria de release del 2026-07-20 reporto dos bloqueos externos vigentes: falta `SUPABASE_DB_URL` o `DATABASE_URL` y falta `.openai/hosting.json`.
  - Los tests de helpers operativos pasaron el 2026-07-20 con `4 passed`.
+ - Los tests del runner live pasaron el 2026-07-20 con `6 passed`.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
  - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.

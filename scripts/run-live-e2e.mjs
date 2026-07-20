@@ -5,13 +5,13 @@ import { spawn } from "node:child_process";
 import { getLiveE2EReadiness } from "./check-live-e2e-readiness.mjs";
 import { loadResolvedEnv } from "./load-project-env.mjs";
 
-const LIVE_E2E_SUITES = {
+export const LIVE_E2E_SUITES = {
   manufacturer: ["tests/e2e/live-manufacturer-flow.spec.ts"],
   reseller: ["tests/e2e/live-reseller-flow.spec.ts"],
   all: ["tests/e2e/live-manufacturer-flow.spec.ts", "tests/e2e/live-reseller-flow.spec.ts"]
 };
 
-function resolveRequestedSuite(args = process.argv.slice(2)) {
+export function resolveRequestedSuite(args = process.argv.slice(2)) {
   const candidate = args[0] || "all";
 
   if (!(candidate in LIVE_E2E_SUITES)) {
@@ -19,6 +19,15 @@ function resolveRequestedSuite(args = process.argv.slice(2)) {
   }
 
   return candidate;
+}
+
+export function buildLiveE2ERunEnv(resolvedEnv) {
+  return {
+    ...resolvedEnv,
+    E2E_LIVE_SUPABASE: "1",
+    E2E_USE_PROD_SERVER: "1",
+    PLAYWRIGHT_PORT: resolvedEnv.PLAYWRIGHT_PORT || "3100"
+  };
 }
 
 function spawnPlaywrightRun({ specFile, env, cwd }) {
@@ -77,12 +86,7 @@ export async function runLiveE2E({
   }
 
   const resolvedEnv = await loadResolvedEnv(env, cwd);
-  const runEnv = {
-    ...resolvedEnv,
-    E2E_LIVE_SUPABASE: "1",
-    E2E_USE_PROD_SERVER: "1",
-    PLAYWRIGHT_PORT: resolvedEnv.PLAYWRIGHT_PORT || "3100"
-  };
+  const runEnv = buildLiveE2ERunEnv(resolvedEnv);
 
   process.stdout.write(`[live-e2e] suite=${suite}\n`);
   process.stdout.write("[live-e2e] building production bundle\n");
