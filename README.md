@@ -48,6 +48,7 @@ Estado del repositorio al 2026-07-20:
 - `pnpm test:e2e:live`
 - `pnpm test:e2e:live:manufacturer`
 - `pnpm test:e2e:live:reseller`
+- `pnpm test:production-access`
 - `pnpm test:release:check`
 - `pnpm test:sql-smoke:check`
 - `pnpm test:sql-smoke`
@@ -95,7 +96,15 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
    - solo fabricante: `pnpm test:e2e:live:manufacturer`
    - solo reventa: `pnpm test:e2e:live:reseller`
    - contra la URL productiva desplegada: define `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app` antes de correr cualquiera de esos comandos
-9. Para auditar readiness de release del repositorio:
+9. Para verificar accesos productivos con cuentas reales:
+   - `pnpm test:production-access`
+   - variables esperadas:
+     - `PRODUCTION_BASE_URL` o `E2E_EXTERNAL_BASE_URL` o `NEXT_PUBLIC_APP_URL`
+     - `PRODUCTION_ADMIN_EMAIL`
+     - `PRODUCTION_ADMIN_PASSWORD`
+     - `PRODUCTION_BUSINESS_EMAIL`
+     - `PRODUCTION_BUSINESS_PASSWORD`
+10. Para auditar readiness de release del repositorio:
    - `pnpm test:release:check`
    - al 2026-07-20 reporta `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la variable configurada para SQL directo no usa esquema `postgres://` o `postgresql://`
 
@@ -129,6 +138,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
   - flujo `manufacturer` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`
   - flujo `reseller` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`
+  - `pnpm test:production-access` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app`
   - login real del admin bootstrap `admin@autora.local` verificado el 2026-07-20 sobre `https://autoracontable.vercel.app/admin`
   - login real del emprendimiento bootstrap `lumiq@autora.local` verificado el 2026-07-20 sobre `https://autoracontable.vercel.app/dashboard`
   - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con bloqueo explicito por URL directa invalida para `psql`

@@ -74,6 +74,7 @@ Cobertura E2E actualmente ejecutada:
 - `pnpm test:e2e:live:reseller` para aislar reventa
 - `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:manufacturer` para validar una URL desplegada real sin levantar servidor local
 - `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:reseller` para validar el segundo flujo principal sobre el deployment activo
+- `pnpm test:production-access` para validar login real de una cuenta admin y una cuenta de negocio contra la URL desplegada
 - `pnpm verify:baseline` para consolidar lint, typecheck, Vitest y build productivo en una sola pasada
 - `pnpm test:release:check` para consolidar readiness de live E2E, SQL smoke y bloqueos de deploy del workspace
 
@@ -87,6 +88,7 @@ Resultado local mas reciente:
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
 - flujo `manufacturer` contra `https://autoracontable.vercel.app` el 2026-07-20: `1 passed`
 - flujo `reseller` contra `https://autoracontable.vercel.app` el 2026-07-20: `1 passed`
+- `pnpm test:production-access` contra `https://autoracontable.vercel.app` el 2026-07-20: admin y negocio verificados
 - auditoria de release del 2026-07-20: `pnpm test:release:check` devolvio `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la URL configurada para SQL directo no usa esquema Postgres valido
 - baseline del 2026-07-20: `pnpm verify:baseline` en verde con lint, typecheck, `102 passed` en Vitest y build productivo exitoso
 - tests de helpers operativos del 2026-07-20: `4 passed` en `check-live-e2e-readiness.test.ts` y `check-release-readiness.test.ts`
