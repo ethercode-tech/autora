@@ -46,6 +46,10 @@ export function createSummaryLines(result) {
   return lines;
 }
 
+function calculateStockAlerts(items) {
+  return items.filter((item) => item.minimum_stock !== null && Number(item.current_stock) <= Number(item.minimum_stock)).length;
+}
+
 function recordCheck(checks, name, ok, detail = "") {
   checks.push({ name, ok, detail });
 
@@ -290,6 +294,25 @@ export async function runLiveSupabaseVerification({ cwd = process.cwd(), env = p
       .from("financial_movements")
       .select("type, amount, source_id")
       .in("source_id", [purchaseId, saleId]);
+    const { data: recentSales } = await primary.client
+      .from("sales")
+      .select("id, total, notes")
+      .eq("user_id", primary.user.id)
+      .order("date", { ascending: false })
+      .limit(12);
+    const { data: dashboardFinances } = await primary.client
+      .from("financial_movements")
+      .select("type, amount, description")
+      .order("date", { ascending: false })
+      .limit(20);
+    const { data: resourceStockView } = await primary.client
+      .from("resource_stock_view")
+      .select("resource_id, current_stock, minimum_stock")
+      .eq("user_id", primary.user.id);
+    const { data: productStockView } = await primary.client
+      .from("product_stock_view")
+      .select("product_id, current_stock, minimum_stock")
+      .eq("user_id", primary.user.id);
     const { data: productionOrder } = await primary.client
       .from("production_orders")
       .select("total_cost, unit_cost")
@@ -308,6 +331,113 @@ export async function runLiveSupabaseVerification({ cwd = process.cwd(), env = p
       `totalCost=${productionOrder?.total_cost ?? "null"},unitCost=${productionOrder?.unit_cost ?? "null"}`
     );
     recordCheck(checks, "financial_movements_created", (financialMovements ?? []).length === 2, `count=${(financialMovements ?? []).length}`);
+
+    const monthlySales = (recentSales ?? []).reduce((total, sale) => total + Number(sale.total), 0);
+    const monthlyIncome = (dashboardFinances ?? [])
+      .filter((movement) => movement.type === "income")
+      .reduce((total, movement) => total + Number(movement.amount), 0);
+    const monthlyExpense = (dashboardFinances ?? [])
+      .filter((movement) => movement.type === "expense")
+      .reduce((total, movement) => total + Number(movement.amount), 0);
+    const stockAlerts = calculateStockAlerts([...(resourceStockView ?? []), ...(productStockView ?? [])]);
+
+    recordCheck(checks, "stock_alerts_are_triggered", stockAlerts === 2, `stockAlerts=${stockAlerts}`);
+    recordCheck(
+      checks,
+      "dashboard_source_metrics_are_consistent",
+      monthlySales === 900 && monthlyIncome === 900 && monthlyExpense === 1000 && monthlyIncome - monthlyExpense === -100,
+      `sales=${monthlySales},income=${monthlyIncome},expense=${monthlyExpense},balance=${monthlyIncome - monthlyExpense}`
+    );
+
+    const { count: salesBeforeOversell } = await primary.client
+      .from("sales")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", primary.user.id)
+      .like("notes", `live-${identity.suffix}-oversell%`);
+
+    const { error: oversellError } = await primary.client.rpc("register_sale", {
+      sale_date: "2026-07-20",
+      sale_notes: `live-${identity.suffix}-oversell`,
+      items: [
+        {
+          product_id: product.id,
+          quantity: 2,
+          unit_price: 300
+        }
+      ]
+    });
+
+    const { count: salesAfterOversell } = await primary.client
+      .from("sales")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", primary.user.id)
+      .like("notes", `live-${identity.suffix}-oversell%`);
+
+    const { data: productMovementsAfterOversell } = await primary.client
+      .from("inventory_movements")
+      .select("quantity_signed")
+      .eq("product_id", product.id);
+
+    const productStockAfterOversell = (productMovementsAfterOversell ?? []).reduce(
+      (total, movement) => total + Number(movement.quantity_signed),
+      0
+    );
+
+    recordCheck(
+      checks,
+      "oversell_is_blocked",
+      Boolean(oversellError) && oversellError.message.includes("INSUFFICIENT_PRODUCT_STOCK"),
+      oversellError?.message ?? "missing INSUFFICIENT_PRODUCT_STOCK"
+    );
+    recordCheck(
+      checks,
+      "failed_sale_rolls_back",
+      (salesBeforeOversell ?? 0) === (salesAfterOversell ?? 0) && productStockAfterOversell === 1,
+      `before=${salesBeforeOversell ?? 0},after=${salesAfterOversell ?? 0},productStock=${productStockAfterOversell}`
+    );
+
+    const { count: productionBeforeFailure } = await primary.client
+      .from("production_orders")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", primary.user.id)
+      .like("notes", `live-${identity.suffix}-extra-production%`);
+
+    const { error: overproductionError } = await primary.client.rpc("register_production", {
+      production_date: "2026-07-20",
+      production_product_id: product.id,
+      production_recipe_id: recipe.id,
+      production_quantity: 2,
+      production_notes: `live-${identity.suffix}-extra-production`
+    });
+
+    const { count: productionAfterFailure } = await primary.client
+      .from("production_orders")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", primary.user.id)
+      .like("notes", `live-${identity.suffix}-extra-production%`);
+
+    const { data: resourceMovementsAfterFailedProduction } = await primary.client
+      .from("inventory_movements")
+      .select("quantity_signed")
+      .eq("resource_id", resource.id);
+
+    const resourceStockAfterFailedProduction = (resourceMovementsAfterFailedProduction ?? []).reduce(
+      (total, movement) => total + Number(movement.quantity_signed),
+      0
+    );
+
+    recordCheck(
+      checks,
+      "overproduction_is_blocked",
+      Boolean(overproductionError) && overproductionError.message.includes("INSUFFICIENT_RESOURCE_STOCK"),
+      overproductionError?.message ?? "missing INSUFFICIENT_RESOURCE_STOCK"
+    );
+    recordCheck(
+      checks,
+      "failed_production_rolls_back",
+      (productionBeforeFailure ?? 0) === (productionAfterFailure ?? 0) && resourceStockAfterFailedProduction === 0,
+      `before=${productionBeforeFailure ?? 0},after=${productionAfterFailure ?? 0},resourceStock=${resourceStockAfterFailedProduction}`
+    );
 
     const { data: crossRead, error: crossReadError } = await secondary.client.from("resources").select("id").eq("id", resource.id);
     if (crossReadError) {

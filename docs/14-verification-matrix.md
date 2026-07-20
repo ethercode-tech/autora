@@ -40,7 +40,11 @@ Estado consolidado el 2026-07-20.
   - evidencia ejecutable en base: `tests/rls/rls-smoke.sql`
 - Verificacion live contra Supabase real:
   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
-  - resultado: 8 checks en verde sobre stock, costos, movimientos economicos, aislamiento RLS y bloqueo de cuenta
+  - resultado: checks en verde sobre stock, costos, movimientos economicos, alertas, metricas fuente de dashboard, aislamiento RLS, bloqueo de cuenta y rollback de fallos operativos
+- Correccion RLS del ciclo comercial admin:
+  - evidencia: `supabase/migrations/202607200004_admin_commercial_rls.sql`
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - cubre: escritura admin sobre `subscriptions` y `payments`
 - Invariantes SQL de stock, costos y movimientos financieros:
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - cubre: bloqueos por stock insuficiente en venta, produccion, consumo y ajustes

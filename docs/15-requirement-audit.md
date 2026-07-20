@@ -144,21 +144,23 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 6. No se permite vender o producir sin stock suficiente.
    - evidencia actual: pruebas de invariantes SQL y mensajes operativos
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` para cuenta bloqueada y reglas operativas
-   - estado: parcial, falta evidencia live especifica de oversell o sobreproduccion rechazada
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` con oversell y sobreproduccion rechazadas
+   - estado: verificado por API real
 7. Movimientos economicos correctos.
    - evidencia actual: pruebas declarativas y metricas dashboard
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
    - estado: verificado por API real para compra y venta
 8. Alertas en el momento adecuado.
    - evidencia actual: calculo de stock y dashboard
-   - estado: parcial
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real
 9. Calculos de costos reproducibles.
    - evidencia actual: pruebas unitarias y persistencia en produccion
    - estado: cubierto
 10. Dashboard refleja datos reales.
    - evidencia actual: agregadores probados
-   - estado: parcial, falta E2E con persistencia real
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` sobre ventas, ingresos, egresos, saldo y alertas
+   - estado: verificado en la fuente real de datos; falta solo evidencia E2E persistente desde UI
 11. Cuentas bloqueadas no pueden operar.
    - evidencia actual: guardas y pruebas de estado
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
@@ -166,12 +168,13 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - estado: verificado por API real
 12. Administracion del ciclo comercial.
    - evidencia actual: panel admin, acciones y pruebas de transicion comercial
-   - estado: parcial
+   - evidencia adicional: `supabase/migrations/202607200004_admin_commercial_rls.sql`
+   - estado: parcial, pendiente de reaplicar migracion al proyecto Supabase y verificar el flujo live de admin
 13. Operaciones criticas transaccionales.
    - evidencia actual: RPC SQL atomicas
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
-   - estado: parcial, falta evidencia live explicita de rollback sobre una operacion fallida en la misma corrida
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` con rollback comprobado en venta y produccion fallidas
+   - estado: verificado por API real
 14. Flujos principales con pruebas automatizadas.
    - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
    - evidencia ejecutada el 2026-07-20: `22 passed`, `1 skipped` en Playwright

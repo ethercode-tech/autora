@@ -10,6 +10,10 @@ const productionCostsMigration = readFileSync(
   join(process.cwd(), "supabase", "migrations", "202607200003_production_costs.sql"),
   "utf8"
 );
+const adminCommercialRlsMigration = readFileSync(
+  join(process.cwd(), "supabase", "migrations", "202607200004_admin_commercial_rls.sql"),
+  "utf8"
+);
 
 describe("RLS migration coverage", () => {
   it("enables row level security on core operational tables", () => {
@@ -101,5 +105,14 @@ describe("RLS migration coverage", () => {
     for (const snippet of requiredSnippets) {
       expect(productionCostsMigration).toContain(snippet);
     }
+  });
+
+  it("grants admin write access required by the commercial cycle", () => {
+    expect(adminCommercialRlsMigration).toContain('create policy "subscriptions_admin_write"');
+    expect(adminCommercialRlsMigration).toContain("on public.subscriptions");
+    expect(adminCommercialRlsMigration).toContain('create policy "payments_admin_write"');
+    expect(adminCommercialRlsMigration).toContain("on public.payments");
+    expect(adminCommercialRlsMigration).toContain("using (public.is_admin())");
+    expect(adminCommercialRlsMigration).toContain("with check (public.is_admin())");
   });
 });
