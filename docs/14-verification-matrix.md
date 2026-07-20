@@ -24,6 +24,8 @@ Estado consolidado el 2026-07-20.
   - evidencia: `src/features/pricing/lib/calculate-price.test.ts`
 - Stock y alertas:
   - evidencia: `src/features/inventory/lib/calculate-stock.test.ts`
+- Dashboard y movimientos economicos:
+  - evidencia: `src/features/dashboard/lib/build-dashboard-metrics.test.ts`
 - Conversion de packs:
   - evidencia: `src/features/inventory/lib/pack-pricing.test.ts`
 - RLS y frontera SaaS declarativa:
