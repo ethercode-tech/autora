@@ -31,7 +31,7 @@ Estado consolidado el 2026-07-20.
   - ventas.
   - calculadora de costos.
   - resultados y movimientos economicos.
-  - exportacion JSON.
+  - exportacion JSON y CSV.
   - observabilidad con logs estructurados en acciones criticas.
 - Administracion:
   - revision de solicitudes.
@@ -81,3 +81,4 @@ Estado consolidado el 2026-07-20.
 - Verificacion automatizada de RLS multiusuario pendiente.
 - Edicion avanzada de recetas y multiples items en un solo formulario pendiente.
 - Exportacion solo en JSON por ahora.
+- Exportacion CSV agregada; faltan formatos adicionales si se requieren reportes mas especializados.

@@ -42,7 +42,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - stock automatico de recursos y productos
   - movimientos economicos
   - dashboard
-  - exportacion JSON
+  - exportacion JSON y CSV
   - gestion de suscripcion
   - panel administrativo
   - gestion de usuarios y cuentas
@@ -56,7 +56,6 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `src/app/admin/page.tsx`
   - `supabase/migrations/202607200001_initial_schema.sql`
 - Gap:
-  - exportacion sigue solo en JSON
   - flujo E2E integrado todavia no probado de punta a punta
 
 ## Objetivo tecnico

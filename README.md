@@ -96,7 +96,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - ventas
   - costos
   - dashboard
-  - exportacion
+  - exportacion JSON y CSV
 - Flujo comercial base cubierto:
   - planes
   - suscripciones

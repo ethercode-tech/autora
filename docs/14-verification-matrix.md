@@ -21,6 +21,7 @@ Estado consolidado el 2026-07-20.
 - Exportacion:
   - evidencia: `src/server/queries/export.test.ts`
   - evidencia: `tests/e2e/export-route.spec.ts`
+  - cubre: descarga JSON y CSV desde la misma ruta de exportacion
 - Ciclo comercial y estados de cuenta:
   - evidencia: `src/features/commercial/lib/account-commercial-state.test.ts`
   - evidencia adicional: `src/features/commercial/lib/payment-subscription-selection.test.ts`

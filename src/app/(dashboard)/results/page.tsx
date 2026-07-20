@@ -17,12 +17,20 @@ export default async function ResultsPage() {
         title="Stock y movimientos economicos"
         description="Este agrupador concentra stock de recursos, stock de productos, ingresos, egresos, saldo e historial financiero."
         actions={
-          <a
-            className="inline-flex items-center rounded-2xl bg-autora-burgundy px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-            href="/api/export"
-          >
-            Exportar JSON
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a
+              className="inline-flex items-center rounded-2xl bg-autora-burgundy px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              href="/api/export"
+            >
+              Exportar JSON
+            </a>
+            <a
+              className="inline-flex items-center rounded-2xl border border-autora-burgundy px-4 py-2 text-sm font-semibold text-autora-burgundy transition-opacity hover:opacity-90"
+              href="/api/export?format=csv"
+            >
+              Exportar CSV
+            </a>
+          </div>
         }
       />
       <div className="grid gap-4 xl:grid-cols-2">
