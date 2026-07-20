@@ -1,0 +1,52 @@
+# Arbol de conocimiento
+
+Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding para cualquier agente o ingeniero nuevo.
+
+## Lectura minima por objetivo
+
+### Si vas a definir producto o alcance
+
+1. [01-product-context.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/01-product-context.md)
+2. [02-domain-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/02-domain-map.md)
+3. [11-open-decisions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/11-open-decisions.md)
+
+### Si vas a modelar backend o base de datos
+
+1. [03-system-architecture.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/03-system-architecture.md)
+2. [04-data-model.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/04-data-model.md)
+3. [05-business-rules.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/05-business-rules.md)
+4. [06-security-rls.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/06-security-rls.md)
+5. [07-critical-flows.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/07-critical-flows.md)
+
+### Si vas a construir frontend o UX
+
+1. [01-product-context.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/01-product-context.md)
+2. [02-domain-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/02-domain-map.md)
+3. [07-critical-flows.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/07-critical-flows.md)
+4. [12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
+
+### Si vas a asegurar calidad
+
+1. [05-business-rules.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/05-business-rules.md)
+2. [06-security-rls.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/06-security-rls.md)
+3. [07-critical-flows.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/07-critical-flows.md)
+4. [09-testing-strategy.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/09-testing-strategy.md)
+
+## Mapa rapido
+
+- Producto: [01-product-context.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/01-product-context.md)
+- Modulos funcionales: [02-domain-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/02-domain-map.md)
+- Arquitectura objetivo: [03-system-architecture.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/03-system-architecture.md)
+- Modelo de datos: [04-data-model.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/04-data-model.md)
+- Reglas de negocio: [05-business-rules.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/05-business-rules.md)
+- Seguridad y RLS: [06-security-rls.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/06-security-rls.md)
+- Flujos criticos: [07-critical-flows.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/07-critical-flows.md)
+- Dependencias entre modulos: [08-dependency-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/08-dependency-matrix.md)
+- Estrategia de pruebas: [09-testing-strategy.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/09-testing-strategy.md)
+- Roadmap tecnico: [10-implementation-roadmap.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/10-implementation-roadmap.md)
+- Decisiones pendientes: [11-open-decisions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/11-open-decisions.md)
+- Convenciones de repositorio: [12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
+
+## Regla operativa
+
+Si un agente necesita contexto adicional, primero debe ampliar desde este arbol. Solo despues conviene ir a codigo o migraciones puntuales.
