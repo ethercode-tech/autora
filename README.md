@@ -7,7 +7,7 @@ Estado del repositorio al 2026-07-20:
 - Base documental y arbol de conocimiento disponibles.
 - MVP funcional implementado sobre Next.js + Supabase.
 - Panel operativo, panel administrativo, autenticacion y migraciones presentes.
-- Recuperacion de contrasena y exportacion JSON incluidas.
+- Recuperacion de contrasena y exportacion JSON/CSV incluidas.
 - Tests unitarios activos, smokes SQL preparados y suite E2E local validada.
 
 ## Punto de entrada recomendado
@@ -116,4 +116,4 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 - Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
 - Reaplicar en la base remota los fixes `202607200004_admin_commercial_rls.sql` y `202607200005_fix_is_admin_recursion.sql`, luego rerun de `pnpm test:supabase-live`.
 - Mejoras de ergonomia para recetas con multiples insumos.
-- Opciones de exportacion adicionales a JSON.
+- Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

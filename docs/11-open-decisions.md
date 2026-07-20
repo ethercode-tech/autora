@@ -9,9 +9,9 @@
 
 ## Media prioridad
 
-- Exportacion solo JSON o tambien CSV por modulo.
 - Notificaciones por email para aprobacion, bloqueo y vencimiento.
 - Politica exacta de acceso para `approved_pending_payment` y `cancelled`.
+- Alcance futuro de exportacion despues de JSON/CSV: por modulo, PDF o formatos contables.
 
 ## Baja prioridad
 
