@@ -29,7 +29,6 @@ export const subscriptionSchema = z.object({
 });
 
 export const paymentSchema = z.object({
-  userId: z.string().uuid("Selecciona una cuenta valida."),
   subscriptionId: z.string().uuid("Selecciona una suscripcion valida."),
   amount: z.coerce.number().positive("El importe debe ser mayor a cero."),
   currency: z.string().min(3).max(3),

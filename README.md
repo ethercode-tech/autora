@@ -101,6 +101,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - planes
   - suscripciones
   - pagos manuales
+  - resolucion automatica de cuenta desde la suscripcion al registrar pagos
   - bloqueo operativo por estado de cuenta
   - auditoria administrativa
 - Evidencia automatizada actual:

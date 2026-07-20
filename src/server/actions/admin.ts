@@ -249,7 +249,6 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
 
 export async function createPayment(_: ActionResult, formData: FormData): Promise<ActionResult> {
   const parsed = paymentSchema.safeParse({
-    userId: formData.get("userId"),
     subscriptionId: formData.get("subscriptionId"),
     amount: formData.get("amount"),
     currency: formData.get("currency"),
@@ -267,8 +266,22 @@ export async function createPayment(_: ActionResult, formData: FormData): Promis
 
   await requireAdminSession();
   const supabase = await createSupabaseServerClient();
+  const { data: subscription, error: subscriptionLookupError } = await supabase
+    .from("subscriptions")
+    .select("id, user_id")
+    .eq("id", parsed.data.subscriptionId)
+    .maybeSingle();
+
+  if (subscriptionLookupError || !subscription) {
+    writeStructuredLog("error", "admin.payment.subscription_lookup_failed", {
+      message: subscriptionLookupError?.message ?? "missing subscription",
+      subscriptionId: parsed.data.subscriptionId
+    });
+    return { success: false, message: "No pudimos resolver la cuenta asociada a la suscripcion." };
+  }
+
   const { error } = await supabase.from("payments").insert({
-    user_id: parsed.data.userId,
+    user_id: subscription.user_id,
     subscription_id: parsed.data.subscriptionId,
     amount: parsed.data.amount,
     currency: parsed.data.currency.toUpperCase(),
@@ -281,16 +294,16 @@ export async function createPayment(_: ActionResult, formData: FormData): Promis
   if (error) {
     writeStructuredLog("error", "admin.payment.persist_failed", {
       message: error.message,
-      userId: parsed.data.userId,
+      userId: subscription.user_id,
       subscriptionId: parsed.data.subscriptionId
     });
     return { success: false, message: "No pudimos registrar el pago." };
   }
 
-  await syncCommercialStateAfterPayment(parsed.data.userId, parsed.data.subscriptionId, parsed.data.status);
+  await syncCommercialStateAfterPayment(subscription.user_id, parsed.data.subscriptionId, parsed.data.status);
 
   await logAdminAudit("payment_created", "payment", null, null, {
-    user_id: parsed.data.userId,
+    user_id: subscription.user_id,
     subscription_id: parsed.data.subscriptionId,
     status: parsed.data.status,
     amount: parsed.data.amount
@@ -298,7 +311,7 @@ export async function createPayment(_: ActionResult, formData: FormData): Promis
 
   revalidatePath("/admin");
   writeStructuredLog("info", "admin.payment.created", {
-    userId: parsed.data.userId,
+    userId: subscription.user_id,
     subscriptionId: parsed.data.subscriptionId,
     status: parsed.data.status
   });

@@ -23,6 +23,9 @@ Estado consolidado el 2026-07-20.
   - evidencia: `tests/e2e/export-route.spec.ts`
 - Ciclo comercial y estados de cuenta:
   - evidencia: `src/features/commercial/lib/account-commercial-state.test.ts`
+  - evidencia adicional: `src/features/commercial/lib/payment-subscription-selection.test.ts`
+  - evidencia adicional: `src/components/forms/payment-form.test.tsx`
+  - evidencia adicional: `src/app/admin/page.test.tsx`
 - Metricas globales de administracion:
   - evidencia: `src/features/admin/lib/build-admin-dashboard-metrics.test.ts`
 - Calculo de costos:
@@ -88,6 +91,7 @@ Estado consolidado el 2026-07-20.
 - No hay todavia E2E del flujo completo de fabricante con persistencia real.
 - No hay todavia E2E del flujo de reventa con persistencia real.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
+ - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
  - La verificacion live del 2026-07-20 detecto que el proyecto Supabase remoto todavia responde `stack depth limit exceeded` en la aprobacion admin de solicitudes; eso confirma que la correccion de `public.is_admin()` aun debe aplicarse en la base remota.
  - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.
  - Falta correr el smoke SQL via Postgres directo si se quiere evidencia adicional a nivel `psql`.

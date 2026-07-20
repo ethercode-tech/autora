@@ -170,8 +170,12 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - estado: verificado por API real
 12. Administracion del ciclo comercial.
    - evidencia actual: panel admin, acciones y pruebas de transicion comercial
+   - evidencia adicional: `src/app/admin/page.test.tsx`
+   - evidencia adicional: `src/components/forms/payment-form.test.tsx`
+   - evidencia adicional: `src/features/commercial/lib/payment-subscription-selection.test.ts`
    - evidencia adicional: `supabase/migrations/202607200004_admin_commercial_rls.sql`
    - evidencia adicional: `supabase/migrations/202607200005_fix_is_admin_recursion.sql`
+   - evidencia de implementacion: `src/server/actions/admin.ts` deriva `user_id` del pago desde la suscripcion persistida
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` detecto `stack depth limit exceeded` al aprobar solicitudes admin en la base remota previa al fix
    - estado: parcial, el repo ya corrige escrituras admin y recursion de `public.is_admin()`, pero falta aplicar ambas migraciones al proyecto Supabase y revalidar el flujo live
 13. Operaciones criticas transaccionales.
