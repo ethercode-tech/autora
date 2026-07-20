@@ -1,28 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { formatPurchaseOrSaleError } from "@/features/operations/lib/operation-feedback";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { purchaseSchema, saleSchema } from "@/lib/validation/operations";
 import type { ActionResult } from "@/server/actions/auth";
-
-function formatSupabaseError(message: string | null) {
-  switch (message) {
-    case "ACCOUNT_NOT_ACTIVE":
-      return "La cuenta debe estar activa para operar.";
-    case "EMPTY_PURCHASE":
-      return "La compra necesita al menos un item.";
-    case "INVALID_PURCHASE_ITEM":
-      return "La compra tiene cantidades o precios invalidos.";
-    case "EMPTY_SALE":
-      return "La venta necesita al menos un item.";
-    case "INVALID_SALE_ITEM":
-      return "La venta tiene cantidades o precios invalidos.";
-    case "INSUFFICIENT_PRODUCT_STOCK":
-      return "No hay stock suficiente para registrar la venta.";
-    default:
-      return "No pudimos registrar la operacion.";
-  }
-}
 
 export async function createPurchase(_: ActionResult, formData: FormData): Promise<ActionResult> {
   const parsed = purchaseSchema.safeParse({
@@ -62,7 +44,7 @@ export async function createPurchase(_: ActionResult, formData: FormData): Promi
   });
 
   if (error) {
-    return { success: false, message: formatSupabaseError(error.message) };
+    return { success: false, message: formatPurchaseOrSaleError(error.message) };
   }
 
   revalidatePath("/purchases");
@@ -99,7 +81,7 @@ export async function createSale(_: ActionResult, formData: FormData): Promise<A
   });
 
   if (error) {
-    return { success: false, message: formatSupabaseError(error.message) };
+    return { success: false, message: formatPurchaseOrSaleError(error.message) };
   }
 
   revalidatePath("/sales");

@@ -26,6 +26,8 @@ Estado consolidado el 2026-07-20.
   - evidencia: `src/features/pricing/lib/calculate-price.test.ts`
 - Stock y alertas:
   - evidencia: `src/features/inventory/lib/calculate-stock.test.ts`
+- Errores operativos y mensajes de bloqueo:
+  - evidencia: `src/features/operations/lib/operation-feedback.test.ts`
 - Dashboard y movimientos economicos:
   - evidencia: `src/features/dashboard/lib/build-dashboard-metrics.test.ts`
 - Conversion de packs:

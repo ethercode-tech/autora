@@ -1,25 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { formatProductionError } from "@/features/operations/lib/operation-feedback";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { recipeSchema } from "@/lib/validation/catalog";
 import { productionSchema } from "@/lib/validation/production";
 import type { ActionResult } from "@/server/actions/auth";
-
-function formatProductionError(message: string | null) {
-  switch (message) {
-    case "ACCOUNT_NOT_ACTIVE":
-      return "La cuenta debe estar activa para producir.";
-    case "INVALID_PRODUCTION_QUANTITY":
-      return "La cantidad a producir debe ser mayor a cero.";
-    case "INSUFFICIENT_RESOURCE_STOCK":
-      return "No hay insumos suficientes para registrar la produccion.";
-    case "MISSING_RESOURCE_COST":
-      return "Falta costo historico de al menos un insumo. Registra compras antes de producir.";
-    default:
-      return "No pudimos registrar la produccion.";
-  }
-}
 
 export async function createRecipe(_: ActionResult, formData: FormData): Promise<ActionResult> {
   const parsed = recipeSchema.safeParse({

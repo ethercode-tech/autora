@@ -1,22 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { formatConsumptionError } from "@/features/operations/lib/operation-feedback";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { resourceConsumptionSchema } from "@/lib/validation/consumption";
 import type { ActionResult } from "@/server/actions/auth";
-
-function formatConsumptionError(message: string | null) {
-  switch (message) {
-    case "ACCOUNT_NOT_ACTIVE":
-      return "La cuenta debe estar activa para registrar consumos.";
-    case "INVALID_CONSUMPTION_QUANTITY":
-      return "La cantidad consumida debe ser mayor a cero.";
-    case "INSUFFICIENT_RESOURCE_STOCK":
-      return "No hay stock suficiente para registrar este consumo.";
-    default:
-      return "No pudimos registrar el consumo.";
-  }
-}
 
 export async function createResourceConsumption(_: ActionResult, formData: FormData): Promise<ActionResult> {
   const parsed = resourceConsumptionSchema.safeParse({
