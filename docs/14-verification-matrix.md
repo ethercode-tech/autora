@@ -40,6 +40,12 @@ Estado consolidado el 2026-07-20.
   - cubre: bloqueos por stock insuficiente en venta, produccion, consumo y ajustes
   - cubre: alta obligatoria de `financial_movements` para compras y ventas
   - cubre: persistencia de `total_cost` y `unit_cost` en produccion
+- Flujo integrado SQL sobre base real:
+  - evidencia ejecutable en base: `tests/integration/operational-flow-smoke.sql`
+  - cubre: compra, consumo, produccion, venta, rollback de venta invalida y bloqueo por cuenta no activa
+- Smoke multiusuario de aislamiento:
+  - evidencia ejecutable en base: `tests/rls/multiuser-smoke.sql`
+  - cubre: no lectura cruzada, no escritura con `user_id` ajeno y no modificacion cruzada
 
 ## Comandos de verificacion
 
@@ -53,6 +59,10 @@ Estado consolidado el 2026-07-20.
   - `pnpm test:e2e`
 - Smoke RLS en Supabase:
   - ejecutar `tests/rls/rls-smoke.sql` contra la base del entorno objetivo.
+- Smoke multiusuario en Supabase:
+  - ejecutar `tests/rls/multiuser-smoke.sql` contra la base del entorno objetivo.
+- Smoke operativo integrado en Supabase:
+  - ejecutar `tests/integration/operational-flow-smoke.sql` contra la base del entorno objetivo.
 
 ## Gaps todavia abiertos
 

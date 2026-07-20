@@ -18,11 +18,18 @@ Cubrir como minimo:
 Cubrir como minimo:
 
 - `register_purchase`,
+- `register_resource_consumption`,
 - `register_production`,
 - `register_sale`,
 - `adjust_inventory`,
 - reversiones,
 - bloqueo por cuenta no activa.
+
+Artefactos ejecutables preparados:
+
+- `tests/integration/operational-flow-smoke.sql`
+- `tests/rls/rls-smoke.sql`
+- `tests/rls/multiuser-smoke.sql`
 
 ## Seguridad y RLS
 

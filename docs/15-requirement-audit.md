@@ -118,21 +118,27 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 
 1. Datos aislados por usuaria.
    - evidencia actual: RLS declarativa y smoke SQL preparado
+   - evidencia ejecutable: `tests/rls/multiuser-smoke.sql`
    - estado: parcial, falta prueba real multiusuario
 2. Compras aumentan stock.
    - evidencia actual: test declarativo de migracion
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta ejecucion integrada real
 3. Consumos disminuyen stock.
    - evidencia actual: RPC y prueba declarativa
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta ejecucion integrada real
 4. Produccion descuenta recursos y suma productos.
    - evidencia actual: RPC con costo y prueba declarativa
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta ejecucion integrada real
 5. Ventas descuentan productos.
    - evidencia actual: RPC y prueba declarativa
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta ejecucion integrada real
 6. No se permite vender o producir sin stock suficiente.
    - evidencia actual: pruebas de invariantes SQL y mensajes operativos
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta corrida real contra base
 7. Movimientos economicos correctos.
    - evidencia actual: pruebas declarativas y metricas dashboard
@@ -148,12 +154,14 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - estado: parcial, falta E2E con persistencia real
 11. Cuentas bloqueadas no pueden operar.
    - evidencia actual: guardas y pruebas de estado
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial
 12. Administracion del ciclo comercial.
    - evidencia actual: panel admin, acciones y pruebas de transicion comercial
    - estado: parcial
 13. Operaciones criticas transaccionales.
    - evidencia actual: RPC SQL atomicas
+   - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta smoke real de rollback
 14. Flujos principales con pruebas automatizadas.
    - evidencia actual: unitarias, declarativas y E2E preparados
