@@ -6,10 +6,10 @@ import { requireAdminSession } from "@/lib/auth/session";
 
 export default async function AdminLayout({ children }: PropsWithChildren) {
   if (!hasPublicSupabaseEnv()) {
-    return <AppShell><ConfigurationState /></AppShell>;
+    return <AppShell mode="admin"><ConfigurationState /></AppShell>;
   }
 
   await requireAdminSession();
 
-  return <AppShell>{children}</AppShell>;
+  return <AppShell mode="admin">{children}</AppShell>;
 }

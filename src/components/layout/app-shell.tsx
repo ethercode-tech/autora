@@ -18,19 +18,32 @@ const dashboardLinks = [
   { href: "/admin", label: "Administracion", icon: Shield }
 ] as const;
 
-export function AppShell({ children }: PropsWithChildren) {
+const adminLinks = [{ href: "/admin", label: "Administracion", icon: Shield }] as const;
+
+type AppShellProps = PropsWithChildren<{
+  mode?: "operations" | "admin";
+}>;
+
+export function AppShell({ children, mode = "operations" }: AppShellProps) {
+  const shellTitle = mode === "admin" ? "Panel administrativo" : "Panel operativo";
+  const shellDescription =
+    mode === "admin"
+      ? "Gestion interna de cuentas, solicitudes, planes, suscripciones y pagos."
+      : "Gestion simple con inventario, costos y trazabilidad.";
+  const navigationLinks = mode === "admin" ? adminLinks : dashboardLinks;
+
   return (
     <div className="min-h-screen bg-autora-cream text-autora-ink">
       <div className="mx-auto grid min-h-screen max-w-7xl lg:grid-cols-[260px_1fr]">
         <aside className="border-b border-autora-sand bg-white px-5 py-6 lg:border-b-0 lg:border-r">
           <div className="mb-8">
             <p className="text-xs uppercase tracking-[0.3em] text-autora-sage">Autora</p>
-            <h1 className="mt-2 text-2xl font-semibold">Panel operativo</h1>
-            <p className="mt-2 text-sm text-autora-ink/70">Gestion simple con inventario, costos y trazabilidad.</p>
+            <h1 className="mt-2 text-2xl font-semibold">{shellTitle}</h1>
+            <p className="mt-2 text-sm text-autora-ink/70">{shellDescription}</p>
           </div>
 
           <nav className="space-y-1">
-            {dashboardLinks.map(({ href, label, icon: Icon }) => (
+            {navigationLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}

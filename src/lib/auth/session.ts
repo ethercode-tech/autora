@@ -4,6 +4,20 @@ import { isOperationalAccountStatus } from "@/lib/auth/account-status";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+type AdminUserRow = Pick<Database["public"]["Tables"]["admin_users"]["Row"], "user_id" | "active" | "role">;
+
+async function getAdminUser(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  userId: string
+): Promise<AdminUserRow | null> {
+  const { data: adminUser } = await supabase
+    .from("admin_users")
+    .select("user_id, active, role")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  return adminUser as AdminUserRow | null;
+}
 
 export async function requireUserSession(): Promise<{
   supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
@@ -33,6 +47,11 @@ export async function requireUserSession(): Promise<{
 
 export async function requireActiveAccount() {
   const session = await requireUserSession();
+  const adminUser = await getAdminUser(session.supabase, session.user.id);
+
+  if (adminUser?.active === true) {
+    redirect("/admin");
+  }
 
   if (!session.profile || !isOperationalAccountStatus(session.profile.account_status)) {
     redirect("/account-status");
@@ -43,7 +62,7 @@ export async function requireActiveAccount() {
 
 export async function requireAdminSession() {
   const session = await requireUserSession();
-  const { data: adminUser } = await session.supabase.from("admin_users").select("user_id, active").eq("user_id", session.user.id).maybeSingle();
+  const adminUser = await getAdminUser(session.supabase, session.user.id);
 
   if (!adminUser || adminUser.active !== true) {
     redirect("/dashboard");
