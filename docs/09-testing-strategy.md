@@ -72,6 +72,8 @@ Cobertura E2E actualmente ejecutada:
 - `pnpm test:e2e:live` para correr fabricante + reventa con build productivo previo
 - `pnpm test:e2e:live:manufacturer` para aislar fabricante
 - `pnpm test:e2e:live:reseller` para aislar reventa
+- `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:manufacturer` para validar una URL desplegada real sin levantar servidor local
+- `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:reseller` para validar el segundo flujo principal sobre el deployment activo
 - `pnpm verify:baseline` para consolidar lint, typecheck, Vitest y build productivo en una sola pasada
 - `pnpm test:release:check` para consolidar readiness de live E2E, SQL smoke y bloqueos de deploy del workspace
 
@@ -83,6 +85,8 @@ Resultado local mas reciente:
 - ejecucion live opt-in del flujo reventa el 2026-07-20: `1 passed`
 - readiness live del 2026-07-20: `pnpm test:e2e:live:check` en verde
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
+- flujo `manufacturer` contra `https://autoracontable.vercel.app` el 2026-07-20: `1 passed`
+- flujo `reseller` contra `https://autoracontable.vercel.app` el 2026-07-20: `1 passed`
 - auditoria de release del 2026-07-20: `pnpm test:release:check` devolvio `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la URL configurada para SQL directo no usa esquema Postgres valido
 - baseline del 2026-07-20: `pnpm verify:baseline` en verde con lint, typecheck, `102 passed` en Vitest y build productivo exitoso
 - tests de helpers operativos del 2026-07-20: `4 passed` en `check-live-e2e-readiness.test.ts` y `check-release-readiness.test.ts`
@@ -101,6 +105,7 @@ Resultado local mas reciente:
 - Resultado mas reciente:
   - 22 checks live en verde el 2026-07-20
   - los fixes de `supabase/migrations/202607200004_admin_commercial_rls.sql` y `supabase/migrations/202607200005_fix_is_admin_recursion.sql` ya quedaron reflejados en la verificacion API real
+  - la URL productiva `https://autoracontable.vercel.app` ya quedo validada con ambos flujos principales usando Playwright live y `E2E_EXTERNAL_BASE_URL`
 - Para aplicar fixes sin Supabase CLI:
   - `npm run db:apply:admin-fixes`
   - requiere `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`

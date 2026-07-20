@@ -54,10 +54,11 @@ describe("run live e2e script helpers", () => {
   });
 
   it("preserves an explicit external base url override", () => {
-    expect(
-      liveE2ERunner.buildLiveE2ERunEnv({
+    expect(liveE2ERunner.buildLiveE2ERunEnv({
         E2E_EXTERNAL_BASE_URL: "https://autoracontable.vercel.app"
-      }).E2E_EXTERNAL_BASE_URL
-    ).toBe("https://autoracontable.vercel.app");
+      })).toMatchObject({
+      E2E_EXTERNAL_BASE_URL: "https://autoracontable.vercel.app",
+      PLAYWRIGHT_TEST_TIMEOUT: "120000"
+    });
   });
 });

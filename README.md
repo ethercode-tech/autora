@@ -8,7 +8,8 @@ Estado del repositorio al 2026-07-20:
 - MVP funcional implementado sobre Next.js + Supabase.
 - Panel operativo, panel administrativo, autenticacion y migraciones presentes.
 - Recuperacion de contrasena y exportacion JSON/CSV incluidas.
-- Tests unitarios activos, readiness de release en verde y suite E2E local validada.
+- Tests unitarios activos, deploy productivo verificado y suite E2E local validada.
+  - nota: el readiness de release ya no bloquea por hosting, pero sigue bloqueado por SQL directo porque `SUPABASE_DB_URL` no es una URI Postgres valida.
 
 ## Punto de entrada recomendado
 
@@ -93,6 +94,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
    - ambos flujos: `pnpm test:e2e:live`
    - solo fabricante: `pnpm test:e2e:live:manufacturer`
    - solo reventa: `pnpm test:e2e:live:reseller`
+   - contra la URL productiva desplegada: define `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app` antes de correr cualquiera de esos comandos
 9. Para auditar readiness de release del repositorio:
    - `pnpm test:release:check`
    - al 2026-07-20 reporta `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la variable configurada para SQL directo no usa esquema `postgres://` o `postgresql://`
@@ -125,17 +127,19 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - E2E live opt-in de fabricante ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - E2E live opt-in de reventa ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
+  - flujo `manufacturer` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`
+  - flujo `reseller` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`
   - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con bloqueo explicito por URL directa invalida para `psql`
   - baseline reproducible `pnpm verify:baseline` ejecutado el 2026-07-20 con lint, typecheck, suite Vitest y build productivo en verde
   - target de hosting del workspace configurado en `.openai/hosting.json` el 2026-07-20
   - build productivo local ejecutado el 2026-07-20 con `pnpm build`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde
+  - deployment productivo verificado el 2026-07-20 en `https://autoracontable.vercel.app`, incluyendo redireccion a login para `/dashboard` y `/admin` sin fallback de variables faltantes
 
 ## Pendientes principales
 
 - Reemplazar `SUPABASE_DB_URL` o `DATABASE_URL` por una URI Postgres real (`postgres://` o `postgresql://`) para poder correr smokes SQL directos y `db:apply`.
   - ejemplo esperado por el preflight actual: `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`
 - Ejecutar smokes SQL multiusuario y operativos contra un proyecto Supabase activo por `psql` una vez corregida esa configuracion.
-- Publicar una version productiva real usando el target ya configurado en `.openai/hosting.json`.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

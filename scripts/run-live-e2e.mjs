@@ -31,6 +31,7 @@ export function buildLiveE2ERunEnv(resolvedEnv) {
 
   if (resolvedEnv.E2E_EXTERNAL_BASE_URL) {
     runEnv.E2E_EXTERNAL_BASE_URL = resolvedEnv.E2E_EXTERNAL_BASE_URL;
+    runEnv.PLAYWRIGHT_TEST_TIMEOUT = resolvedEnv.PLAYWRIGHT_TEST_TIMEOUT || "120000";
   }
 
   return runEnv;

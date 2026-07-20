@@ -27,9 +27,11 @@ Estado consolidado el 2026-07-20.
 - E2E live fabricante con persistencia real:
   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts`
   - cubre: solicitud de acceso, aprobacion, alta controlada, activacion, onboarding, unidad, recurso, producto, receta, compra, produccion, venta, dashboard y persistencia real
+  - evidencia adicional ejecutada el 2026-07-20: `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:manufacturer`
 - E2E live reventa con persistencia real:
   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-reseller-flow.spec.ts`
   - cubre: solicitud de acceso, aprobacion, alta controlada, activacion, onboarding reseller, alta de producto de reventa, compra, venta, dashboard, persistencia real y bloqueo explicito de consumos, produccion y pricing
+  - evidencia adicional ejecutada el 2026-07-20: `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:reseller`
 - Ciclo comercial y estados de cuenta:
   - evidencia: `src/features/commercial/lib/account-commercial-state.test.ts`
   - evidencia adicional: `src/features/commercial/lib/payment-subscription-selection.test.ts`
@@ -102,6 +104,7 @@ Estado consolidado el 2026-07-20.
   - `pnpm test:e2e:live:check`
   - `pnpm test:e2e:live`
   - variantes: `pnpm test:e2e:live:manufacturer`, `pnpm test:e2e:live:reseller`
+  - contra deployment activo: definir `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app`
 - Smoke RLS en Supabase:
   - ejecutar `tests/rls/rls-smoke.sql` contra la base del entorno objetivo.
 - Smoke multiusuario en Supabase:
@@ -131,11 +134,14 @@ Estado consolidado el 2026-07-20.
 - El build productivo local paso el 2026-07-20 con `pnpm build`.
  - El readiness de live E2E paso el 2026-07-20 con `pnpm test:e2e:live:check`.
  - El runner unificado de live E2E paso el 2026-07-20 con `pnpm test:e2e:live`, incluyendo build productivo y `2 passed`.
+ - El flujo `manufacturer` paso el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`.
+ - El flujo `reseller` paso el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`.
  - La auditoria de release del 2026-07-20 reporto `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la URL configurada para SQL directo no usa esquema Postgres valido.
  - Los tests de helpers operativos pasaron el 2026-07-20 con `4 passed`.
  - Los tests del runner live pasaron el 2026-07-20 con `6 passed`.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
  - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows, y tambien detecta que la URL directa actual es invalida para Postgres.
- - Falta corregir `SUPABASE_DB_URL` o `DATABASE_URL` y luego correr el smoke SQL completo via Postgres directo si se quiere evidencia adicional a nivel `psql`.
+- Falta corregir `SUPABASE_DB_URL` o `DATABASE_URL` y luego correr el smoke SQL completo via Postgres directo si se quiere evidencia adicional a nivel `psql`.
 - La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, y los flujos live de fabricante y reventa ya quedaron verificados con persistencia real.
+- El deployment activo ya no muestra el fallback de variables faltantes en `/dashboard` ni en `/admin`; ambas rutas resuelven a login cuando no hay sesion.

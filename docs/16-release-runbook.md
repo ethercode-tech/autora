@@ -42,6 +42,9 @@ Dejar claro:
    - o variantes:
      - `pnpm test:e2e:live:manufacturer`
      - `pnpm test:e2e:live:reseller`
+   - para validar la URL productiva desplegada:
+     - `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:manufacturer`
+     - `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:reseller`
 4. Verificacion live por API real
    - `pnpm test:supabase-live`
 5. Smokes SQL directos por Postgres
@@ -81,6 +84,8 @@ Sirve para demostrar:
 - build utilizable en modo productivo local,
 - integracion entre UI, server actions y Supabase.
 
+Si defines `E2E_EXTERNAL_BASE_URL`, el runner usa esa URL desplegada y omite el `next build` local.
+
 ### `pnpm test:sql-smoke:check`
 
 Valida:
@@ -116,7 +121,6 @@ Eso significa que el repo ya puede demostrar build productivo, flujos live reale
 
 - una URI Postgres valida para `SUPABASE_DB_URL` o `DATABASE_URL`
 - una ejecucion completa y documentada de `pnpm test:sql-smoke`
-- una version productiva publicada sobre el target gestionado del workspace
 
 ## Bloqueos vigentes al 2026-07-20
 
@@ -124,10 +128,11 @@ Eso significa que el repo ya puede demostrar build productivo, flujos live reale
    - impacto:
      - `pnpm test:sql-smoke:check` y `pnpm test:release:check` quedan bloqueados correctamente,
      - no pueden correrse `pnpm test:sql-smoke` ni `pnpm db:apply` contra la base remota.
-2. Workspace con target de hosting gestionado pero sin deploy publicado verificable.
-   - impacto:
-     - aun no hay evidencia de deploy productivo administrado desde este repositorio,
-     - no puede afirmarse release completo hacia hosting gestionado solo con la configuracion.
+
+## Evidencia de deploy vigente al 2026-07-20
+
+- `https://autoracontable.vercel.app` ya fue validado con Playwright live en los dos flujos principales.
+- `/dashboard` y `/admin` resuelven a login cuando no hay sesion y ya no muestran el fallback de variables faltantes.
 
 ## Definicion practica de release completo
 
