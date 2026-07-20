@@ -63,8 +63,10 @@ Cobertura E2E actualmente ejecutada:
 - `tests/e2e/export-route.spec.ts`
 - `tests/e2e/live-manufacturer-flow.spec.ts` con `E2E_LIVE_SUPABASE=1` y `E2E_USE_PROD_SERVER=1`
 - `tests/e2e/live-reseller-flow.spec.ts` con `E2E_LIVE_SUPABASE=1` y `E2E_USE_PROD_SERVER=1`
-  - comando PowerShell fabricante: `$env:E2E_LIVE_SUPABASE='1'; $env:E2E_USE_PROD_SERVER='1'; pnpm test:e2e -- tests/e2e/live-manufacturer-flow.spec.ts`
-  - comando PowerShell reventa: `$env:E2E_LIVE_SUPABASE='1'; $env:E2E_USE_PROD_SERVER='1'; pnpm test:e2e -- tests/e2e/live-reseller-flow.spec.ts`
+- `pnpm test:e2e:live:check` para readiness de entorno
+- `pnpm test:e2e:live` para correr fabricante + reventa con build productivo previo
+- `pnpm test:e2e:live:manufacturer` para aislar fabricante
+- `pnpm test:e2e:live:reseller` para aislar reventa
 
 Resultado local mas reciente:
 
@@ -72,6 +74,8 @@ Resultado local mas reciente:
 - build productivo local del 2026-07-20: `npm run build` exitoso
 - ejecucion live opt-in del flujo fabricante el 2026-07-20: `1 passed`
 - ejecucion live opt-in del flujo reventa el 2026-07-20: `1 passed`
+- readiness live del 2026-07-20: `pnpm test:e2e:live:check` en verde
+- runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
 
 ## Verificacion live actual
 

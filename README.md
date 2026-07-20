@@ -42,6 +42,10 @@ Estado del repositorio al 2026-07-20:
 - `pnpm test`
 - `pnpm build`
 - `pnpm test:e2e`
+- `pnpm test:e2e:live:check`
+- `pnpm test:e2e:live`
+- `pnpm test:e2e:live:manufacturer`
+- `pnpm test:e2e:live:reseller`
 - `pnpm test:sql-smoke:check`
 - `pnpm test:sql-smoke`
 - `pnpm test:sql-smoke:rls`
@@ -81,9 +85,12 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 6. Para aplicar fixes SQL puntuales sin Supabase CLI, usa:
    - `pnpm db:apply -- supabase/migrations/<archivo>.sql`
    - `pnpm db:apply:admin-fixes` para reaplicar los fixes admin/comerciales del 2026-07-20
-7. Para ejecutar los E2E live sobre UI real + Supabase real:
-   - fabricante: `$env:E2E_LIVE_SUPABASE='1'; $env:E2E_USE_PROD_SERVER='1'; pnpm test:e2e -- tests/e2e/live-manufacturer-flow.spec.ts`
-   - reventa: `$env:E2E_LIVE_SUPABASE='1'; $env:E2E_USE_PROD_SERVER='1'; pnpm test:e2e -- tests/e2e/live-reseller-flow.spec.ts`
+7. Para verificar readiness de live E2E:
+   - `pnpm test:e2e:live:check`
+8. Para ejecutar los E2E live sobre UI real + Supabase real:
+   - ambos flujos: `pnpm test:e2e:live`
+   - solo fabricante: `pnpm test:e2e:live:manufacturer`
+   - solo reventa: `pnpm test:e2e:live:reseller`
 
 ## Estado actual
 
@@ -112,6 +119,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - suite E2E local ejecutada el 2026-07-20 con `24 passed`
   - E2E live opt-in de fabricante ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - E2E live opt-in de reventa ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
+  - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
   - build productivo local ejecutado el 2026-07-20 con `npm run build`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde

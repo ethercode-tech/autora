@@ -99,6 +99,9 @@ Estado consolidado el 2026-07-20.
   - `pnpm build`
 - E2E:
   - `pnpm test:e2e`
+  - `pnpm test:e2e:live:check`
+  - `pnpm test:e2e:live`
+  - variantes: `pnpm test:e2e:live:manufacturer`, `pnpm test:e2e:live:reseller`
 - Smoke RLS en Supabase:
   - ejecutar `tests/rls/rls-smoke.sql` contra la base del entorno objetivo.
 - Smoke multiusuario en Supabase:
@@ -116,6 +119,8 @@ Estado consolidado el 2026-07-20.
 
 - La suite E2E local paso el 2026-07-20 con `24 passed`.
 - El build productivo local paso el 2026-07-20 con `npm run build`.
+ - El readiness de live E2E paso el 2026-07-20 con `pnpm test:e2e:live:check`.
+ - El runner unificado de live E2E paso el 2026-07-20 con `pnpm test:e2e:live`, incluyendo build productivo y `2 passed`.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
  - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.
