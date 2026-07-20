@@ -35,6 +35,11 @@ Estado consolidado el 2026-07-20.
 - RLS y frontera SaaS declarativa:
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - evidencia ejecutable en base: `tests/rls/rls-smoke.sql`
+- Invariantes SQL de stock, costos y movimientos financieros:
+  - evidencia: `src/server/queries/rls-migration.test.ts`
+  - cubre: bloqueos por stock insuficiente en venta, produccion, consumo y ajustes
+  - cubre: alta obligatoria de `financial_movements` para compras y ventas
+  - cubre: persistencia de `total_cost` y `unit_cost` en produccion
 
 ## Comandos de verificacion
 

@@ -6,6 +6,10 @@ const initialMigration = readFileSync(
   join(process.cwd(), "supabase", "migrations", "202607200001_initial_schema.sql"),
   "utf8"
 );
+const productionCostsMigration = readFileSync(
+  join(process.cwd(), "supabase", "migrations", "202607200003_production_costs.sql"),
+  "utf8"
+);
 
 describe("RLS migration coverage", () => {
   it("enables row level security on core operational tables", () => {
@@ -46,6 +50,56 @@ describe("RLS migration coverage", () => {
 
     for (const policy of requiredPolicies) {
       expect(initialMigration).toContain(policy);
+    }
+  });
+
+  it("protects inventory flows from going negative at the database layer", () => {
+    const guardedExceptions = [
+      "raise exception 'INSUFFICIENT_PRODUCT_STOCK';",
+      "raise exception 'INSUFFICIENT_RESOURCE_STOCK';"
+    ];
+
+    for (const guardedException of guardedExceptions) {
+      expect(initialMigration).toContain(guardedException);
+    }
+
+    expect(initialMigration).toContain("if public.product_stock(item_product_id) < item_quantity then");
+    expect(initialMigration).toContain(
+      "if adjustment_entity_type = 'resource' and public.resource_stock(adjustment_resource_id) + adjustment_quantity < 0 then"
+    );
+    expect(initialMigration).toContain(
+      "if adjustment_entity_type = 'product' and public.product_stock(adjustment_product_id) + adjustment_quantity < 0 then"
+    );
+    expect(productionCostsMigration).toContain(
+      "if public.resource_stock(recipe_item.resource_id) < resource_needed then"
+    );
+  });
+
+  it("persists financial movements for purchases and sales", () => {
+    expect(initialMigration).toContain(
+      "insert into public.financial_movements (user_id, type, amount, date, description, source_type, source_id)"
+    );
+    expect(initialMigration).toContain(
+      "values (auth.uid(), 'expense', purchase_total, purchase_date, 'Compra registrada', 'purchase', purchase_id);"
+    );
+    expect(initialMigration).toContain(
+      "values (auth.uid(), 'income', sale_total, sale_date, 'Venta registrada', 'sale', sale_id);"
+    );
+  });
+
+  it("persists production costs and product ingress in the cost-aware migration", () => {
+    const requiredSnippets = [
+      "raise exception 'MISSING_RESOURCE_COST';",
+      "production_total_cost numeric(12, 2) := 0;",
+      "line_total_cost := round((resource_needed * latest_unit_cost)::numeric, 2);",
+      "insert into public.production_items (user_id, production_order_id, resource_id, quantity_used, unit_cost, total_cost)",
+      "total_cost = production_total_cost,",
+      "unit_cost = round((production_total_cost / nullif(production_quantity, 0))::numeric, 2)",
+      "'production_product_in',"
+    ];
+
+    for (const snippet of requiredSnippets) {
+      expect(productionCostsMigration).toContain(snippet);
     }
   });
 });
