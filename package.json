@@ -23,6 +23,7 @@
     "test:sql-smoke:multiuser": "node ./scripts/run-sql-smoke.mjs multiuser",
     "test:sql-smoke:operational": "node ./scripts/run-sql-smoke.mjs operational",
     "admin:bootstrap": "node ./scripts/bootstrap-admin.mjs",
+    "business:bootstrap": "node ./scripts/bootstrap-business.mjs",
     "db:apply": "node ./scripts/apply-sql-files.mjs",
     "db:apply:admin-fixes": "node ./scripts/apply-sql-files.mjs supabase/migrations/202607200004_admin_commercial_rls.sql supabase/migrations/202607200005_fix_is_admin_recursion.sql",
     "test:supabase-live": "node ./scripts/verify-live-supabase.mjs",
