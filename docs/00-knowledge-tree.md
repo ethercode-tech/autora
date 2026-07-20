@@ -47,6 +47,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Decisiones pendientes: [11-open-decisions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/11-open-decisions.md)
 - Convenciones de repositorio: [12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
 - Implementacion actual: [13-current-implementation-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/13-current-implementation-map.md)
+- Matriz de verificacion: [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
 
 ## Regla operativa
 

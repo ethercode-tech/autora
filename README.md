@@ -18,6 +18,7 @@ Estado del repositorio al 2026-07-20:
 4. [docs/04-data-model.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/04-data-model.md)
 5. [docs/06-security-rls.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/06-security-rls.md)
 6. [docs/09-testing-strategy.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/09-testing-strategy.md)
+7. [docs/14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
 
 ## Estructura principal
 
@@ -40,6 +41,7 @@ Estado del repositorio al 2026-07-20:
 - `pnpm lint`
 - `pnpm test`
 - `pnpm build`
+- `pnpm test:e2e`
 
 ## Estado actual
 
