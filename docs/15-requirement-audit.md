@@ -11,16 +11,23 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia: `src/server/actions/auth.ts`
   - evidencia: `src/server/actions/admin.ts`
   - evidencia: `src/lib/auth/account-status.ts`
-  - estado: parcial verificado
+  - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts`
+  - evidencia ejecutada el 2026-07-20: `tests/e2e/live-reseller-flow.spec.ts`
+  - estado: verificado con persistencia real
 - Configuracion, recursos, productos, compras, recetas, produccion, ventas y dashboard:
   - evidencia: `src/app/(dashboard)/*`
   - evidencia: `src/server/actions/*`
   - evidencia: `src/server/queries/catalog.ts`
-  - estado: parcial verificado
+  - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts`
+  - evidencia ejecutada el 2026-07-20: `tests/e2e/live-reseller-flow.spec.ts`
+  - evidencia adicional: `docs/17-latest-verification-evidence.md`
+  - estado: verificado con persistencia real
 - Alertas de faltantes y consulta del estado real del negocio:
   - evidencia: `src/features/inventory/lib/calculate-stock.ts`
   - evidencia: `src/features/dashboard/lib/build-dashboard-metrics.ts`
-  - estado: parcial verificado
+  - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+  - evidencia adicional: `docs/17-latest-verification-evidence.md`
+  - estado: verificado por API real
 
 ## Objetivo funcional del MVP
 
@@ -56,7 +63,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `src/app/admin/page.tsx`
   - `supabase/migrations/202607200001_initial_schema.sql`
 - Gap:
-  - evidencia E2E persistente ya disponible para fabricante y reventa; resta evidencia de ejecucion completa de smokes SQL directos por `psql` y evidencia de despliegue productivo
+  - evidencia E2E persistente y evidencia de despliegue productivo ya disponibles; resta evidencia de ejecucion completa de smokes SQL directos por `psql`
 
 ## Objetivo tecnico
 
@@ -69,7 +76,9 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia: `docs/06-security-rls.md`
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - evidencia ejecutable: `tests/rls/rls-smoke.sql`
-  - estado: parcial verificado
+  - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+  - evidencia adicional: `docs/17-latest-verification-evidence.md`
+  - estado: verificado por API real; falta solo la capa adicional por `psql` si se quiere doble cobertura
 - Validaciones frontend y backend:
   - evidencia: `src/lib/validation/*`
   - evidencia: formularios en `src/components/forms/*`
@@ -77,7 +86,9 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 - Operaciones transaccionales, integridad y prevencion de stock negativo:
   - evidencia: RPC SQL `register_purchase`, `register_resource_consumption`, `register_production`, `register_sale`, `adjust_inventory`
   - evidencia: `src/server/queries/rls-migration.test.ts`
-  - estado: parcial verificado
+  - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+  - evidencia adicional: `docs/17-latest-verification-evidence.md`
+  - estado: verificado por API real; falta solo la evidencia SQL directa por `psql` si se quiere doble cobertura
 - Tipado estricto, modularidad, manejo de errores y responsive:
   - evidencia: TypeScript estricto, estructura por dominios y formularios responsivos
   - evidencia: `src/features/operations/lib/operation-feedback.ts`
@@ -102,7 +113,8 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia de hosting gestionado: `.openai/hosting.json`
   - evidencia ejecutada el 2026-07-20: `4 passed` en pruebas de helpers operativos
   - evidencia ejecutada el 2026-07-20: `6 passed` en pruebas del runner live
-  - estado: parcial, falta evidencia de despliegue productivo real y corregir la URL directa de Postgres para ejecutar el smoke SQL completo
+  - evidencia ejecutada el 2026-07-20: `https://autoracontable.vercel.app` validado con Playwright live y `pnpm test:production-access`
+  - estado: parcial, falta solo corregir la conexion directa de Postgres para ejecutar el smoke SQL completo por `psql`
 
 ## Objetivo de inventario y economico
 
@@ -207,18 +219,18 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia ejecutada el 2026-07-20: `tests/e2e/live-reseller-flow.spec.ts` con `1 passed` sobre UI real + Supabase real
    - estado: verificado
 15. Despliegue sin datos locales.
-   - evidencia actual: arquitectura server-side con Supabase
-   - evidencia adicional: `src/architecture/storage-boundary.test.ts`
-   - evidencia ejecutada el 2026-07-20: `pnpm build`
-   - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live` construye bundle productivo y verifica ambos flujos principales sobre Supabase real
-   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` confirma que el workspace ya tiene target de hosting, pero no una URL directa Postgres valida para los smokes SQL
-   - estado: parcial, falta evidencia de despliegue productivo y smoke SQL directo
+  - evidencia actual: arquitectura server-side con Supabase
+  - evidencia adicional: `src/architecture/storage-boundary.test.ts`
+  - evidencia ejecutada el 2026-07-20: `pnpm build`
+  - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live` construye bundle productivo y verifica ambos flujos principales sobre Supabase real
+  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` confirma que el workspace ya tiene target de hosting, pero no una URL directa Postgres valida para los smokes SQL
+  - evidencia ejecutada el 2026-07-20: `https://autoracontable.vercel.app` validado con Playwright live y `pnpm test:production-access`
+  - estado: verificado para despliegue productivo sin datos locales; falta solo la evidencia SQL directa por `psql` para cerrar el release tecnico completo
 
 ## Siguiente tramo recomendado
 
-- Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
 - Proveer una conexion Postgres directa usable, ya sea con `SUPABASE_DB_URL`/`DATABASE_URL` validas o con `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`, y luego ejecutar smoke SQL directo por `psql`, incluyendo el caso multiusuario, para sumar evidencia adicional de aislamiento RLS.
-- Publicar una version productiva real sobre el target ya configurado del workspace.
+- Mantener `docs/17-latest-verification-evidence.md` como hoja viva cada vez que se ejecute una verificacion externa adicional.
 
 ## Runner operativo disponible
 
@@ -234,5 +246,5 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `npm run test:sql-smoke:multiuser`
   - `npm run test:sql-smoke:operational`
 - Requisitos:
-  - `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`
+  - `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`, o la combinacion `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`
   - `psql` en `PATH`, `PSQL_PATH` o instalado en una ruta estandar de PostgreSQL para Windows
