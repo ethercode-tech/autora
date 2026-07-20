@@ -56,7 +56,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `src/app/admin/page.tsx`
   - `supabase/migrations/202607200001_initial_schema.sql`
 - Gap:
-  - flujo E2E integrado todavia no probado de punta a punta
+  - evidencia E2E persistente ya disponible para fabricante y reventa; restan smokes SQL directos por `psql` y evidencia de despliegue productivo
 
 ## Objetivo tecnico
 
@@ -162,7 +162,8 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 10. Dashboard refleja datos reales.
    - evidencia actual: agregadores probados
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` sobre ventas, ingresos, egresos, saldo y alertas
-   - estado: verificado en la fuente real de datos; falta solo evidencia E2E persistente desde UI
+   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts` y `tests/e2e/live-reseller-flow.spec.ts`
+   - estado: verificado en fuente real y desde UI persistente
 11. Cuentas bloqueadas no pueden operar.
    - evidencia actual: guardas y pruebas de estado
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
@@ -189,7 +190,8 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
    - evidencia ejecutada el 2026-07-20: `24 passed` en Playwright
    - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts` con `1 passed` sobre UI real + Supabase real
-   - estado: parcial, el flujo fabricante ya tiene E2E persistente real; falta el flujo equivalente de reventa
+   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-reseller-flow.spec.ts` con `1 passed` sobre UI real + Supabase real
+   - estado: verificado
 15. Despliegue sin datos locales.
    - evidencia actual: arquitectura server-side con Supabase
    - evidencia adicional: `src/architecture/storage-boundary.test.ts`
@@ -200,7 +202,6 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 
 - Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
 - Ejecutar smoke multiusuario para demostrar aislamiento RLS.
-- Completar E2E del flujo principal de reventa.
 - Registrar evidencia de despliegue reproducible del entorno objetivo.
 
 ## Runner operativo disponible
