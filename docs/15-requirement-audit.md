@@ -164,8 +164,9 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - estado: parcial, falta smoke real de rollback
 14. Flujos principales con pruebas automatizadas.
-   - evidencia actual: unitarias, declarativas y E2E preparados
-   - estado: parcial, falta E2E de punta a punta ejecutado
+   - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
+   - evidencia ejecutada el 2026-07-20: `22 passed`, `1 skipped` en Playwright
+   - estado: parcial, falta E2E de punta a punta con persistencia real
 15. Despliegue sin datos locales.
    - evidencia actual: arquitectura server-side con Supabase
    - estado: parcial, falta evidencia de despliegue productivo

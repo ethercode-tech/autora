@@ -7,14 +7,17 @@ Estado consolidado el 2026-07-20.
 - Flujo publico base:
   - evidencia: `src/app/(public)/public-routes.test.tsx`
   - evidencia: `tests/e2e/public-flows.spec.ts`
+  - evidencia adicional: `tests/e2e/access-onboarding.spec.ts`
 - Recuperacion de contrasena:
   - evidencia: `src/app/(public)/public-routes.test.tsx`
   - evidencia: `tests/e2e/public-flows.spec.ts`
+  - evidencia adicional: `tests/e2e/access-onboarding.spec.ts`
   - evidencia: `tests/e2e/configuration-guards.spec.ts`
 - Bloqueo y guardas de acceso:
   - evidencia: `src/lib/auth/account-status.test.ts`
   - evidencia: `src/app/(public)/public-routes.test.tsx`
   - evidencia: `tests/e2e/configuration-guards.spec.ts`
+  - evidencia adicional: `tests/e2e/panel-guardrails.spec.ts`
 - Exportacion:
   - evidencia: `src/server/queries/export.test.ts`
   - evidencia: `tests/e2e/export-route.spec.ts`
@@ -66,8 +69,9 @@ Estado consolidado el 2026-07-20.
 
 ## Gaps todavia abiertos
 
+- La suite E2E local paso el 2026-07-20 con `22 passed` y `1 skipped`; el skip corresponde a exportacion sin Supabase configurado.
 - No hay todavia E2E del flujo completo de fabricante con persistencia real.
-- No hay todavia E2E del flujo de reventa.
+- No hay todavia E2E del flujo de reventa con persistencia real.
 - Falta una prueba real de lectura cruzada con dos usuarias autenticadas.
 - Falta correr el smoke SQL de RLS en un proyecto Supabase activo.
-- El entorno local actual no pudo sostener Playwright completo por limites de recursos del proceso, aunque la suite ya quedo preparada.
+- La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, pero la persistencia real sigue pendiente de un entorno configurado.

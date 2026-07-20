@@ -50,6 +50,14 @@ Escenarios minimos:
 - bloqueo administrativo,
 - exportacion.
 
+Cobertura E2E actualmente ejecutada:
+
+- `tests/e2e/public-flows.spec.ts`
+- `tests/e2e/access-onboarding.spec.ts`
+- `tests/e2e/configuration-guards.spec.ts`
+- `tests/e2e/panel-guardrails.spec.ts`
+- `tests/e2e/export-route.spec.ts` condicionado a Supabase configurado
+
 ## Responsive
 
 Revisar al menos:

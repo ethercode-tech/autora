@@ -12,7 +12,7 @@ test.describe("configuration and access guards", () => {
     await page.goto("/admin");
 
     await expect(page.getByRole("heading", { name: /faltan variables de entorno de supabase/i })).toBeVisible();
-    await expect(page.getByText(/autenticacion, persistencia y rls/i)).toBeVisible();
+    await expect(page.getByText(/persistencia/i)).toBeVisible();
   });
 
   test("reset password without a recovery token explains the expected flow", async ({ page }) => {

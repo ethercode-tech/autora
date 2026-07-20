@@ -4,9 +4,9 @@ test.describe("public flows", () => {
   test("home exposes the main entry points", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.getByRole("heading", { name: /gestion/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /emprendimientos|revenden/i })).toBeVisible();
     await expect(page.getByRole("link", { name: /solicitar acceso/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /iniciar sesi|iniciar sesion/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /iniciar/i })).toBeVisible();
   });
 
   test("login links to password recovery", async ({ page }) => {

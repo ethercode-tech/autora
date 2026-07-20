@@ -5,7 +5,8 @@ export default defineConfig({
   timeout: 30000,
   workers: 1,
   webServer: {
-    command: "C:\\Users\\cecil\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback\\pnpm.cmd exec next start --hostname 127.0.0.1 --port 3000",
+    command:
+      "\"C:\\Users\\cecil\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe\" .\\node_modules\\next\\dist\\bin\\next dev --hostname 127.0.0.1 --port 3000",
     url: "http://127.0.0.1:3000",
     reuseExistingServer: true,
     timeout: 120000
