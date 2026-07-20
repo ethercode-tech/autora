@@ -25,12 +25,7 @@ describe("run baseline checks helpers", () => {
   it("exposes the expected command sequence", () => {
     expect(baselineModule.BASELINE_COMMANDS.map((entry) => entry.label)).toEqual(["lint", "typecheck", "test", "build"]);
     expect(baselineModule.BASELINE_COMMANDS[0]?.args.slice(-2)).toEqual([".", "--max-warnings=0"]);
-    expect(baselineModule.BASELINE_COMMANDS[1]?.args.slice(-1)).toEqual(["--noEmit"]);
-    expect(baselineModule.BASELINE_COMMANDS[1]?.preCommands).toEqual([
-      expect.objectContaining({
-        args: expect.arrayContaining(["typegen"])
-      })
-    ]);
+    expect(baselineModule.BASELINE_COMMANDS[1]?.args?.[0]).toContain(path.join("scripts", "run-typecheck.mjs"));
     expect(baselineModule.BASELINE_COMMANDS[2]?.args.slice(-1)).toEqual(["run"]);
     expect(baselineModule.BASELINE_COMMANDS[3]?.args.slice(-1)).toEqual(["build"]);
   });

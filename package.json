@@ -8,7 +8,7 @@
     "start": "next start",
     "verify:baseline": "node ./scripts/run-baseline-checks.mjs",
     "lint": "eslint . --max-warnings=0",
-    "typecheck": "next typegen && tsc --noEmit",
+    "typecheck": "node ./scripts/run-typecheck.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

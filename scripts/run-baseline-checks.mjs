@@ -15,8 +15,7 @@ export const BASELINE_COMMANDS = [
   {
     label: "typecheck",
     command: process.execPath,
-    args: [resolveProjectPath("node_modules", "typescript", "bin", "tsc"), "--noEmit"],
-    preCommands: [{ command: process.execPath, args: [resolveProjectPath("node_modules", "next", "dist", "bin", "next"), "typegen"] }]
+    args: [resolveProjectPath("scripts", "run-typecheck.mjs")]
   },
   { label: "test", command: process.execPath, args: [resolveProjectPath("node_modules", "vitest", "vitest.mjs"), "run"] },
   { label: "build", command: process.execPath, args: [resolveProjectPath("node_modules", "next", "dist", "bin", "next"), "build"] }
@@ -56,15 +55,6 @@ export async function runBaselineChecks({
   process.stdout.write(`${formatBaselineSummary(commands.map((entry) => entry.label))}\n`);
 
   for (const entry of commands) {
-    for (const preCommand of entry.preCommands ?? []) {
-      await runCommandStep({
-        label: `${entry.label}:${path.basename(preCommand.args[0], path.extname(preCommand.args[0]))}`,
-        ...preCommand,
-        cwd,
-        env
-      });
-    }
-
     await runCommandStep({
       ...entry,
       cwd,

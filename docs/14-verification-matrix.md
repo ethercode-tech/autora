@@ -98,7 +98,8 @@ Estado consolidado el 2026-07-20.
 - Unitarias e invariantes:
   - `pnpm test`
 - TypeScript:
-  - `pnpm exec tsc --noEmit`
+  - `pnpm typecheck`
+  - usa el runner `scripts/run-typecheck.mjs` para limpiar `.next/types`, regenerar route types y ejecutar `tsc --noEmit` de forma reproducible
 - Build:
   - `pnpm build`
 - E2E:
