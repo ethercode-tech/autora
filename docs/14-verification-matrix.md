@@ -20,6 +20,8 @@ Estado consolidado el 2026-07-20.
   - evidencia adicional: `tests/e2e/panel-guardrails.spec.ts`
 - Exportacion:
   - evidencia: `src/server/queries/export.test.ts`
+  - evidencia adicional: `src/app/api/export/route.test.ts`
+  - evidencia adicional: `src/app/(dashboard)/results/page.test.tsx`
   - evidencia: `tests/e2e/export-route.spec.ts`
   - cubre: descarga JSON y CSV desde la misma ruta de exportacion
 - Ciclo comercial y estados de cuenta:
