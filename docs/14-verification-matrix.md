@@ -37,6 +37,11 @@ Estado consolidado el 2026-07-20.
   - evidencia de implementacion: `src/components/forms/recipe-form.tsx`
   - evidencia de implementacion: `src/server/actions/production.ts`
   - cubre: experiencia fabricante con alta multi-insumo y bloqueo explicito del modulo para cuentas de reventa
+- Flujo diario segun tipo de negocio:
+  - evidencia: `src/app/(dashboard)/purchases/page.test.tsx`
+  - evidencia adicional: `src/app/(dashboard)/production/page.test.tsx`
+  - evidencia adicional: `src/app/(dashboard)/pricing/page.test.tsx`
+  - cubre: compras con mensaje distinto para fabricante/reventa y bloqueo explicito de produccion/costos en cuentas de reventa
 - Metricas globales de administracion:
   - evidencia: `src/features/admin/lib/build-admin-dashboard-metrics.test.ts`
 - Calculo de costos:
