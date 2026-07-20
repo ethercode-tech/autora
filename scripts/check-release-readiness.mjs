@@ -1,5 +1,7 @@
 import path from "node:path";
 import process from "node:process";
+import { access, readFile } from "node:fs/promises";
+import { constants } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { getLiveE2EReadiness } from "./check-live-e2e-readiness.mjs";
 import { getSqlSmokeReadiness } from "./check-sql-smoke-readiness.mjs";
@@ -12,19 +14,45 @@ const REQUIRED_RELEASE_ENV_KEYS = [
   "SUPABASE_SERVICE_ROLE_KEY"
 ];
 
+export async function readHostingConfig(cwd = process.cwd()) {
+  const hostingConfigPath = path.resolve(cwd, ".openai", "hosting.json");
+
+  try {
+    await access(hostingConfigPath, constants.F_OK);
+  } catch {
+    return {
+      exists: false,
+      projectId: null,
+      path: hostingConfigPath
+    };
+  }
+
+  const rawConfig = await readFile(hostingConfigPath, "utf8");
+  const parsedConfig = JSON.parse(rawConfig);
+  const projectId = typeof parsedConfig.project_id === "string" && parsedConfig.project_id.length > 0 ? parsedConfig.project_id : null;
+
+  return {
+    exists: true,
+    projectId,
+    path: hostingConfigPath
+  };
+}
+
 export async function getReleaseReadiness({ env = process.env, cwd = process.cwd() } = {}) {
   const resolvedEnv = await loadResolvedEnv(env, cwd);
   const liveE2E = await getLiveE2EReadiness({ env: resolvedEnv, cwd });
   const sqlSmoke = await getSqlSmokeReadiness({ env: resolvedEnv, cwd });
+  const hostingConfig = await readHostingConfig(cwd);
   const missingReleaseEnvKeys = REQUIRED_RELEASE_ENV_KEYS.filter((key) => !resolvedEnv[key]);
   const hasDirectDatabaseUrl = Boolean(resolvedEnv.SUPABASE_DB_URL || resolvedEnv.DATABASE_URL);
-  const hasHostingConfig = false;
+  const hasHostingConfig = hostingConfig.exists && Boolean(hostingConfig.projectId);
 
   return {
     ready: missingReleaseEnvKeys.length === 0 && liveE2E.ready && sqlSmoke.ready && hasHostingConfig,
     missingReleaseEnvKeys,
     hasDirectDatabaseUrl,
     hasHostingConfig,
+    hostingConfig,
     liveE2E,
     sqlSmoke
   };
@@ -52,7 +80,11 @@ export function formatReleaseReadinessSummary(readiness) {
   }
 
   if (!readiness.hasHostingConfig) {
-    lines.push("[release:check] deploy blocker: .openai/hosting.json is not present in this workspace.");
+    lines.push(
+      readiness.hostingConfig?.exists
+        ? "[release:check] deploy blocker: .openai/hosting.json exists but project_id is missing."
+        : "[release:check] deploy blocker: .openai/hosting.json is not present in this workspace."
+    );
   }
 
   if (readiness.ready) {

@@ -104,12 +104,12 @@ Al 2026-07-20, el resultado esperado de este workspace es:
 - `live-e2e=ok`
 - `sql-smoke=blocked`
 - `direct-db-url=missing`
-- `hosting-config=missing`
+- `hosting-config=present`
 
-Eso significa que el repo ya puede demostrar build productivo y flujos live reales, pero no puede cerrar release completo desde este workspace mientras falten:
+Eso significa que el repo ya puede demostrar build productivo, flujos live reales y un target de hosting configurado, pero no puede cerrar release completo desde este workspace mientras falten:
 
 - `SUPABASE_DB_URL` o `DATABASE_URL`
-- `.openai/hosting.json`
+- una version productiva publicada sobre el target gestionado del workspace
 
 ## Bloqueos externos vigentes al 2026-07-20
 
@@ -117,10 +117,10 @@ Eso significa que el repo ya puede demostrar build productivo y flujos live real
    - impacto:
      - no pueden correrse los smokes SQL directos,
      - no pueden aplicarse archivos SQL desde el repo con `pnpm db:apply`.
-2. Workspace sin target de hosting gestionado.
+2. Workspace con target de hosting gestionado pero sin deploy publicado verificable.
    - impacto:
-     - no hay evidencia de deploy productivo administrado desde este repositorio,
-     - no puede afirmarse release completo hacia hosting gestionado.
+     - aun no hay evidencia de deploy productivo administrado desde este repositorio,
+     - no puede afirmarse release completo hacia hosting gestionado solo con la configuracion.
 
 ## Definicion practica de release completo
 

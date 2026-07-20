@@ -98,7 +98,8 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia ejecutada el 2026-07-20: `npm run test:sql-smoke:check` detecta `psql` automaticamente en `C:\Program Files\PostgreSQL\17\bin\psql.exe`
   - evidencia ejecutada el 2026-07-20: `npm run build` completo sobre Next.js 15.5.20
   - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live:check` y `pnpm test:e2e:live`
-  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` explicita bloqueo por ausencia de `SUPABASE_DB_URL` o `DATABASE_URL` y por falta de `.openai/hosting.json`
+  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` explicita bloqueo por ausencia de `SUPABASE_DB_URL` o `DATABASE_URL`
+  - evidencia de hosting gestionado: `.openai/hosting.json`
   - evidencia ejecutada el 2026-07-20: `4 passed` en pruebas de helpers operativos
   - evidencia ejecutada el 2026-07-20: `6 passed` en pruebas del runner live
   - estado: parcial, falta evidencia de despliegue productivo real y `SUPABASE_DB_URL` para aplicar SQL directo al proyecto remoto
@@ -207,14 +208,14 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia adicional: `src/architecture/storage-boundary.test.ts`
    - evidencia ejecutada el 2026-07-20: `npm run build`
    - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live` construye bundle productivo y verifica ambos flujos principales sobre Supabase real
-   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` deja explicitado que el workspace aun no tiene `.openai/hosting.json` ni `SUPABASE_DB_URL` o `DATABASE_URL`
-   - estado: parcial, falta evidencia de despliegue productivo
+   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` deja explicitado que el workspace ya tiene target de hosting pero aun no tiene `SUPABASE_DB_URL` o `DATABASE_URL`
+   - estado: parcial, falta evidencia de despliegue productivo y smoke SQL directo
 
 ## Siguiente tramo recomendado
 
 - Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
 - Ejecutar smoke multiusuario para demostrar aislamiento RLS.
-- Registrar evidencia de despliegue reproducible del entorno objetivo.
+- Publicar una version productiva real sobre el target ya configurado del workspace.
 
 ## Runner operativo disponible
 

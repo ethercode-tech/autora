@@ -127,6 +127,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
   - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con live E2E listo y bloqueos externos explicitados para SQL directo y hosting
   - baseline reproducible `pnpm verify:baseline` ejecutado el 2026-07-20 con lint, typecheck, suite Vitest y build productivo en verde
+  - target de hosting del workspace configurado en `.openai/hosting.json` el 2026-07-20
   - build productivo local ejecutado el 2026-07-20 con `npm run build`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde
@@ -135,4 +136,5 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 
 - Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
 - Exponer `SUPABASE_DB_URL` o `DATABASE_URL` para correr smokes SQL directos por `psql` y aplicar SQL puntual desde el repo cuando haga falta.
+- Publicar una version productiva real usando el target ya configurado en `.openai/hosting.json`.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

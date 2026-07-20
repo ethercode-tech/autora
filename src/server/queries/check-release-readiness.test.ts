@@ -8,6 +8,10 @@ type ReleaseReadinessModule = {
     missingReleaseEnvKeys: string[];
     hasDirectDatabaseUrl: boolean;
     hasHostingConfig: boolean;
+    hostingConfig: {
+      exists: boolean;
+      projectId: string | null;
+    };
     liveE2E: {
       ready: boolean;
       chromeAvailable: boolean;
@@ -33,6 +37,10 @@ describe("release readiness helpers", () => {
       missingReleaseEnvKeys: [],
       hasDirectDatabaseUrl: false,
       hasHostingConfig: false,
+      hostingConfig: {
+        exists: false,
+        projectId: null
+      },
       liveE2E: {
         ready: true,
         chromeAvailable: true,
@@ -59,6 +67,10 @@ describe("release readiness helpers", () => {
       missingReleaseEnvKeys: [],
       hasDirectDatabaseUrl: true,
       hasHostingConfig: true,
+      hostingConfig: {
+        exists: true,
+        projectId: "appgprj_123"
+      },
       liveE2E: {
         ready: true,
         chromeAvailable: true,
