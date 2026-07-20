@@ -79,7 +79,8 @@ Estado consolidado el 2026-07-20.
   - `npm run test:sql-smoke:check`
   - `npm run test:sql-smoke`
   - variantes: `npm run test:sql-smoke:rls`, `npm run test:sql-smoke:multiuser`, `npm run test:sql-smoke:operational`
-  - requiere `SUPABASE_DB_URL` o `DATABASE_URL` y un binario `psql` disponible o configurable por `PSQL_PATH`
+  - requiere `SUPABASE_DB_URL` o `DATABASE_URL`
+  - resuelve `psql` desde `PATH`, `PSQL_PATH` o rutas estandar de PostgreSQL en Windows
 
 ## Gaps todavia abiertos
 
@@ -88,5 +89,6 @@ Estado consolidado el 2026-07-20.
 - No hay todavia E2E del flujo de reventa con persistencia real.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - La verificacion live del 2026-07-20 detecto que el proyecto Supabase remoto todavia responde `stack depth limit exceeded` en la aprobacion admin de solicitudes; eso confirma que la correccion de `public.is_admin()` aun debe aplicarse en la base remota.
+ - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.
  - Falta correr el smoke SQL via Postgres directo si se quiere evidencia adicional a nivel `psql`.
 - La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, pero la persistencia real sigue pendiente de un entorno configurado.

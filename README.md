@@ -64,6 +64,8 @@ Si `psql` no esta disponible en `PATH`, define tambien:
 
 - `PSQL_PATH`
 
+En Windows, el runner intenta autodetectar `psql` en instalaciones comunes de PostgreSQL, por ejemplo `C:\Program Files\PostgreSQL\17\bin\psql.exe`.
+
 ## Verificacion sobre Supabase real
 
 Con el proyecto Supabase configurado y una base accesible por Postgres:

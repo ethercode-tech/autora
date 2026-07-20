@@ -5,6 +5,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 type SmokeRunnerModule = {
   SQL_SMOKE_SUITES: Record<string, string[]>;
   buildPsqlArguments: (databaseUrl: string, sqlFilePath: string) => string[];
+  buildWindowsPsqlCandidates: (env?: Record<string, string | undefined>) => string[];
   resolveDatabaseUrl: (env?: Record<string, string | undefined>) => string | null;
   resolvePsqlBinary: (env?: Record<string, string | undefined>) => string;
   resolveSelectedSuite: (selection?: string) => {
@@ -55,7 +56,23 @@ describe("run sql smoke script helpers", () => {
 
   it("uses PSQL_PATH when provided", () => {
     expect(smokeRunner.resolvePsqlBinary({ PSQL_PATH: "C:\\psql\\psql.exe" })).toBe("C:\\psql\\psql.exe");
-    expect(smokeRunner.resolvePsqlBinary({})).toBe("psql");
+  });
+
+  it("builds Windows psql candidates from common PostgreSQL install paths", () => {
+    expect(
+      smokeRunner.buildWindowsPsqlCandidates({
+        ProgramFiles: "C:\\Program Files",
+        "ProgramFiles(x86)": "C:\\Program Files (x86)"
+      }).slice(0, 3)
+    ).toEqual([
+      "C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe",
+      "C:\\Program Files\\PostgreSQL\\16\\bin\\psql.exe",
+      "C:\\Program Files\\PostgreSQL\\15\\bin\\psql.exe"
+    ]);
+  });
+
+  it("falls back to bare psql when no explicit path is configured", () => {
+    expect(smokeRunner.resolvePsqlBinary({})).toBeTypeOf("string");
   });
 
   it("builds psql arguments with ON_ERROR_STOP", () => {

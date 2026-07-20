@@ -89,7 +89,9 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - estado: cubierto de manera inicial
 - Build y despliegue reproducibles:
   - evidencia: scripts de `package.json`
-  - estado: parcial, falta evidencia de despliegue productivo real
+  - evidencia adicional: `scripts/apply-sql-files.mjs`
+  - evidencia ejecutada el 2026-07-20: `npm run test:sql-smoke:check` detecta `psql` automaticamente en `C:\Program Files\PostgreSQL\17\bin\psql.exe`
+  - estado: parcial, falta evidencia de despliegue productivo real y `SUPABASE_DB_URL` para aplicar SQL directo al proyecto remoto
 
 ## Objetivo de inventario y economico
 
@@ -196,6 +198,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 
 - Script: `scripts/run-sql-smoke.mjs`
 - Preflight: `scripts/check-sql-smoke-readiness.mjs`
+- Apply runner: `scripts/apply-sql-files.mjs`
 - Verificacion live: `scripts/verify-live-supabase.mjs`
 - Comando principal: `npm run test:sql-smoke`
 - Comando de readiness: `npm run test:sql-smoke:check`
@@ -206,4 +209,4 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `npm run test:sql-smoke:operational`
 - Requisitos:
   - `SUPABASE_DB_URL` o `DATABASE_URL`
-  - `psql` en `PATH` o `PSQL_PATH` apuntando al binario
+  - `psql` en `PATH`, `PSQL_PATH` o instalado en una ruta estandar de PostgreSQL para Windows

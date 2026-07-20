@@ -1,5 +1,5 @@
 import { access } from "node:fs/promises";
-import { constants } from "node:fs";
+import { constants, existsSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -32,8 +32,34 @@ export function resolveDatabaseUrl(env = process.env) {
   return env.SUPABASE_DB_URL || env.DATABASE_URL || null;
 }
 
+export function buildWindowsPsqlCandidates(env = process.env) {
+  const rootDirectories = [env.ProgramFiles, env["ProgramFiles(x86)"]].filter(Boolean);
+  const versions = ["17", "16", "15", "14", "13"];
+  const candidates = [];
+
+  for (const rootDirectory of rootDirectories) {
+    for (const version of versions) {
+      candidates.push(path.join(rootDirectory, "PostgreSQL", version, "bin", "psql.exe"));
+    }
+  }
+
+  return candidates;
+}
+
 export function resolvePsqlBinary(env = process.env) {
-  return env.PSQL_PATH || "psql";
+  if (env.PSQL_PATH) {
+    return env.PSQL_PATH;
+  }
+
+  if (process.platform === "win32") {
+    const installedBinary = buildWindowsPsqlCandidates(env).find((candidate) => existsSync(candidate));
+
+    if (installedBinary) {
+      return installedBinary;
+    }
+  }
+
+  return "psql";
 }
 
 export function buildPsqlArguments(databaseUrl, sqlFilePath) {
