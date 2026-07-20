@@ -2,7 +2,9 @@ import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
+import { loadResolvedEnv } from "./load-project-env.mjs";
 import { resolveDatabaseUrl, resolvePsqlBinary, SQL_SMOKE_SUITES } from "./run-sql-smoke.mjs";
 
 const REQUIRED_ENV_KEYS = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"];
@@ -67,9 +69,10 @@ export async function resolvePsqlAvailability(env = process.env, cwd = process.c
 }
 
 export async function getSqlSmokeReadiness({ env = process.env, cwd = process.cwd() } = {}) {
-  const missingEnvKeys = getMissingReadinessEnvKeys(env);
+  const resolvedEnv = await loadResolvedEnv(env, cwd);
+  const missingEnvKeys = getMissingReadinessEnvKeys(resolvedEnv);
   const missingFiles = await getMissingSmokeFiles(cwd);
-  const psql = await resolvePsqlAvailability(env, cwd);
+  const psql = await resolvePsqlAvailability(resolvedEnv, cwd);
 
   return {
     ready: missingEnvKeys.length === 0 && missingFiles.length === 0 && psql.available,
@@ -113,7 +116,7 @@ export async function runSqlSmokeReadinessCheck(options = {}) {
   return readiness;
 }
 
-const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 
 if (isDirectExecution) {
   runSqlSmokeReadinessCheck().catch((error) => {

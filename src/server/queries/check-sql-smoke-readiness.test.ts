@@ -56,4 +56,19 @@ describe("sql smoke readiness helpers", () => {
     expect(summary).toContain("missing env: SUPABASE_DB_URL or DATABASE_URL");
     expect(summary).toContain("missing files: tests/rls/rls-smoke.sql");
   });
+
+  it("reports a runnable summary when everything is ready", () => {
+    const summary = readinessModule.formatReadinessSummary({
+      ready: true,
+      missingEnvKeys: [],
+      missingFiles: [],
+      psql: {
+        available: true,
+        psqlPath: "psql"
+      }
+    });
+
+    expect(summary).toContain("ready=yes");
+    expect(summary).toContain("You can run: pnpm test:sql-smoke");
+  });
 });

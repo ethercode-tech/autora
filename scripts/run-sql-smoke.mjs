@@ -2,7 +2,9 @@ import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
+import { loadResolvedEnv } from "./load-project-env.mjs";
 
 export const SQL_SMOKE_SUITES = {
   rls: ["tests/rls/rls-smoke.sql"],
@@ -81,14 +83,15 @@ export async function runSelectedSqlSmokeSuite({
   cwd = process.cwd(),
   env = process.env
 } = {}) {
+  const resolvedEnv = await loadResolvedEnv(env, cwd);
   const selection = resolveSelectedSuite(suite);
-  const databaseUrl = resolveDatabaseUrl(env);
+  const databaseUrl = resolveDatabaseUrl(resolvedEnv);
 
   if (!databaseUrl) {
     throw new Error("Missing SUPABASE_DB_URL or DATABASE_URL. Set one of them before running SQL smoke tests.");
   }
 
-  const psqlPath = resolvePsqlBinary(env);
+  const psqlPath = resolvePsqlBinary(resolvedEnv);
 
   for (const relativeFilePath of selection.files) {
     const sqlFilePath = path.resolve(cwd, relativeFilePath);
@@ -104,7 +107,7 @@ export async function runSelectedSqlSmokeSuite({
   process.stdout.write(`\n[sql-smoke] Suite "${selection.suite}" completed successfully.\n`);
 }
 
-const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 
 if (isDirectExecution) {
   const suite = process.argv[2] || "all";

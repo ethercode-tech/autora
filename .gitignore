@@ -2,6 +2,10 @@ autora/
 .next/
 .pnpm-store/
 node_modules/
+.env
+.env.local
+.env.development
+.env.production
 playwright-report/
 test-results/
 tsconfig.tsbuildinfo
