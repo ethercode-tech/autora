@@ -63,7 +63,14 @@ export function resolvePsqlBinary(env = process.env) {
 }
 
 export function buildPsqlArguments(databaseUrl, sqlFilePath) {
-  return [databaseUrl, "-v", "ON_ERROR_STOP=1", "-f", sqlFilePath];
+  return [databaseUrl, "-w", "-v", "ON_ERROR_STOP=1", "-f", sqlFilePath];
+}
+
+export function buildPsqlEnvironment(env = process.env) {
+  return {
+    ...env,
+    PGCONNECT_TIMEOUT: env.PGCONNECT_TIMEOUT || "15"
+  };
 }
 
 export async function assertFileExists(filePath) {
@@ -76,6 +83,7 @@ export async function runPsqlFile({ psqlPath, databaseUrl, sqlFilePath, cwd }) {
   return new Promise((resolve, reject) => {
     const child = spawn(psqlPath, buildPsqlArguments(databaseUrl, sqlFilePath), {
       cwd,
+      env: buildPsqlEnvironment(process.env),
       stdio: "inherit",
       shell: false
     });
