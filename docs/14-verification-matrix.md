@@ -59,6 +59,9 @@ Estado consolidado el 2026-07-20.
 - RLS y frontera SaaS declarativa:
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - evidencia ejecutable en base: `tests/rls/rls-smoke.sql`
+- Frontera de persistencia sin storage local:
+  - evidencia: `src/architecture/storage-boundary.test.ts`
+  - cubre: ausencia de dependencias sobre `localStorage` y `sessionStorage` dentro de `src/`
 - Verificacion live contra Supabase real:
   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
   - resultado: checks en verde sobre stock, costos, movimientos economicos, alertas, metricas fuente de dashboard, aislamiento RLS, bloqueo de cuenta y rollback de fallos operativos
@@ -106,6 +109,7 @@ Estado consolidado el 2026-07-20.
 ## Gaps todavia abiertos
 
 - La suite E2E local paso el 2026-07-20 con `24 passed`.
+- El build productivo local paso el 2026-07-20 con `npm run build`.
 - No hay todavia E2E del flujo completo de fabricante con persistencia real.
 - No hay todavia E2E del flujo de reventa con persistencia real.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.

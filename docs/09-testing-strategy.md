@@ -33,6 +33,7 @@ Artefactos ejecutables preparados:
 - `scripts/run-sql-smoke.mjs`
 - `scripts/verify-live-supabase.mjs`
 - `scripts/apply-sql-files.mjs`
+- `src/architecture/storage-boundary.test.ts`
 
 ## Seguridad y RLS
 
@@ -64,6 +65,7 @@ Cobertura E2E actualmente ejecutada:
 Resultado local mas reciente:
 
 - ejecucion completa de Playwright del 2026-07-20: `24 passed`
+- build productivo local del 2026-07-20: `npm run build` exitoso
 
 ## Verificacion live actual
 

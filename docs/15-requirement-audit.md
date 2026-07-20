@@ -63,7 +63,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 - Persistencia en nube y fuente unica de verdad:
   - evidencia: clientes Supabase server-side en `src/lib/supabase/*`
   - evidencia: migraciones en `supabase/migrations/*`
-  - evidencia: busqueda sin dependencias operativas de `localStorage`
+  - evidencia: `src/architecture/storage-boundary.test.ts`
   - estado: cubierto a nivel de arquitectura
 - Aislamiento, roles y RLS:
   - evidencia: `docs/06-security-rls.md`
@@ -90,6 +90,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia: scripts de `package.json`
   - evidencia adicional: `scripts/apply-sql-files.mjs`
   - evidencia ejecutada el 2026-07-20: `npm run test:sql-smoke:check` detecta `psql` automaticamente en `C:\Program Files\PostgreSQL\17\bin\psql.exe`
+  - evidencia ejecutada el 2026-07-20: `npm run build` completo sobre Next.js 15.5.20
   - estado: parcial, falta evidencia de despliegue productivo real y `SUPABASE_DB_URL` para aplicar SQL directo al proyecto remoto
 
 ## Objetivo de inventario y economico
@@ -190,6 +191,8 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - estado: parcial, falta E2E de punta a punta con persistencia real
 15. Despliegue sin datos locales.
    - evidencia actual: arquitectura server-side con Supabase
+   - evidencia adicional: `src/architecture/storage-boundary.test.ts`
+   - evidencia ejecutada el 2026-07-20: `npm run build`
    - estado: parcial, falta evidencia de despliegue productivo
 
 ## Siguiente tramo recomendado
