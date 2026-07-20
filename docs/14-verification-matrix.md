@@ -33,8 +33,10 @@ Estado consolidado el 2026-07-20.
 - Recetas con multiples insumos:
   - evidencia: `src/lib/validation/catalog.test.ts`
   - evidencia adicional: `src/components/forms/recipe-form.test.tsx`
+  - evidencia adicional: `src/app/(dashboard)/recipes/page.test.tsx`
   - evidencia de implementacion: `src/components/forms/recipe-form.tsx`
   - evidencia de implementacion: `src/server/actions/production.ts`
+  - cubre: experiencia fabricante con alta multi-insumo y bloqueo explicito del modulo para cuentas de reventa
 - Metricas globales de administracion:
   - evidencia: `src/features/admin/lib/build-admin-dashboard-metrics.test.ts`
 - Calculo de costos:

@@ -25,7 +25,7 @@ export default async function RecipesPage() {
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nueva receta</h3>
-        <p className="mt-1 text-sm text-autora-ink/70">Esta primera version permite crear recetas simples con un insumo inicial y rendimiento definido.</p>
+        <p className="mt-1 text-sm text-autora-ink/70">Define rendimiento y todos los insumos necesarios en una sola receta para producir sin calculos manuales.</p>
         <div className="mt-4">
           {products.filter((product) => product.product_type === "manufactured").length > 0 && resources.length > 0 ? (
             <RecipeForm products={products} resources={resources} />
