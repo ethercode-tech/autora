@@ -10,6 +10,7 @@ Preparar el proyecto para ejecucion local, CI, build y despliegue seguro.
 - [../docs/09-testing-strategy.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/09-testing-strategy.md)
 - [../docs/10-implementation-roadmap.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/10-implementation-roadmap.md)
 - [../docs/12-repo-conventions.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/12-repo-conventions.md)
+- [../docs/16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 
 ## Responsabilidades
 
