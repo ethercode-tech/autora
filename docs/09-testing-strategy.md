@@ -74,12 +74,13 @@ Resultado local mas reciente:
   - compras, consumos, produccion y ventas con persistencia real
   - rollback en fallos operativos
   - bloqueo por cuenta no activa
-- El mismo dia, la ampliacion del flujo admin/comercial detecto `stack depth limit exceeded` en la base remota al aprobar solicitudes admin.
-- La remediacion en repo es:
-  - `supabase/migrations/202607200004_admin_commercial_rls.sql`
-  - `supabase/migrations/202607200005_fix_is_admin_recursion.sql`
+- aprobacion de solicitudes, alta de planes, suscripciones, pagos, activacion comercial y auditoria admin
+- Resultado mas reciente:
+  - 22 checks live en verde el 2026-07-20
+  - los fixes de `supabase/migrations/202607200004_admin_commercial_rls.sql` y `supabase/migrations/202607200005_fix_is_admin_recursion.sql` ya quedaron reflejados en la verificacion API real
 - Para aplicar fixes sin Supabase CLI:
   - `npm run db:apply:admin-fixes`
+  - requiere `SUPABASE_DB_URL` o `DATABASE_URL`
 
 ## Responsive
 

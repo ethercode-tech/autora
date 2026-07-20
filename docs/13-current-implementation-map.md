@@ -78,6 +78,6 @@ Estado consolidado el 2026-07-20.
 ## Gaps abiertos
 
 - E2E end-to-end todavia no implementados.
-- Verificacion automatizada de RLS multiusuario pendiente.
+- Verificacion SQL directa por `psql` pendiente por ausencia de `SUPABASE_DB_URL` o `DATABASE_URL` en el entorno actual, aunque la verificacion live por API ya cubre aislamiento RLS y flujo comercial.
 - Edicion avanzada de recetas existente solo en alta inicial; falta un flujo de edicion posterior si se requiere.
 - Exportacion CSV agregada; faltan formatos adicionales si se requieren reportes mas especializados.

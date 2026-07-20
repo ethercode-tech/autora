@@ -107,13 +107,13 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - auditoria administrativa
 - Evidencia automatizada actual:
   - suite E2E local ejecutada el 2026-07-20 con `24 passed`
+  - build productivo local ejecutado el 2026-07-20 con `npm run build`
   - runner reproducible para smokes SQL sobre Supabase real
-  - verificacion live sobre Supabase ejecutada el 2026-07-20 con 14 checks operativos y de RLS en verde
-  - verificacion live admin/comercial ejecutada el 2026-07-20 con deteccion de `stack depth limit exceeded` en la base remota antes de aplicar `202607200005_fix_is_admin_recursion.sql`
+  - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde
 
 ## Pendientes principales
 
 - E2E de fabricante y reventa con persistencia real.
 - Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
-- Reaplicar en la base remota los fixes `202607200004_admin_commercial_rls.sql` y `202607200005_fix_is_admin_recursion.sql`, luego rerun de `pnpm test:supabase-live`.
+- Exponer `SUPABASE_DB_URL` o `DATABASE_URL` para correr smokes SQL directos por `psql` y aplicar SQL puntual desde el repo cuando haga falta.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.
