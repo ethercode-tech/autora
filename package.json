@@ -11,6 +11,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:sql-smoke": "node ./scripts/run-sql-smoke.mjs all",
+    "test:sql-smoke:rls": "node ./scripts/run-sql-smoke.mjs rls",
+    "test:sql-smoke:multiuser": "node ./scripts/run-sql-smoke.mjs multiuser",
+    "test:sql-smoke:operational": "node ./scripts/run-sql-smoke.mjs operational",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

@@ -66,6 +66,10 @@ Estado consolidado el 2026-07-20.
   - ejecutar `tests/rls/multiuser-smoke.sql` contra la base del entorno objetivo.
 - Smoke operativo integrado en Supabase:
   - ejecutar `tests/integration/operational-flow-smoke.sql` contra la base del entorno objetivo.
+- Runner reproducible de smokes SQL:
+  - `npm run test:sql-smoke`
+  - variantes: `npm run test:sql-smoke:rls`, `npm run test:sql-smoke:multiuser`, `npm run test:sql-smoke:operational`
+  - requiere `SUPABASE_DB_URL` o `DATABASE_URL` y un binario `psql` disponible o configurable por `PSQL_PATH`
 
 ## Gaps todavia abiertos
 

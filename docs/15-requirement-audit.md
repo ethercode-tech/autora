@@ -177,3 +177,15 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 - Ejecutar smoke multiusuario para demostrar aislamiento RLS.
 - Completar E2E del flujo principal de fabricante y reventa.
 - Registrar evidencia de despliegue reproducible del entorno objetivo.
+
+## Runner operativo disponible
+
+- Script: `scripts/run-sql-smoke.mjs`
+- Comando principal: `npm run test:sql-smoke`
+- Suites disponibles:
+  - `npm run test:sql-smoke:rls`
+  - `npm run test:sql-smoke:multiuser`
+  - `npm run test:sql-smoke:operational`
+- Requisitos:
+  - `SUPABASE_DB_URL` o `DATABASE_URL`
+  - `psql` en `PATH` o `PSQL_PATH` apuntando al binario

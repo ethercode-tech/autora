@@ -30,6 +30,7 @@ Artefactos ejecutables preparados:
 - `tests/integration/operational-flow-smoke.sql`
 - `tests/rls/rls-smoke.sql`
 - `tests/rls/multiuser-smoke.sql`
+- `scripts/run-sql-smoke.mjs`
 
 ## Seguridad y RLS
 
