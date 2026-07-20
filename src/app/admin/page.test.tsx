@@ -143,7 +143,8 @@ describe("AdminPage", () => {
     expect(screen.getByLabelText("plan-form")).toBeInTheDocument();
     expect(screen.getByLabelText("subscription-form")).toBeInTheDocument();
     expect(screen.getByLabelText("payment-form")).toBeInTheDocument();
-    expect(screen.getByText(/Base/)).toBeInTheDocument();
+    expect(screen.getByText("Base · 15000.00 ARS · monthly")).toBeInTheDocument();
+    expect(screen.getByText("Base · active · profile-1")).toBeInTheDocument();
     expect(screen.getByText(/payment_created/i)).toBeInTheDocument();
   });
 });

@@ -22,7 +22,7 @@ describe("PaymentForm", () => {
   });
 
   it("derives the account user id from the selected subscription", () => {
-    render(
+    const { container } = render(
       <PaymentForm
         subscriptions={[
           {
@@ -37,11 +37,22 @@ describe("PaymentForm", () => {
       />
     );
 
-    const subscriptionSelect = screen.getByRole("combobox", { name: "" });
+    const subscriptionSelect = container.querySelector('select[name="subscriptionId"]');
+    expect(subscriptionSelect).not.toBeNull();
+    if (!subscriptionSelect) {
+      throw new Error("subscription select not found");
+    }
     fireEvent.change(subscriptionSelect, { target: { value: "11111111-1111-1111-1111-111111111111" } });
 
-    expect(screen.getByDisplayValue("22222222-2222-2222-2222-222222222222")).toBeDisabled();
-    expect(screen.getByDisplayValue("22222222-2222-2222-2222-222222222222")).toHaveAttribute("readonly");
+    const associatedAccountField = container.querySelector('input[placeholder="Cuenta asociada"]');
+    expect(associatedAccountField).not.toBeNull();
+    if (!associatedAccountField) {
+      throw new Error("associated account field not found");
+    }
+
+    expect(associatedAccountField).toHaveValue("22222222-2222-2222-2222-222222222222");
+    expect(associatedAccountField).toBeDisabled();
+    expect(associatedAccountField).toHaveAttribute("readonly");
   });
 
   it("shows a safe placeholder until a subscription is selected", () => {

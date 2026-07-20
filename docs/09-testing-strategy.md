@@ -33,9 +33,11 @@ Artefactos ejecutables preparados:
 - `scripts/run-sql-smoke.mjs`
 - `scripts/verify-live-supabase.mjs`
 - `scripts/apply-sql-files.mjs`
+- `scripts/run-baseline-checks.mjs`
 - `src/architecture/storage-boundary.test.ts`
 - `src/server/queries/check-live-e2e-readiness.test.ts`
 - `src/server/queries/check-release-readiness.test.ts`
+- `src/server/queries/run-baseline-checks.test.ts`
 - `src/server/queries/run-live-e2e.test.ts`
 
 ## Seguridad y RLS
@@ -70,6 +72,7 @@ Cobertura E2E actualmente ejecutada:
 - `pnpm test:e2e:live` para correr fabricante + reventa con build productivo previo
 - `pnpm test:e2e:live:manufacturer` para aislar fabricante
 - `pnpm test:e2e:live:reseller` para aislar reventa
+- `pnpm verify:baseline` para consolidar lint, typecheck, Vitest y build productivo en una sola pasada
 - `pnpm test:release:check` para consolidar readiness de live E2E, SQL smoke y bloqueos de deploy del workspace
 
 Resultado local mas reciente:
@@ -81,7 +84,9 @@ Resultado local mas reciente:
 - readiness live del 2026-07-20: `pnpm test:e2e:live:check` en verde
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
 - auditoria de release del 2026-07-20: `pnpm test:release:check` marco `SUPABASE_DB_URL` o `DATABASE_URL` y `.openai/hosting.json` como faltantes externos
+- baseline del 2026-07-20: `pnpm verify:baseline` en verde con lint, typecheck, `102 passed` en Vitest y build productivo exitoso
 - tests de helpers operativos del 2026-07-20: `4 passed` en `check-live-e2e-readiness.test.ts` y `check-release-readiness.test.ts`
+- tests del runner baseline del 2026-07-20: `3 passed` en `run-baseline-checks.test.ts`
 - tests del runner live del 2026-07-20: `6 passed` en `run-live-e2e.test.ts`
 
 ## Verificacion live actual

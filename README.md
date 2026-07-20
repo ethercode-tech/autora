@@ -41,6 +41,7 @@ Estado del repositorio al 2026-07-20:
 - `pnpm lint`
 - `pnpm test`
 - `pnpm build`
+- `pnpm verify:baseline`
 - `pnpm test:e2e`
 - `pnpm test:e2e:live:check`
 - `pnpm test:e2e:live`
@@ -125,6 +126,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - E2E live opt-in de reventa ejecutado el 2026-07-20 con `1 passed` sobre UI real + Supabase real
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
   - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con live E2E listo y bloqueos externos explicitados para SQL directo y hosting
+  - baseline reproducible `pnpm verify:baseline` ejecutado el 2026-07-20 con lint, typecheck, suite Vitest y build productivo en verde
   - build productivo local ejecutado el 2026-07-20 con `npm run build`
   - runner reproducible para smokes SQL sobre Supabase real
   - verificacion live sobre Supabase ejecutada el 2026-07-20 con 22 checks operativos, comerciales y de RLS en verde
