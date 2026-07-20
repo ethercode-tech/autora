@@ -8,6 +8,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - El preflight de release detecta un bloqueo real al 2026-07-20: la configuracion actual para SQL directo no resuelve una conexion Postgres usable, aunque hosting y live E2E si estan listos.
 - El mismo preflight ya sugiere el formato esperado para este proyecto: `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`.
 - Verificacion live contra Supabase real ejecutada el 2026-07-20 con 22 checks en verde.
+- Existe una hoja rapida con la evidencia mas reciente y los checks live exactos: [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md).
 - Existe panel admin separado del workspace operativo y scripts de bootstrap para admin y emprendimientos de prueba.
 - Sigue faltando evidencia fuerte de ejecucion completa de `pnpm test:sql-smoke` por `psql`; ahora el runner tambien detecta y reporta URLs directas invalidas antes de intentar correr.
 
@@ -47,6 +48,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 2. [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
 3. [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 4. [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
+5. [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
 
 ## Mapa rapido
 
@@ -66,6 +68,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Matriz de verificacion: [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
 - Auditoria de requisitos: [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 - Runbook de release: [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
+- Evidencia mas reciente: [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
 
 ## Regla operativa
 

@@ -75,6 +75,7 @@ Estado consolidado el 2026-07-20.
 - Verificacion live contra Supabase real:
   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
   - resultado: 22 checks en verde sobre aprobacion admin, planes, suscripciones, pagos, auditoria, stock, costos, movimientos economicos, alertas, metricas fuente de dashboard, aislamiento RLS, bloqueo de cuenta y rollback de fallos operativos
+  - evidencia adicional: `docs/17-latest-verification-evidence.md`
 - Correccion RLS del ciclo comercial admin:
   - evidencia: `supabase/migrations/202607200004_admin_commercial_rls.sql`
   - evidencia complementaria: `supabase/migrations/202607200005_fix_is_admin_recursion.sql`

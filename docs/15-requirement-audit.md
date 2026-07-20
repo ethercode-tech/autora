@@ -133,6 +133,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia actual: RLS declarativa y smoke SQL preparado
    - evidencia ejecutable: `tests/rls/multiuser-smoke.sql`
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - evidencia adicional: `docs/17-latest-verification-evidence.md`
    - estado: verificado por API real; falta solo evidencia adicional por `psql` si se desea doble cobertura
 2. Compras aumentan stock.
    - evidencia actual: test declarativo de migracion
@@ -191,11 +192,13 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia de implementacion: `src/server/actions/admin.ts` deriva `user_id` del pago desde la suscripcion persistida
    - evidencia de implementacion: `src/server/actions/admin.ts` resuelve la promocion de estado tras crear suscripciones con el `account_status` real del perfil
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` valido aprobacion de solicitudes, alta de planes, suscripciones, pagos, activacion de cuenta y auditoria admin
+   - evidencia adicional: `docs/17-latest-verification-evidence.md`
    - estado: verificado por API real
 13. Operaciones criticas transaccionales.
    - evidencia actual: RPC SQL atomicas
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
    - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` con rollback comprobado en venta y produccion fallidas
+   - evidencia adicional: `docs/17-latest-verification-evidence.md`
    - estado: verificado por API real
 14. Flujos principales con pruebas automatizadas.
    - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
