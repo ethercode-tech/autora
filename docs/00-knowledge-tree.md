@@ -5,7 +5,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 ## Estado operativo rapido
 
 - Build productivo local verificado el 2026-07-20 con `pnpm build`.
-- El preflight de release detecta un bloqueo real al 2026-07-20: la variable para SQL directo no es una URI Postgres valida, aunque hosting y live E2E si estan listos.
+- El preflight de release detecta un bloqueo real al 2026-07-20: la configuracion actual para SQL directo no resuelve una conexion Postgres usable, aunque hosting y live E2E si estan listos.
 - El mismo preflight ya sugiere el formato esperado para este proyecto: `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`.
 - Verificacion live contra Supabase real ejecutada el 2026-07-20 con 22 checks en verde.
 - Existe panel admin separado del workspace operativo y scripts de bootstrap para admin y emprendimientos de prueba.

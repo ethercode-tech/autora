@@ -49,7 +49,7 @@ describe("release readiness helpers", () => {
       },
       sqlSmoke: {
         ready: false,
-        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL"],
+        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL (or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD)"],
         expectedDirectUrlExample: "postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres"
       }
     });
@@ -59,7 +59,7 @@ describe("release readiness helpers", () => {
     expect(summary).toContain("sql-smoke=blocked");
     expect(summary).toContain("direct-db-url=missing");
     expect(summary).toContain("hosting-config=missing");
-    expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL");
+    expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL (or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD)");
     expect(summary).toContain("expected direct url example: postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
     expect(summary).toContain("deploy blocker: .openai/hosting.json is not present in this workspace.");
   });
@@ -81,7 +81,7 @@ describe("release readiness helpers", () => {
       },
       sqlSmoke: {
         ready: false,
-        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)"],
+        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL must be Postgres, or provide NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD"],
         expectedDirectUrlExample: "postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres"
       }
     });
@@ -89,7 +89,7 @@ describe("release readiness helpers", () => {
     expect(summary).toContain("ready=no");
     expect(summary).toContain("sql-smoke=blocked");
     expect(summary).toContain("direct-db-url=missing");
-    expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)");
+    expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL must be Postgres, or provide NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD");
     expect(summary).toContain("expected direct url example: postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
   });
 

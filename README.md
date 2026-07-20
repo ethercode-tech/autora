@@ -9,7 +9,7 @@ Estado del repositorio al 2026-07-20:
 - Panel operativo, panel administrativo, autenticacion y migraciones presentes.
 - Recuperacion de contrasena y exportacion JSON/CSV incluidas.
 - Tests unitarios activos, deploy productivo verificado y suite E2E local validada.
-  - nota: el readiness de release ya no bloquea por hosting, pero sigue bloqueado por SQL directo porque `SUPABASE_DB_URL` no es una URI Postgres valida.
+  - nota: el readiness de release ya no bloquea por hosting, pero sigue bloqueado por SQL directo porque la configuracion actual no aporta una conexion Postgres usable para `psql`.
 
 ## Punto de entrada recomendado
 
@@ -66,7 +66,7 @@ Parti de `.env.example` y completa:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `SUPABASE_DB_URL`
+- `SUPABASE_DB_URL` o `SUPABASE_DB_PASSWORD`
 
 Si `psql` no esta disponible en `PATH`, define tambien:
 
@@ -106,7 +106,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
      - `PRODUCTION_BUSINESS_PASSWORD`
 10. Para auditar readiness de release del repositorio:
    - `pnpm test:release:check`
-   - al 2026-07-20 reporta `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la variable configurada para SQL directo no usa esquema `postgres://` o `postgresql://`
+   - al 2026-07-20 reporta `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la configuracion actual no resuelve una conexion Postgres directa; el preflight acepta `SUPABASE_DB_URL`/`DATABASE_URL` validas o la combinacion `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`
 
 ## Estado actual
 
@@ -151,7 +151,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 
 ## Pendientes principales
 
-- Reemplazar `SUPABASE_DB_URL` o `DATABASE_URL` por una URI Postgres real (`postgres://` o `postgresql://`) para poder correr smokes SQL directos y `db:apply`.
+- Proveer una conexion Postgres directa usable para `psql`, ya sea con `SUPABASE_DB_URL`/`DATABASE_URL` validas o con `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`, para poder correr smokes SQL directos y `db:apply`.
   - ejemplo esperado por el preflight actual: `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`
 - Ejecutar smokes SQL multiusuario y operativos contra un proyecto Supabase activo por `psql` una vez corregida esa configuracion.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

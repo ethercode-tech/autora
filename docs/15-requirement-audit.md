@@ -214,7 +214,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 ## Siguiente tramo recomendado
 
 - Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
-- Corregir `SUPABASE_DB_URL` o `DATABASE_URL` a una URI Postgres valida y luego ejecutar smoke SQL directo por `psql`, incluyendo el caso multiusuario, para sumar evidencia adicional de aislamiento RLS.
+- Proveer una conexion Postgres directa usable, ya sea con `SUPABASE_DB_URL`/`DATABASE_URL` validas o con `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`, y luego ejecutar smoke SQL directo por `psql`, incluyendo el caso multiusuario, para sumar evidencia adicional de aislamiento RLS.
 - Publicar una version productiva real sobre el target ya configurado del workspace.
 
 ## Runner operativo disponible

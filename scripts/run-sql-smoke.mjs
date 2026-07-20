@@ -29,7 +29,19 @@ export function resolveSelectedSuite(selection = "all") {
 }
 
 export function resolveDatabaseUrl(env = process.env) {
-  return env.SUPABASE_DB_URL || env.DATABASE_URL || null;
+  const explicitUrl = sanitizeEnvValue(env.SUPABASE_DB_URL) || sanitizeEnvValue(env.DATABASE_URL);
+
+  if (isPostgresConnectionString(explicitUrl)) {
+    return explicitUrl;
+  }
+
+  const derivedUrl = buildDerivedSupabaseDatabaseUrl(env);
+
+  if (derivedUrl) {
+    return derivedUrl;
+  }
+
+  return explicitUrl || null;
 }
 
 export function isPostgresConnectionString(value) {
@@ -43,6 +55,15 @@ export function isPostgresConnectionString(value) {
   } catch {
     return false;
   }
+}
+
+export function sanitizeEnvValue(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const sanitized = value.trim();
+  return sanitized.length > 0 ? sanitized : null;
 }
 
 export function extractSupabaseProjectRef(value) {
@@ -59,6 +80,35 @@ export function extractSupabaseProjectRef(value) {
   }
 }
 
+export function buildDerivedSupabaseDatabaseUrl(env = process.env) {
+  const password = sanitizeEnvValue(env.SUPABASE_DB_PASSWORD) || sanitizeEnvValue(env.PGPASSWORD);
+
+  if (!password) {
+    return null;
+  }
+
+  const supabaseUrl = sanitizeEnvValue(env.NEXT_PUBLIC_SUPABASE_URL) || sanitizeEnvValue(env.SUPABASE_URL);
+  const projectRef = extractSupabaseProjectRef(supabaseUrl);
+  const host = sanitizeEnvValue(env.SUPABASE_DB_HOST) || sanitizeEnvValue(env.PGHOST) || (projectRef ? `db.${projectRef}.supabase.co` : null);
+
+  if (!host) {
+    return null;
+  }
+
+  const protocol = sanitizeEnvValue(env.SUPABASE_DB_SCHEME) || "postgresql";
+  const user = sanitizeEnvValue(env.SUPABASE_DB_USER) || sanitizeEnvValue(env.PGUSER) || "postgres";
+  const port = sanitizeEnvValue(env.SUPABASE_DB_PORT) || sanitizeEnvValue(env.PGPORT) || "5432";
+  const databaseName = sanitizeEnvValue(env.SUPABASE_DB_NAME) || sanitizeEnvValue(env.PGDATABASE) || "postgres";
+  const sslmode = sanitizeEnvValue(env.SUPABASE_DB_SSLMODE) || sanitizeEnvValue(env.PGSSLMODE);
+  const connectionUrl = new URL(`${protocol}://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${databaseName}`);
+
+  if (sslmode) {
+    connectionUrl.searchParams.set("sslmode", sslmode);
+  }
+
+  return connectionUrl.toString();
+}
+
 export function resolveValidatedDatabaseUrl(env = process.env) {
   const databaseUrl = resolveDatabaseUrl(env);
 
@@ -68,7 +118,7 @@ export function resolveValidatedDatabaseUrl(env = process.env) {
 
   if (!isPostgresConnectionString(databaseUrl)) {
     throw new Error(
-      "SUPABASE_DB_URL or DATABASE_URL must be a direct Postgres connection string starting with postgres:// or postgresql://."
+      "SQL smoke requires a direct Postgres connection string via SUPABASE_DB_URL or DATABASE_URL, or enough discrete variables to derive one (for example NEXT_PUBLIC_SUPABASE_URL plus SUPABASE_DB_PASSWORD)."
     );
   }
 

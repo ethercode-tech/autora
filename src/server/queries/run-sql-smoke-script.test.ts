@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 type SmokeRunnerModule = {
   SQL_SMOKE_SUITES: Record<string, string[]>;
+  buildDerivedSupabaseDatabaseUrl: (env?: Record<string, string | undefined>) => string | null;
   buildPsqlArguments: (databaseUrl: string, sqlFilePath: string) => string[];
   buildPsqlEnvironment: (env?: Record<string, string | undefined>) => Record<string, string | undefined>;
   buildWindowsPsqlCandidates: (env?: Record<string, string | undefined>) => string[];
@@ -58,6 +59,25 @@ describe("run sql smoke script helpers", () => {
     expect(smokeRunner.resolveDatabaseUrl({})).toBeNull();
   });
 
+  it("derives a direct Supabase Postgres url from discrete variables", () => {
+    expect(
+      smokeRunner.buildDerivedSupabaseDatabaseUrl({
+        NEXT_PUBLIC_SUPABASE_URL: "https://skqtwagdshdppijswchw.supabase.co",
+        SUPABASE_DB_PASSWORD: "secret-password"
+      })
+    ).toBe("postgresql://postgres:secret-password@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
+  });
+
+  it("prefers a derived direct url over an invalid https supabase db url", () => {
+    expect(
+      smokeRunner.resolveDatabaseUrl({
+        NEXT_PUBLIC_SUPABASE_URL: "https://skqtwagdshdppijswchw.supabase.co",
+        SUPABASE_DB_URL: "https://skqtwagdshdppijswchw.supabase.co",
+        SUPABASE_DB_PASSWORD: "secret-password"
+      })
+    ).toBe("postgresql://postgres:secret-password@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
+  });
+
   it("accepts direct postgres connection strings only", () => {
     expect(smokeRunner.isPostgresConnectionString("postgres://user:pass@host:5432/db")).toBe(true);
     expect(smokeRunner.isPostgresConnectionString("postgresql://user:pass@host:5432/db")).toBe(true);
@@ -74,7 +94,7 @@ describe("run sql smoke script helpers", () => {
       smokeRunner.resolveValidatedDatabaseUrl({
         SUPABASE_DB_URL: "https://example.supabase.co"
       })
-    ).toThrow(/must be a direct Postgres connection string/i);
+    ).toThrow(/requires a direct Postgres connection string/i);
   });
 
   it("uses PSQL_PATH when provided", () => {

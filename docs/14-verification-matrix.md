@@ -118,7 +118,7 @@ Estado consolidado el 2026-07-20.
   - `npm run test:sql-smoke:check`
   - `npm run test:sql-smoke`
   - variantes: `npm run test:sql-smoke:rls`, `npm run test:sql-smoke:multiuser`, `npm run test:sql-smoke:operational`
-  - requiere `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`
+  - requiere `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`, o la combinacion `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`
   - resuelve `psql` desde `PATH`, `PSQL_PATH` o rutas estandar de PostgreSQL en Windows
 - Auditoria consolidada de release:
   - `pnpm test:release:check`
@@ -139,12 +139,12 @@ Estado consolidado el 2026-07-20.
  - El runner unificado de live E2E paso el 2026-07-20 con `pnpm test:e2e:live`, incluyendo build productivo y `2 passed`.
  - El flujo `manufacturer` paso el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`.
  - El flujo `reseller` paso el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`.
- - La auditoria de release del 2026-07-20 reporto `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la URL configurada para SQL directo no usa esquema Postgres valido.
+ - La auditoria de release del 2026-07-20 reporto `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la configuracion actual no resuelve una conexion Postgres directa usable.
  - Los tests de helpers operativos pasaron el 2026-07-20 con `4 passed`.
  - Los tests del runner live pasaron el 2026-07-20 con `6 passed`.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
- - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows, y tambien detecta que la URL directa actual es invalida para Postgres.
-- Falta corregir `SUPABASE_DB_URL` o `DATABASE_URL` y luego correr el smoke SQL completo via Postgres directo si se quiere evidencia adicional a nivel `psql`.
+ - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows, y tambien detecta que la configuracion actual no aporta una conexion Postgres usable.
+- Falta proveer `SUPABASE_DB_URL`/`DATABASE_URL` validas o `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`, y luego correr el smoke SQL completo via Postgres directo si se quiere evidencia adicional a nivel `psql`.
 - La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, y los flujos live de fabricante y reventa ya quedaron verificados con persistencia real.
 - El deployment activo ya no muestra el fallback de variables faltantes en `/dashboard` ni en `/admin`; ambas rutas resuelven a login cuando no hay sesion.

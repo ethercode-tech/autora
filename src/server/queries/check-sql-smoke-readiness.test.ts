@@ -27,7 +27,7 @@ describe("sql smoke readiness helpers", () => {
     expect(readinessModule.getMissingReadinessEnvKeys({})).toEqual([
       "NEXT_PUBLIC_SUPABASE_URL",
       "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-      "SUPABASE_DB_URL or DATABASE_URL"
+      "SUPABASE_DB_URL or DATABASE_URL (or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD)"
     ]);
   });
 
@@ -48,13 +48,23 @@ describe("sql smoke readiness helpers", () => {
         NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-key",
         SUPABASE_DB_URL: "https://example.supabase.co"
       })
-    ).toEqual(["SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)"]);
+    ).toEqual(["SUPABASE_DB_URL or DATABASE_URL must be Postgres, or provide NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD"]);
+  });
+
+  it("accepts derived Supabase direct configuration without an explicit database url", () => {
+    expect(
+      readinessModule.getMissingReadinessEnvKeys({
+        NEXT_PUBLIC_SUPABASE_URL: "https://skqtwagdshdppijswchw.supabase.co",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-key",
+        SUPABASE_DB_PASSWORD: "secret-password"
+      })
+    ).toEqual([]);
   });
 
   it("formats a readable readiness summary", () => {
     const summary = readinessModule.formatReadinessSummary({
       ready: false,
-      missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL"],
+      missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL (or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD)"],
       missingFiles: ["tests/rls/rls-smoke.sql"],
       expectedDirectUrlExample: "postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres",
       psql: {
@@ -65,8 +75,9 @@ describe("sql smoke readiness helpers", () => {
 
     expect(summary).toContain("ready=no");
     expect(summary).toContain("psql=missing");
-    expect(summary).toContain("missing env: SUPABASE_DB_URL or DATABASE_URL");
+    expect(summary).toContain("missing env: SUPABASE_DB_URL or DATABASE_URL (or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD)");
     expect(summary).toContain("expected direct url example: postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
+    expect(summary).toContain("alternate supported config: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD");
     expect(summary).toContain("missing files: tests/rls/rls-smoke.sql");
   });
 

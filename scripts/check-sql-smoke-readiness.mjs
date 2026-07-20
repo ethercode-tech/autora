@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { loadResolvedEnv } from "./load-project-env.mjs";
 import {
+  buildDerivedSupabaseDatabaseUrl,
   extractSupabaseProjectRef,
   resolveDatabaseUrl,
   resolvePsqlBinary,
@@ -18,11 +19,18 @@ const REQUIRED_ENV_KEYS = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANO
 export function getMissingReadinessEnvKeys(env = process.env) {
   const missingKeys = REQUIRED_ENV_KEYS.filter((key) => !env[key]);
   const databaseUrl = resolveDatabaseUrl(env);
+  const canDeriveDirectUrl = Boolean(buildDerivedSupabaseDatabaseUrl(env));
 
   if (!databaseUrl) {
-    missingKeys.push("SUPABASE_DB_URL or DATABASE_URL");
+    if (canDeriveDirectUrl) {
+      return missingKeys;
+    }
+
+    missingKeys.push("SUPABASE_DB_URL or DATABASE_URL (or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD)");
   } else if (!isPostgresConnectionString(databaseUrl)) {
-    missingKeys.push("SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)");
+    missingKeys.push(
+      "SUPABASE_DB_URL or DATABASE_URL must be Postgres, or provide NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD"
+    );
   }
 
   return missingKeys;
@@ -108,6 +116,7 @@ export function formatReadinessSummary(readiness) {
 
   if (readiness.expectedDirectUrlExample && readiness.missingEnvKeys.some((key) => key.includes("SUPABASE_DB_URL or DATABASE_URL"))) {
     lines.push(`[sql-smoke:check] expected direct url example: ${readiness.expectedDirectUrlExample}`);
+    lines.push("[sql-smoke:check] alternate supported config: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD");
   }
 
   if (readiness.missingFiles.length > 0) {

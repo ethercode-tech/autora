@@ -21,7 +21,7 @@ Dejar claro:
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
 - Para smokes SQL directos:
-  - `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`
+  - `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`, o bien `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`
   - `psql` en `PATH`, `PSQL_PATH` o en una ruta estandar de PostgreSQL para Windows
 - Para live E2E:
   - Chrome disponible
@@ -95,7 +95,7 @@ Valida:
 - presencia de `psql`,
 - existencia de las suites SQL requeridas.
 
-Si falla por variables faltantes o por una URL HTTP/HTTPS mal configurada, el bloqueo es externo al codigo del repo.
+Si falla por variables faltantes, por una URL HTTP/HTTPS mal configurada o porque falta `SUPABASE_DB_PASSWORD` para derivar la URL directa, el bloqueo es externo al codigo del repo.
 
 Con la configuracion actual del proyecto, el ejemplo esperado por el preflight es:
 
@@ -117,14 +117,15 @@ Al 2026-07-20, el resultado esperado de este workspace es:
 - `direct-db-url=missing`
 - `hosting-config=present`
 
-Eso significa que el repo ya puede demostrar build productivo, flujos live reales y un target de hosting configurado, pero no puede cerrar el release completo desde este workspace mientras falten:
+Eso significa que el repo ya puede demostrar build productivo, flujos live reales y un target de hosting configurado, pero no puede cerrar el release completo desde este workspace mientras falte una conexion Postgres directa utilizable por `psql`, por ejemplo:
 
 - una URI Postgres valida para `SUPABASE_DB_URL` o `DATABASE_URL`
+- o la combinacion `NEXT_PUBLIC_SUPABASE_URL + SUPABASE_DB_PASSWORD`
 - una ejecucion completa y documentada de `pnpm test:sql-smoke`
 
 ## Bloqueos vigentes al 2026-07-20
 
-1. La variable configurada para SQL directo no es una URI Postgres valida.
+1. La configuracion actual para SQL directo no resuelve una conexion Postgres utilizable.
    - impacto:
      - `pnpm test:sql-smoke:check` y `pnpm test:release:check` quedan bloqueados correctamente,
      - no pueden correrse `pnpm test:sql-smoke` ni `pnpm db:apply` contra la base remota.
