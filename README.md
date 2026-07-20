@@ -42,6 +42,7 @@ Estado del repositorio al 2026-07-20:
 - `pnpm test`
 - `pnpm build`
 - `pnpm test:e2e`
+- `pnpm test:sql-smoke:check`
 - `pnpm test:sql-smoke`
 - `pnpm test:sql-smoke:rls`
 - `pnpm test:sql-smoke:multiuser`
@@ -67,8 +68,9 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 
 1. Completa `.env.local` desde `.env.example`.
 2. Asegura un binario `psql` disponible en `PATH` o configura `PSQL_PATH`.
-3. Ejecuta `pnpm test:sql-smoke` para correr RLS declarativa, aislamiento multiusuario y flujo operativo integrado.
-4. Si necesitas aislar una suite, usa:
+3. Ejecuta `pnpm test:sql-smoke:check` para validar variables, `psql` y archivos requeridos.
+4. Ejecuta `pnpm test:sql-smoke` para correr RLS declarativa, aislamiento multiusuario y flujo operativo integrado.
+5. Si necesitas aislar una suite, usa:
    - `pnpm test:sql-smoke:rls`
    - `pnpm test:sql-smoke:multiuser`
    - `pnpm test:sql-smoke:operational`

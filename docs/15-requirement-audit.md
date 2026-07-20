@@ -181,7 +181,9 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 ## Runner operativo disponible
 
 - Script: `scripts/run-sql-smoke.mjs`
+- Preflight: `scripts/check-sql-smoke-readiness.mjs`
 - Comando principal: `npm run test:sql-smoke`
+- Comando de readiness: `npm run test:sql-smoke:check`
 - Suites disponibles:
   - `npm run test:sql-smoke:rls`
   - `npm run test:sql-smoke:multiuser`
