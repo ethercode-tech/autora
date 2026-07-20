@@ -133,6 +133,8 @@ Eso significa que el repo ya puede demostrar build productivo, flujos live reale
 
 - `https://autoracontable.vercel.app` ya fue validado con Playwright live en los dos flujos principales.
 - `/dashboard` y `/admin` resuelven a login cuando no hay sesion y ya no muestran el fallback de variables faltantes.
+- `admin@autora.local` ya fue validado con acceso visible al panel administrativo sobre la URL productiva.
+- `lumiq@autora.local` ya fue validado con acceso visible al dashboard operativo sobre la URL productiva.
 
 ## Definicion practica de release completo
 

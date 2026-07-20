@@ -28,6 +28,7 @@ Estado consolidado el 2026-07-20.
   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts`
   - cubre: solicitud de acceso, aprobacion, alta controlada, activacion, onboarding, unidad, recurso, producto, receta, compra, produccion, venta, dashboard y persistencia real
   - evidencia adicional ejecutada el 2026-07-20: `E2E_EXTERNAL_BASE_URL=https://autoracontable.vercel.app pnpm test:e2e:live:manufacturer`
+  - evidencia adicional ejecutada el 2026-07-20: login real de `lumiq@autora.local` en `https://autoracontable.vercel.app/dashboard`
 - E2E live reventa con persistencia real:
   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-reseller-flow.spec.ts`
   - cubre: solicitud de acceso, aprobacion, alta controlada, activacion, onboarding reseller, alta de producto de reventa, compra, venta, dashboard, persistencia real y bloqueo explicito de consumos, produccion y pricing
@@ -38,6 +39,7 @@ Estado consolidado el 2026-07-20.
   - evidencia adicional: `src/components/forms/payment-form.test.tsx`
   - evidencia adicional: `src/app/admin/page.test.tsx`
   - evidencia de implementacion: `src/server/actions/admin.ts` resuelve transiciones de suscripcion con el estado real del perfil
+  - evidencia adicional ejecutada el 2026-07-20: login real de `admin@autora.local` en `https://autoracontable.vercel.app/admin`
 - Recetas con multiples insumos:
   - evidencia: `src/lib/validation/catalog.test.ts`
   - evidencia adicional: `src/components/forms/recipe-form.test.tsx`

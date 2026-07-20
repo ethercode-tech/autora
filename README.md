@@ -129,6 +129,8 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - runner unificado `pnpm test:e2e:live` ejecutado el 2026-07-20 con build productivo + `2 passed`
   - flujo `manufacturer` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`
   - flujo `reseller` ejecutado el 2026-07-20 contra `https://autoracontable.vercel.app` con `1 passed`
+  - login real del admin bootstrap `admin@autora.local` verificado el 2026-07-20 sobre `https://autoracontable.vercel.app/admin`
+  - login real del emprendimiento bootstrap `lumiq@autora.local` verificado el 2026-07-20 sobre `https://autoracontable.vercel.app/dashboard`
   - auditoria `pnpm test:release:check` ejecutada el 2026-07-20 con bloqueo explicito por URL directa invalida para `psql`
   - baseline reproducible `pnpm verify:baseline` ejecutado el 2026-07-20 con lint, typecheck, suite Vitest y build productivo en verde
   - target de hosting del workspace configurado en `.openai/hosting.json` el 2026-07-20
