@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { getLiveE2EReadiness } from "./check-live-e2e-readiness.mjs";
 import { getSqlSmokeReadiness } from "./check-sql-smoke-readiness.mjs";
 import { loadResolvedEnv } from "./load-project-env.mjs";
+import { isPostgresConnectionString } from "./run-sql-smoke.mjs";
 
 const REQUIRED_RELEASE_ENV_KEYS = [
   "NEXT_PUBLIC_APP_URL",
@@ -44,7 +45,8 @@ export async function getReleaseReadiness({ env = process.env, cwd = process.cwd
   const sqlSmoke = await getSqlSmokeReadiness({ env: resolvedEnv, cwd });
   const hostingConfig = await readHostingConfig(cwd);
   const missingReleaseEnvKeys = REQUIRED_RELEASE_ENV_KEYS.filter((key) => !resolvedEnv[key]);
-  const hasDirectDatabaseUrl = Boolean(resolvedEnv.SUPABASE_DB_URL || resolvedEnv.DATABASE_URL);
+  const configuredDatabaseUrl = resolvedEnv.SUPABASE_DB_URL || resolvedEnv.DATABASE_URL || null;
+  const hasDirectDatabaseUrl = isPostgresConnectionString(configuredDatabaseUrl);
   const hasHostingConfig = hostingConfig.exists && Boolean(hostingConfig.projectId);
 
   return {

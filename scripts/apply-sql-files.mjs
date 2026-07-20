@@ -2,7 +2,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { loadResolvedEnv } from "./load-project-env.mjs";
-import { resolveDatabaseUrl, resolvePsqlBinary, runPsqlFile } from "./run-sql-smoke.mjs";
+import { resolvePsqlBinary, resolveValidatedDatabaseUrl, runPsqlFile } from "./run-sql-smoke.mjs";
 
 export function resolveSqlFileArguments(args = process.argv.slice(2)) {
   const files = args.filter(Boolean);
@@ -24,7 +24,7 @@ export async function applySqlFiles({
   env = process.env
 } = {}) {
   const resolvedEnv = await loadResolvedEnv(env, cwd);
-  const databaseUrl = resolveDatabaseUrl(resolvedEnv);
+  const databaseUrl = resolveValidatedDatabaseUrl(resolvedEnv);
 
   if (!databaseUrl) {
     throw new Error("Missing SUPABASE_DB_URL or DATABASE_URL. Set one of them before applying SQL files.");

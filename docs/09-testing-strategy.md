@@ -83,12 +83,12 @@ Resultado local mas reciente:
 - ejecucion live opt-in del flujo reventa el 2026-07-20: `1 passed`
 - readiness live del 2026-07-20: `pnpm test:e2e:live:check` en verde
 - runner unificado live del 2026-07-20: `pnpm test:e2e:live` con build productivo + `2 passed`
-- auditoria de release del 2026-07-20: `pnpm test:release:check` devolvio `ready=yes`, `live-e2e=ok`, `sql-smoke=ok`, `direct-db-url=present` y `hosting-config=present`
+- auditoria de release del 2026-07-20: `pnpm test:release:check` devolvio `ready=no`, `live-e2e=ok`, `sql-smoke=blocked`, `direct-db-url=missing` y `hosting-config=present` porque la URL configurada para SQL directo no usa esquema Postgres valido
 - baseline del 2026-07-20: `pnpm verify:baseline` en verde con lint, typecheck, `102 passed` en Vitest y build productivo exitoso
 - tests de helpers operativos del 2026-07-20: `4 passed` en `check-live-e2e-readiness.test.ts` y `check-release-readiness.test.ts`
 - tests del runner baseline del 2026-07-20: `3 passed` en `run-baseline-checks.test.ts`
 - tests del runner live del 2026-07-20: `6 passed` en `run-live-e2e.test.ts`
-- la ejecucion directa completa de `pnpm test:sql-smoke` sigue pendiente como evidencia separada; hoy solo esta verificado su readiness
+- la ejecucion directa completa de `pnpm test:sql-smoke` sigue pendiente como evidencia separada; ademas, hoy la configuracion real de `SUPABASE_DB_URL` debe corregirse a una URI Postgres valida antes de poder correrla
 
 ## Verificacion live actual
 
@@ -103,7 +103,7 @@ Resultado local mas reciente:
   - los fixes de `supabase/migrations/202607200004_admin_commercial_rls.sql` y `supabase/migrations/202607200005_fix_is_admin_recursion.sql` ya quedaron reflejados en la verificacion API real
 - Para aplicar fixes sin Supabase CLI:
   - `npm run db:apply:admin-fixes`
-  - requiere `SUPABASE_DB_URL` o `DATABASE_URL`
+  - requiere `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`
 
 ## Responsive
 

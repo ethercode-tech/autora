@@ -40,6 +40,16 @@ describe("sql smoke readiness helpers", () => {
     ).toEqual([]);
   });
 
+  it("rejects non-postgres database urls during readiness", () => {
+    expect(
+      readinessModule.getMissingReadinessEnvKeys({
+        NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-key",
+        SUPABASE_DB_URL: "https://example.supabase.co"
+      })
+    ).toEqual(["SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)"]);
+  });
+
   it("formats a readable readiness summary", () => {
     const summary = readinessModule.formatReadinessSummary({
       ready: false,

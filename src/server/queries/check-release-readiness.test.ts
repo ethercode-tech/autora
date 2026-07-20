@@ -61,6 +61,33 @@ describe("release readiness helpers", () => {
     expect(summary).toContain("deploy blocker: .openai/hosting.json is not present in this workspace.");
   });
 
+  it("surfaces invalid direct database url as blocked", () => {
+    const summary = readinessModule.formatReleaseReadinessSummary({
+      ready: false,
+      missingReleaseEnvKeys: [],
+      hasDirectDatabaseUrl: false,
+      hasHostingConfig: true,
+      hostingConfig: {
+        exists: true,
+        projectId: "appgprj_123"
+      },
+      liveE2E: {
+        ready: true,
+        chromeAvailable: true,
+        chromePath: "C:\\Chrome\\chrome.exe"
+      },
+      sqlSmoke: {
+        ready: false,
+        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)"]
+      }
+    });
+
+    expect(summary).toContain("ready=no");
+    expect(summary).toContain("sql-smoke=blocked");
+    expect(summary).toContain("direct-db-url=missing");
+    expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)");
+  });
+
   it("formats a ready release summary", () => {
     const summary = readinessModule.formatReleaseReadinessSummary({
       ready: true,

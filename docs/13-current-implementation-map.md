@@ -84,6 +84,6 @@ Estado consolidado el 2026-07-20.
 ## Gaps abiertos
 
 - `src/types/database.ts` esta incompleto respecto del esquema real y no debe tratarse como fuente canonica hasta regenerarlo o ampliarlo.
-- Verificacion SQL directa por `psql` pendiente como evidencia de ejecucion completa; el entorno actual ya resuelve readiness y URL directa, pero la corrida total aun no quedo documentada como exitosa.
+- Verificacion SQL directa por `psql` pendiente como evidencia de ejecucion completa; el entorno actual tiene una variable `SUPABASE_DB_URL` configurada, pero hoy no es una URI Postgres valida y el preflight ya lo detecta.
 - Edicion avanzada de recetas existente solo en alta inicial; falta un flujo de edicion posterior si se requiere.
 - Exportacion CSV agregada; faltan formatos adicionales si se requieren reportes mas especializados.

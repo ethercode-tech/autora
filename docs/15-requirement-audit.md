@@ -98,11 +98,11 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - evidencia ejecutada el 2026-07-20: `npm run test:sql-smoke:check` detecta `psql` automaticamente en `C:\Program Files\PostgreSQL\17\bin\psql.exe`
   - evidencia ejecutada el 2026-07-20: `pnpm build` completo sobre Next.js 15.5.20
   - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live:check` y `pnpm test:e2e:live`
-  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` con `ready=yes`
+  - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` con bloqueo explicito porque `SUPABASE_DB_URL` o `DATABASE_URL` no usan un esquema Postgres valido
   - evidencia de hosting gestionado: `.openai/hosting.json`
   - evidencia ejecutada el 2026-07-20: `4 passed` en pruebas de helpers operativos
   - evidencia ejecutada el 2026-07-20: `6 passed` en pruebas del runner live
-  - estado: parcial, falta evidencia de despliegue productivo real y de ejecucion completa del smoke SQL directo
+  - estado: parcial, falta evidencia de despliegue productivo real y corregir la URL directa de Postgres para ejecutar el smoke SQL completo
 
 ## Objetivo de inventario y economico
 
@@ -208,13 +208,13 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
    - evidencia adicional: `src/architecture/storage-boundary.test.ts`
    - evidencia ejecutada el 2026-07-20: `pnpm build`
    - evidencia ejecutada el 2026-07-20: `pnpm test:e2e:live` construye bundle productivo y verifica ambos flujos principales sobre Supabase real
-   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` confirma que el workspace ya tiene target de hosting y readiness en verde
+   - evidencia ejecutada el 2026-07-20: `pnpm test:release:check` confirma que el workspace ya tiene target de hosting, pero no una URL directa Postgres valida para los smokes SQL
    - estado: parcial, falta evidencia de despliegue productivo y smoke SQL directo
 
 ## Siguiente tramo recomendado
 
 - Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
-- Ejecutar smoke SQL directo por `psql`, incluyendo el caso multiusuario, para sumar evidencia adicional de aislamiento RLS.
+- Corregir `SUPABASE_DB_URL` o `DATABASE_URL` a una URI Postgres valida y luego ejecutar smoke SQL directo por `psql`, incluyendo el caso multiusuario, para sumar evidencia adicional de aislamiento RLS.
 - Publicar una version productiva real sobre el target ya configurado del workspace.
 
 ## Runner operativo disponible
@@ -231,5 +231,5 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
   - `npm run test:sql-smoke:multiuser`
   - `npm run test:sql-smoke:operational`
 - Requisitos:
-  - `SUPABASE_DB_URL` o `DATABASE_URL`
+  - `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`
   - `psql` en `PATH`, `PSQL_PATH` o instalado en una ruta estandar de PostgreSQL para Windows

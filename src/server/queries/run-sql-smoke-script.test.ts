@@ -7,7 +7,9 @@ type SmokeRunnerModule = {
   buildPsqlArguments: (databaseUrl: string, sqlFilePath: string) => string[];
   buildPsqlEnvironment: (env?: Record<string, string | undefined>) => Record<string, string | undefined>;
   buildWindowsPsqlCandidates: (env?: Record<string, string | undefined>) => string[];
+  isPostgresConnectionString: (value?: string | null) => boolean;
   resolveDatabaseUrl: (env?: Record<string, string | undefined>) => string | null;
+  resolveValidatedDatabaseUrl: (env?: Record<string, string | undefined>) => string | null;
   resolvePsqlBinary: (env?: Record<string, string | undefined>) => string;
   resolveSelectedSuite: (selection?: string) => {
     suite: string;
@@ -53,6 +55,20 @@ describe("run sql smoke script helpers", () => {
   it("falls back to DATABASE_URL when needed", () => {
     expect(smokeRunner.resolveDatabaseUrl({ DATABASE_URL: "postgres://fallback" })).toBe("postgres://fallback");
     expect(smokeRunner.resolveDatabaseUrl({})).toBeNull();
+  });
+
+  it("accepts direct postgres connection strings only", () => {
+    expect(smokeRunner.isPostgresConnectionString("postgres://user:pass@host:5432/db")).toBe(true);
+    expect(smokeRunner.isPostgresConnectionString("postgresql://user:pass@host:5432/db")).toBe(true);
+    expect(smokeRunner.isPostgresConnectionString("https://example.supabase.co")).toBe(false);
+  });
+
+  it("rejects non-postgres direct database urls", () => {
+    expect(() =>
+      smokeRunner.resolveValidatedDatabaseUrl({
+        SUPABASE_DB_URL: "https://example.supabase.co"
+      })
+    ).toThrow(/must be a direct Postgres connection string/i);
   });
 
   it("uses PSQL_PATH when provided", () => {

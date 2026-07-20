@@ -5,10 +5,10 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 ## Estado operativo rapido
 
 - Build productivo local verificado el 2026-07-20 con `pnpm build`.
-- Readiness de release verificado el 2026-07-20 con `ready=yes` en `pnpm test:release:check`.
+- El preflight de release detecta un bloqueo real al 2026-07-20: la variable para SQL directo no es una URI Postgres valida, aunque hosting y live E2E si estan listos.
 - Verificacion live contra Supabase real ejecutada el 2026-07-20 con 22 checks en verde.
 - Existe panel admin separado del workspace operativo y scripts de bootstrap para admin y emprendimientos de prueba.
-- Sigue faltando evidencia fuerte de ejecucion completa de `pnpm test:sql-smoke` por `psql`; el readiness del runner ya esta en verde.
+- Sigue faltando evidencia fuerte de ejecucion completa de `pnpm test:sql-smoke` por `psql`; ahora el runner tambien detecta y reporta URLs directas invalidas antes de intentar correr.
 
 ## Lectura minima por objetivo
 

@@ -32,6 +32,35 @@ export function resolveDatabaseUrl(env = process.env) {
   return env.SUPABASE_DB_URL || env.DATABASE_URL || null;
 }
 
+export function isPostgresConnectionString(value) {
+  if (typeof value !== "string" || value.length === 0) {
+    return false;
+  }
+
+  try {
+    const parsedUrl = new URL(value);
+    return parsedUrl.protocol === "postgres:" || parsedUrl.protocol === "postgresql:";
+  } catch {
+    return false;
+  }
+}
+
+export function resolveValidatedDatabaseUrl(env = process.env) {
+  const databaseUrl = resolveDatabaseUrl(env);
+
+  if (!databaseUrl) {
+    return null;
+  }
+
+  if (!isPostgresConnectionString(databaseUrl)) {
+    throw new Error(
+      "SUPABASE_DB_URL or DATABASE_URL must be a direct Postgres connection string starting with postgres:// or postgresql://."
+    );
+  }
+
+  return databaseUrl;
+}
+
 export function buildWindowsPsqlCandidates(env = process.env) {
   const rootDirectories = [env.ProgramFiles, env["ProgramFiles(x86)"]].filter(Boolean);
   const versions = ["17", "16", "15", "14", "13"];
@@ -119,7 +148,7 @@ export async function runSelectedSqlSmokeSuite({
 } = {}) {
   const resolvedEnv = await loadResolvedEnv(env, cwd);
   const selection = resolveSelectedSuite(suite);
-  const databaseUrl = resolveDatabaseUrl(resolvedEnv);
+  const databaseUrl = resolveValidatedDatabaseUrl(resolvedEnv);
 
   if (!databaseUrl) {
     throw new Error("Missing SUPABASE_DB_URL or DATABASE_URL. Set one of them before running SQL smoke tests.");

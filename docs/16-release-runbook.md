@@ -21,7 +21,7 @@ Dejar claro:
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
 - Para smokes SQL directos:
-  - `SUPABASE_DB_URL` o `DATABASE_URL`
+  - `SUPABASE_DB_URL` o `DATABASE_URL` con esquema `postgres://` o `postgresql://`
   - `psql` en `PATH`, `PSQL_PATH` o en una ruta estandar de PostgreSQL para Windows
 - Para live E2E:
   - Chrome disponible
@@ -86,10 +86,11 @@ Sirve para demostrar:
 Valida:
 
 - presencia de `SUPABASE_DB_URL` o `DATABASE_URL`,
+- que esa URL sea una conexion Postgres directa valida,
 - presencia de `psql`,
 - existencia de las suites SQL requeridas.
 
-Si falla por variables faltantes, el bloqueo es externo al codigo del repo.
+Si falla por variables faltantes o por una URL HTTP/HTTPS mal configurada, el bloqueo es externo al codigo del repo.
 
 ### `pnpm test:release:check`
 
@@ -101,23 +102,24 @@ Consolida:
 
 Al 2026-07-20, el resultado esperado de este workspace es:
 
-- `ready=yes`
+- `ready=no`
 - `live-e2e=ok`
-- `sql-smoke=ok`
-- `direct-db-url=present`
+- `sql-smoke=blocked`
+- `direct-db-url=missing`
 - `hosting-config=present`
 
-Eso significa que el repo ya puede demostrar build productivo, flujos live reales, readiness de SQL smoke y un target de hosting configurado. Aun asi, no puede cerrarse el release completo desde este workspace mientras falten:
+Eso significa que el repo ya puede demostrar build productivo, flujos live reales y un target de hosting configurado, pero no puede cerrar el release completo desde este workspace mientras falten:
 
+- una URI Postgres valida para `SUPABASE_DB_URL` o `DATABASE_URL`
 - una ejecucion completa y documentada de `pnpm test:sql-smoke`
 - una version productiva publicada sobre el target gestionado del workspace
 
 ## Bloqueos vigentes al 2026-07-20
 
-1. No hay evidencia archivada de una corrida completa de smoke SQL por `psql`.
+1. La variable configurada para SQL directo no es una URI Postgres valida.
    - impacto:
-     - no puede afirmarse validacion directa por Postgres mas alla del readiness del runner,
-     - no queda una prueba adicional de aislamiento RLS y transaccionalidad a nivel SQL puro.
+     - `pnpm test:sql-smoke:check` y `pnpm test:release:check` quedan bloqueados correctamente,
+     - no pueden correrse `pnpm test:sql-smoke` ni `pnpm db:apply` contra la base remota.
 2. Workspace con target de hosting gestionado pero sin deploy publicado verificable.
    - impacto:
      - aun no hay evidencia de deploy productivo administrado desde este repositorio,

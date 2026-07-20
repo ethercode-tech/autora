@@ -5,15 +5,18 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { loadResolvedEnv } from "./load-project-env.mjs";
-import { resolveDatabaseUrl, resolvePsqlBinary, SQL_SMOKE_SUITES } from "./run-sql-smoke.mjs";
+import { resolveDatabaseUrl, resolvePsqlBinary, isPostgresConnectionString, SQL_SMOKE_SUITES } from "./run-sql-smoke.mjs";
 
 const REQUIRED_ENV_KEYS = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"];
 
 export function getMissingReadinessEnvKeys(env = process.env) {
   const missingKeys = REQUIRED_ENV_KEYS.filter((key) => !env[key]);
+  const databaseUrl = resolveDatabaseUrl(env);
 
-  if (!resolveDatabaseUrl(env)) {
+  if (!databaseUrl) {
     missingKeys.push("SUPABASE_DB_URL or DATABASE_URL");
+  } else if (!isPostgresConnectionString(databaseUrl)) {
+    missingKeys.push("SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)");
   }
 
   return missingKeys;
