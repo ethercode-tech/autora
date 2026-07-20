@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { resolveCommercialStateAfterPayment, resolveProfileStatusAfterSubscriptionCreation } from "@/features/commercial/lib/account-commercial-state";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { accessRequestStatusSchema, accountStatusSchema, paymentSchema, planSchema, subscriptionSchema } from "@/lib/validation/admin";
 import type { ActionResult } from "@/server/actions/auth";
@@ -21,42 +22,31 @@ async function logAdminAudit(action: string, entityType: string, entityId: strin
 
 async function syncCommercialStateAfterPayment(userId: string, subscriptionId: string, paymentStatus: "pending" | "confirmed" | "rejected") {
   const { supabase } = await requireAdminSession();
+  const { data: profile } = await supabase.from("profiles").select("account_status").eq("user_id", userId).maybeSingle();
 
-  if (paymentStatus === "confirmed") {
-    await supabase
-      .from("subscriptions")
-      .update({
-        status: "active",
-        starts_at: new Date().toISOString().slice(0, 10)
-      })
-      .eq("id", subscriptionId);
-
-    await supabase
-      .from("profiles")
-      .update({
-        account_status: "active"
-      })
-      .eq("user_id", userId)
-      .in("account_status", ["approved_pending_payment", "past_due"]);
-
+  if (!profile) {
     return;
   }
 
-  if (paymentStatus === "rejected") {
+  const transitions = resolveCommercialStateAfterPayment({
+    profileStatus: profile.account_status,
+    paymentStatus,
+    effectiveDate: new Date().toISOString().slice(0, 10)
+  });
+
+  if (Object.keys(transitions.subscriptionPatch).length > 0) {
     await supabase
       .from("subscriptions")
-      .update({
-        status: "past_due"
-      })
+      .update(transitions.subscriptionPatch)
       .eq("id", subscriptionId);
+  }
 
+  if (Object.keys(transitions.profilePatch).length > 0) {
     await supabase
       .from("profiles")
-      .update({
-        account_status: "past_due"
-      })
+      .update(transitions.profilePatch)
       .eq("user_id", userId)
-      .eq("account_status", "approved_pending_payment");
+      .eq("account_status", profile.account_status);
   }
 }
 
@@ -188,11 +178,13 @@ export async function createSubscription(_: ActionResult, formData: FormData): P
     return { success: false, message: "No pudimos crear la suscripcion." };
   }
 
-  if (parsed.data.status === "active") {
+  const nextProfileStatus = resolveProfileStatusAfterSubscriptionCreation("pending", parsed.data.status);
+
+  if (nextProfileStatus !== "pending") {
     await supabase
       .from("profiles")
       .update({
-        account_status: "approved_pending_payment"
+        account_status: nextProfileStatus
       })
       .eq("user_id", parsed.data.userId)
       .eq("account_status", "pending");
