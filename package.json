@@ -16,6 +16,8 @@
     "test:sql-smoke:rls": "node ./scripts/run-sql-smoke.mjs rls",
     "test:sql-smoke:multiuser": "node ./scripts/run-sql-smoke.mjs multiuser",
     "test:sql-smoke:operational": "node ./scripts/run-sql-smoke.mjs operational",
+    "db:apply": "node ./scripts/apply-sql-files.mjs",
+    "db:apply:admin-fixes": "node ./scripts/apply-sql-files.mjs supabase/migrations/202607200004_admin_commercial_rls.sql supabase/migrations/202607200005_fix_is_admin_recursion.sql",
     "test:supabase-live": "node ./scripts/verify-live-supabase.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

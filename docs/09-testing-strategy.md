@@ -32,6 +32,7 @@ Artefactos ejecutables preparados:
 - `tests/rls/multiuser-smoke.sql`
 - `scripts/run-sql-smoke.mjs`
 - `scripts/verify-live-supabase.mjs`
+- `scripts/apply-sql-files.mjs`
 
 ## Seguridad y RLS
 
@@ -59,6 +60,20 @@ Cobertura E2E actualmente ejecutada:
 - `tests/e2e/configuration-guards.spec.ts`
 - `tests/e2e/panel-guardrails.spec.ts`
 - `tests/e2e/export-route.spec.ts` condicionado a Supabase configurado
+
+## Verificacion live actual
+
+- `npm run test:supabase-live` valido el 2026-07-20:
+  - aislamiento RLS real por API
+  - compras, consumos, produccion y ventas con persistencia real
+  - rollback en fallos operativos
+  - bloqueo por cuenta no activa
+- El mismo dia, la ampliacion del flujo admin/comercial detecto `stack depth limit exceeded` en la base remota al aprobar solicitudes admin.
+- La remediacion en repo es:
+  - `supabase/migrations/202607200004_admin_commercial_rls.sql`
+  - `supabase/migrations/202607200005_fix_is_admin_recursion.sql`
+- Para aplicar fixes sin Supabase CLI:
+  - `npm run db:apply:admin-fixes`
 
 ## Responsive
 

@@ -47,6 +47,8 @@ Estado del repositorio al 2026-07-20:
 - `pnpm test:sql-smoke:rls`
 - `pnpm test:sql-smoke:multiuser`
 - `pnpm test:sql-smoke:operational`
+- `pnpm db:apply -- <sql-file> [sql-file...]`
+- `pnpm db:apply:admin-fixes`
 
 ## Entorno
 
@@ -74,6 +76,9 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
    - `pnpm test:sql-smoke:rls`
    - `pnpm test:sql-smoke:multiuser`
    - `pnpm test:sql-smoke:operational`
+6. Para aplicar fixes SQL puntuales sin Supabase CLI, usa:
+   - `pnpm db:apply -- supabase/migrations/<archivo>.sql`
+   - `pnpm db:apply:admin-fixes` para reaplicar los fixes admin/comerciales del 2026-07-20
 
 ## Estado actual
 
@@ -99,11 +104,13 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 - Evidencia automatizada actual:
   - suite E2E local ejecutada el 2026-07-20 con `22 passed` y `1 skipped`
   - runner reproducible para smokes SQL sobre Supabase real
-  - verificacion live sobre Supabase ejecutada el 2026-07-20 con 8 checks operativos y de RLS en verde
+  - verificacion live sobre Supabase ejecutada el 2026-07-20 con 14 checks operativos y de RLS en verde
+  - verificacion live admin/comercial ejecutada el 2026-07-20 con deteccion de `stack depth limit exceeded` en la base remota antes de aplicar `202607200005_fix_is_admin_recursion.sql`
 
 ## Pendientes principales
 
 - E2E de fabricante y reventa con persistencia real.
 - Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
+- Reaplicar en la base remota los fixes `202607200004_admin_commercial_rls.sql` y `202607200005_fix_is_admin_recursion.sql`, luego rerun de `pnpm test:supabase-live`.
 - Mejoras de ergonomia para recetas con multiples insumos.
 - Opciones de exportacion adicionales a JSON.
