@@ -188,7 +188,8 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 14. Flujos principales con pruebas automatizadas.
    - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
    - evidencia ejecutada el 2026-07-20: `24 passed` en Playwright
-   - estado: parcial, falta E2E de punta a punta con persistencia real
+   - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts` con `1 passed` sobre UI real + Supabase real
+   - estado: parcial, el flujo fabricante ya tiene E2E persistente real; falta el flujo equivalente de reventa
 15. Despliegue sin datos locales.
    - evidencia actual: arquitectura server-side con Supabase
    - evidencia adicional: `src/architecture/storage-boundary.test.ts`
@@ -199,7 +200,7 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 
 - Ejecutar una prueba integrada real sobre Supabase para compra, consumo, produccion y venta.
 - Ejecutar smoke multiusuario para demostrar aislamiento RLS.
-- Completar E2E del flujo principal de fabricante y reventa.
+- Completar E2E del flujo principal de reventa.
 - Registrar evidencia de despliegue reproducible del entorno objetivo.
 
 ## Runner operativo disponible

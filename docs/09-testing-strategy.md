@@ -61,11 +61,14 @@ Cobertura E2E actualmente ejecutada:
 - `tests/e2e/configuration-guards.spec.ts`
 - `tests/e2e/panel-guardrails.spec.ts`
 - `tests/e2e/export-route.spec.ts`
+- `tests/e2e/live-manufacturer-flow.spec.ts` con `E2E_LIVE_SUPABASE=1` y `E2E_USE_PROD_SERVER=1`
+  - comando PowerShell: `$env:E2E_LIVE_SUPABASE='1'; $env:E2E_USE_PROD_SERVER='1'; pnpm test:e2e -- tests/e2e/live-manufacturer-flow.spec.ts`
 
 Resultado local mas reciente:
 
 - ejecucion completa de Playwright del 2026-07-20: `24 passed`
 - build productivo local del 2026-07-20: `npm run build` exitoso
+- ejecucion live opt-in del flujo fabricante el 2026-07-20: `1 passed`
 
 ## Verificacion live actual
 

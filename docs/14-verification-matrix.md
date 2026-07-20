@@ -24,6 +24,9 @@ Estado consolidado el 2026-07-20.
   - evidencia adicional: `src/app/(dashboard)/results/page.test.tsx`
   - evidencia: `tests/e2e/export-route.spec.ts`
   - cubre: descarga JSON y CSV desde la misma ruta de exportacion
+- E2E live fabricante con persistencia real:
+  - evidencia ejecutada el 2026-07-20: `tests/e2e/live-manufacturer-flow.spec.ts`
+  - cubre: solicitud de acceso, aprobacion, alta controlada, activacion, onboarding, unidad, recurso, producto, receta, compra, produccion, venta, dashboard y persistencia real
 - Ciclo comercial y estados de cuenta:
   - evidencia: `src/features/commercial/lib/account-commercial-state.test.ts`
   - evidencia adicional: `src/features/commercial/lib/payment-subscription-selection.test.ts`
@@ -110,10 +113,9 @@ Estado consolidado el 2026-07-20.
 
 - La suite E2E local paso el 2026-07-20 con `24 passed`.
 - El build productivo local paso el 2026-07-20 con `npm run build`.
-- No hay todavia E2E del flujo completo de fabricante con persistencia real.
 - No hay todavia E2E del flujo de reventa con persistencia real.
  - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
  - El panel admin ya tiene cobertura adicional de render y contrato comercial local; el formulario de pagos deriva `user_id` desde la suscripcion seleccionada y ya no depende de ingreso manual de ese dato.
  - El preflight `npm run test:sql-smoke:check` ya detecta `psql` automaticamente en este host Windows; el faltante externo restante para smokes Postgres directos es `SUPABASE_DB_URL` o `DATABASE_URL`.
  - Falta correr el smoke SQL via Postgres directo si se quiere evidencia adicional a nivel `psql`.
-- La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, pero la persistencia real sigue pendiente de un entorno configurado.
+- La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, y el flujo fabricante live ya quedo verificado con persistencia real.
