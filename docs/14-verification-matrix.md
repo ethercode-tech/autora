@@ -38,6 +38,9 @@ Estado consolidado el 2026-07-20.
 - RLS y frontera SaaS declarativa:
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - evidencia ejecutable en base: `tests/rls/rls-smoke.sql`
+- Verificacion live contra Supabase real:
+  - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+  - resultado: 8 checks en verde sobre stock, costos, movimientos economicos, aislamiento RLS y bloqueo de cuenta
 - Invariantes SQL de stock, costos y movimientos financieros:
   - evidencia: `src/server/queries/rls-migration.test.ts`
   - cubre: bloqueos por stock insuficiente en venta, produccion, consumo y ajustes
@@ -77,6 +80,6 @@ Estado consolidado el 2026-07-20.
 - La suite E2E local paso el 2026-07-20 con `22 passed` y `1 skipped`; el skip corresponde a exportacion sin Supabase configurado.
 - No hay todavia E2E del flujo completo de fabricante con persistencia real.
 - No hay todavia E2E del flujo de reventa con persistencia real.
-- Falta una prueba real de lectura cruzada con dos usuarias autenticadas.
-- Falta correr el smoke SQL de RLS en un proyecto Supabase activo.
+ - La verificacion live contra Supabase ya cubrio lectura cruzada y escrituras cruzadas por API real el 2026-07-20.
+ - Falta correr el smoke SQL via Postgres directo si se quiere evidencia adicional a nivel `psql`.
 - La ejecucion completa de Playwright ya es estable en entorno local sin Supabase, pero la persistencia real sigue pendiente de un entorno configurado.

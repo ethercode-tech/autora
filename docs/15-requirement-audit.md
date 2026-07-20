@@ -119,30 +119,37 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 1. Datos aislados por usuaria.
    - evidencia actual: RLS declarativa y smoke SQL preparado
    - evidencia ejecutable: `tests/rls/multiuser-smoke.sql`
-   - estado: parcial, falta prueba real multiusuario
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real; falta solo evidencia adicional por `psql` si se desea doble cobertura
 2. Compras aumentan stock.
    - evidencia actual: test declarativo de migracion
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial, falta ejecucion integrada real
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real
 3. Consumos disminuyen stock.
    - evidencia actual: RPC y prueba declarativa
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial, falta ejecucion integrada real
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real
 4. Produccion descuenta recursos y suma productos.
    - evidencia actual: RPC con costo y prueba declarativa
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial, falta ejecucion integrada real
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real
 5. Ventas descuentan productos.
    - evidencia actual: RPC y prueba declarativa
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial, falta ejecucion integrada real
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real
 6. No se permite vender o producir sin stock suficiente.
    - evidencia actual: pruebas de invariantes SQL y mensajes operativos
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial, falta corrida real contra base
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live` para cuenta bloqueada y reglas operativas
+   - estado: parcial, falta evidencia live especifica de oversell o sobreproduccion rechazada
 7. Movimientos economicos correctos.
    - evidencia actual: pruebas declarativas y metricas dashboard
-   - estado: parcial
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real para compra y venta
 8. Alertas en el momento adecuado.
    - evidencia actual: calculo de stock y dashboard
    - estado: parcial
@@ -155,14 +162,16 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 11. Cuentas bloqueadas no pueden operar.
    - evidencia actual: guardas y pruebas de estado
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: verificado por API real
 12. Administracion del ciclo comercial.
    - evidencia actual: panel admin, acciones y pruebas de transicion comercial
    - estado: parcial
 13. Operaciones criticas transaccionales.
    - evidencia actual: RPC SQL atomicas
    - evidencia ejecutable: `tests/integration/operational-flow-smoke.sql`
-   - estado: parcial, falta smoke real de rollback
+   - evidencia ejecutada el 2026-07-20: `npm run test:supabase-live`
+   - estado: parcial, falta evidencia live explicita de rollback sobre una operacion fallida en la misma corrida
 14. Flujos principales con pruebas automatizadas.
    - evidencia actual: unitarias, declarativas y suite E2E local ejecutada
    - evidencia ejecutada el 2026-07-20: `22 passed`, `1 skipped` en Playwright
@@ -182,8 +191,10 @@ Este documento cruza el objetivo final del producto con evidencia real del repos
 
 - Script: `scripts/run-sql-smoke.mjs`
 - Preflight: `scripts/check-sql-smoke-readiness.mjs`
+- Verificacion live: `scripts/verify-live-supabase.mjs`
 - Comando principal: `npm run test:sql-smoke`
 - Comando de readiness: `npm run test:sql-smoke:check`
+- Comando live: `npm run test:supabase-live`
 - Suites disponibles:
   - `npm run test:sql-smoke:rls`
   - `npm run test:sql-smoke:multiuser`

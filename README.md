@@ -99,6 +99,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 - Evidencia automatizada actual:
   - suite E2E local ejecutada el 2026-07-20 con `22 passed` y `1 skipped`
   - runner reproducible para smokes SQL sobre Supabase real
+  - verificacion live sobre Supabase ejecutada el 2026-07-20 con 8 checks operativos y de RLS en verde
 
 ## Pendientes principales
 

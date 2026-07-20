@@ -31,6 +31,7 @@ Artefactos ejecutables preparados:
 - `tests/rls/rls-smoke.sql`
 - `tests/rls/multiuser-smoke.sql`
 - `scripts/run-sql-smoke.mjs`
+- `scripts/verify-live-supabase.mjs`
 
 ## Seguridad y RLS
 
