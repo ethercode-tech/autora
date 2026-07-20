@@ -77,6 +77,10 @@ export function formatReleaseReadinessSummary(readiness) {
     lines.push(`[release:check] sql blockers: ${readiness.sqlSmoke.missingEnvKeys.join(", ")}`);
   }
 
+  if (readiness.sqlSmoke.expectedDirectUrlExample && readiness.sqlSmoke.missingEnvKeys.some((key) => key.includes("SUPABASE_DB_URL or DATABASE_URL"))) {
+    lines.push(`[release:check] expected direct url example: ${readiness.sqlSmoke.expectedDirectUrlExample}`);
+  }
+
   if (!readiness.liveE2E.chromeAvailable) {
     lines.push(`[release:check] live-e2e blocker: chrome missing at ${readiness.liveE2E.chromePath}`);
   }

@@ -135,6 +135,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 ## Pendientes principales
 
 - Reemplazar `SUPABASE_DB_URL` o `DATABASE_URL` por una URI Postgres real (`postgres://` o `postgresql://`) para poder correr smokes SQL directos y `db:apply`.
+  - ejemplo esperado por el preflight actual: `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`
 - Ejecutar smokes SQL multiusuario y operativos contra un proyecto Supabase activo por `psql` una vez corregida esa configuracion.
 - Publicar una version productiva real usando el target ya configurado en `.openai/hosting.json`.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

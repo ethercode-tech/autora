@@ -92,6 +92,10 @@ Valida:
 
 Si falla por variables faltantes o por una URL HTTP/HTTPS mal configurada, el bloqueo es externo al codigo del repo.
 
+Con la configuracion actual del proyecto, el ejemplo esperado por el preflight es:
+
+- `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`
+
 ### `pnpm test:release:check`
 
 Consolida:

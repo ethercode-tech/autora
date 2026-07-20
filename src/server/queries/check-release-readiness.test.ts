@@ -20,6 +20,7 @@ type ReleaseReadinessModule = {
     sqlSmoke: {
       ready: boolean;
       missingEnvKeys: string[];
+      expectedDirectUrlExample?: string | null;
     };
   }) => string;
 };
@@ -48,7 +49,8 @@ describe("release readiness helpers", () => {
       },
       sqlSmoke: {
         ready: false,
-        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL"]
+        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL"],
+        expectedDirectUrlExample: "postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres"
       }
     });
 
@@ -58,6 +60,7 @@ describe("release readiness helpers", () => {
     expect(summary).toContain("direct-db-url=missing");
     expect(summary).toContain("hosting-config=missing");
     expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL");
+    expect(summary).toContain("expected direct url example: postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
     expect(summary).toContain("deploy blocker: .openai/hosting.json is not present in this workspace.");
   });
 
@@ -78,7 +81,8 @@ describe("release readiness helpers", () => {
       },
       sqlSmoke: {
         ready: false,
-        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)"]
+        missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)"],
+        expectedDirectUrlExample: "postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres"
       }
     });
 
@@ -86,6 +90,7 @@ describe("release readiness helpers", () => {
     expect(summary).toContain("sql-smoke=blocked");
     expect(summary).toContain("direct-db-url=missing");
     expect(summary).toContain("sql blockers: SUPABASE_DB_URL or DATABASE_URL (must start with postgres:// or postgresql://)");
+    expect(summary).toContain("expected direct url example: postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
   });
 
   it("formats a ready release summary", () => {
@@ -105,7 +110,8 @@ describe("release readiness helpers", () => {
       },
       sqlSmoke: {
         ready: true,
-        missingEnvKeys: []
+        missingEnvKeys: [],
+        expectedDirectUrlExample: null
       }
     });
 

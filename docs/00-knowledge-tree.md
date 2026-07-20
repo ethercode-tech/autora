@@ -6,6 +6,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 
 - Build productivo local verificado el 2026-07-20 con `pnpm build`.
 - El preflight de release detecta un bloqueo real al 2026-07-20: la variable para SQL directo no es una URI Postgres valida, aunque hosting y live E2E si estan listos.
+- El mismo preflight ya sugiere el formato esperado para este proyecto: `postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres`.
 - Verificacion live contra Supabase real ejecutada el 2026-07-20 con 22 checks en verde.
 - Existe panel admin separado del workspace operativo y scripts de bootstrap para admin y emprendimientos de prueba.
 - Sigue faltando evidencia fuerte de ejecucion completa de `pnpm test:sql-smoke` por `psql`; ahora el runner tambien detecta y reporta URLs directas invalidas antes de intentar correr.

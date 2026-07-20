@@ -7,6 +7,7 @@ type ReadinessModule = {
     ready: boolean;
     missingEnvKeys: string[];
     missingFiles: string[];
+    expectedDirectUrlExample?: string | null;
     psql: {
       available: boolean;
       psqlPath: string;
@@ -55,6 +56,7 @@ describe("sql smoke readiness helpers", () => {
       ready: false,
       missingEnvKeys: ["SUPABASE_DB_URL or DATABASE_URL"],
       missingFiles: ["tests/rls/rls-smoke.sql"],
+      expectedDirectUrlExample: "postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres",
       psql: {
         available: false,
         psqlPath: "psql"
@@ -64,6 +66,7 @@ describe("sql smoke readiness helpers", () => {
     expect(summary).toContain("ready=no");
     expect(summary).toContain("psql=missing");
     expect(summary).toContain("missing env: SUPABASE_DB_URL or DATABASE_URL");
+    expect(summary).toContain("expected direct url example: postgresql://postgres:<db-password>@db.skqtwagdshdppijswchw.supabase.co:5432/postgres");
     expect(summary).toContain("missing files: tests/rls/rls-smoke.sql");
   });
 
@@ -72,6 +75,7 @@ describe("sql smoke readiness helpers", () => {
       ready: true,
       missingEnvKeys: [],
       missingFiles: [],
+      expectedDirectUrlExample: null,
       psql: {
         available: true,
         psqlPath: "psql"

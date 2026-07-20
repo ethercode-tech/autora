@@ -7,6 +7,7 @@ type SmokeRunnerModule = {
   buildPsqlArguments: (databaseUrl: string, sqlFilePath: string) => string[];
   buildPsqlEnvironment: (env?: Record<string, string | undefined>) => Record<string, string | undefined>;
   buildWindowsPsqlCandidates: (env?: Record<string, string | undefined>) => string[];
+  extractSupabaseProjectRef: (value?: string | null) => string | null;
   isPostgresConnectionString: (value?: string | null) => boolean;
   resolveDatabaseUrl: (env?: Record<string, string | undefined>) => string | null;
   resolveValidatedDatabaseUrl: (env?: Record<string, string | undefined>) => string | null;
@@ -61,6 +62,11 @@ describe("run sql smoke script helpers", () => {
     expect(smokeRunner.isPostgresConnectionString("postgres://user:pass@host:5432/db")).toBe(true);
     expect(smokeRunner.isPostgresConnectionString("postgresql://user:pass@host:5432/db")).toBe(true);
     expect(smokeRunner.isPostgresConnectionString("https://example.supabase.co")).toBe(false);
+  });
+
+  it("extracts the project ref from a Supabase URL", () => {
+    expect(smokeRunner.extractSupabaseProjectRef("https://skqtwagdshdppijswchw.supabase.co")).toBe("skqtwagdshdppijswchw");
+    expect(smokeRunner.extractSupabaseProjectRef("not-a-url")).toBeNull();
   });
 
   it("rejects non-postgres direct database urls", () => {

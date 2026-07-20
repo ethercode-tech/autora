@@ -5,7 +5,13 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { loadResolvedEnv } from "./load-project-env.mjs";
-import { resolveDatabaseUrl, resolvePsqlBinary, isPostgresConnectionString, SQL_SMOKE_SUITES } from "./run-sql-smoke.mjs";
+import {
+  extractSupabaseProjectRef,
+  resolveDatabaseUrl,
+  resolvePsqlBinary,
+  isPostgresConnectionString,
+  SQL_SMOKE_SUITES
+} from "./run-sql-smoke.mjs";
 
 const REQUIRED_ENV_KEYS = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"];
 
@@ -76,12 +82,17 @@ export async function getSqlSmokeReadiness({ env = process.env, cwd = process.cw
   const missingEnvKeys = getMissingReadinessEnvKeys(resolvedEnv);
   const missingFiles = await getMissingSmokeFiles(cwd);
   const psql = await resolvePsqlAvailability(resolvedEnv, cwd);
+  const projectRef = extractSupabaseProjectRef(resolvedEnv.NEXT_PUBLIC_SUPABASE_URL);
+  const expectedDirectUrlExample = projectRef
+    ? `postgresql://postgres:<db-password>@db.${projectRef}.supabase.co:5432/postgres`
+    : null;
 
   return {
     ready: missingEnvKeys.length === 0 && missingFiles.length === 0 && psql.available,
     missingEnvKeys,
     missingFiles,
-    psql
+    psql,
+    expectedDirectUrlExample
   };
 }
 
@@ -93,6 +104,10 @@ export function formatReadinessSummary(readiness) {
 
   if (readiness.missingEnvKeys.length > 0) {
     lines.push(`[sql-smoke:check] missing env: ${readiness.missingEnvKeys.join(", ")}`);
+  }
+
+  if (readiness.expectedDirectUrlExample && readiness.missingEnvKeys.some((key) => key.includes("SUPABASE_DB_URL or DATABASE_URL"))) {
+    lines.push(`[sql-smoke:check] expected direct url example: ${readiness.expectedDirectUrlExample}`);
   }
 
   if (readiness.missingFiles.length > 0) {

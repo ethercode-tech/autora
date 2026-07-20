@@ -45,6 +45,20 @@ export function isPostgresConnectionString(value) {
   }
 }
 
+export function extractSupabaseProjectRef(value) {
+  if (typeof value !== "string" || value.length === 0) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(value);
+    const [projectRef] = parsedUrl.hostname.split(".");
+    return projectRef || null;
+  } catch {
+    return null;
+  }
+}
+
 export function resolveValidatedDatabaseUrl(env = process.env) {
   const databaseUrl = resolveDatabaseUrl(env);
 
