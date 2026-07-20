@@ -20,6 +20,8 @@ Estado consolidado el 2026-07-20.
   - evidencia: `tests/e2e/export-route.spec.ts`
 - Ciclo comercial y estados de cuenta:
   - evidencia: `src/features/commercial/lib/account-commercial-state.test.ts`
+- Metricas globales de administracion:
+  - evidencia: `src/features/admin/lib/build-admin-dashboard-metrics.test.ts`
 - Calculo de costos:
   - evidencia: `src/features/pricing/lib/calculate-price.test.ts`
 - Stock y alertas:

@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
+import { buildAdminDashboardMetrics } from "@/features/admin/lib/build-admin-dashboard-metrics";
 import { buildDashboardMetrics } from "@/features/dashboard/lib/build-dashboard-metrics";
 
 export type MeasurementUnitRow = {
@@ -311,14 +312,12 @@ export async function getAdminDashboardMetrics() {
     getPayments()
   ]);
 
-  return {
-    pendingRequests: requests.filter((request) => request.status === "pending").length,
-    activeAccounts: profiles.filter((profile) => profile.account_status === "active").length,
-    blockedAccounts: profiles.filter((profile) => profile.account_status === "blocked").length,
-    activeSubscriptions: subscriptions.filter((subscription) => subscription.status === "active").length,
-    registeredPayments: payments.length,
-    recentRequests: requests.slice(0, 10)
-  };
+  return buildAdminDashboardMetrics({
+    requests,
+    profiles,
+    subscriptions,
+    payments
+  });
 }
 
 export async function getAdminAuditLogs() {
