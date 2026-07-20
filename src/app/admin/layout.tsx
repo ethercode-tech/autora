@@ -4,6 +4,8 @@ import { ConfigurationState } from "@/components/feedback/configuration-state";
 import { hasPublicSupabaseEnv } from "@/lib/config/env";
 import { requireAdminSession } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({ children }: PropsWithChildren) {
   if (!hasPublicSupabaseEnv()) {
     return <AppShell mode="admin"><ConfigurationState /></AppShell>;
