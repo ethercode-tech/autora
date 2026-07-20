@@ -8,7 +8,7 @@ Estado del repositorio al 2026-07-20:
 - MVP funcional implementado sobre Next.js + Supabase.
 - Panel operativo, panel administrativo, autenticacion y migraciones presentes.
 - Recuperacion de contrasena y exportacion JSON incluidas.
-- Tests unitarios activos y E2E todavia pendientes.
+- Tests unitarios activos, smokes SQL preparados y suite E2E local validada.
 
 ## Punto de entrada recomendado
 
@@ -42,6 +42,36 @@ Estado del repositorio al 2026-07-20:
 - `pnpm test`
 - `pnpm build`
 - `pnpm test:e2e`
+- `pnpm test:sql-smoke`
+- `pnpm test:sql-smoke:rls`
+- `pnpm test:sql-smoke:multiuser`
+- `pnpm test:sql-smoke:operational`
+
+## Entorno
+
+Parti de `.env.example` y completa:
+
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_DB_URL`
+
+Si `psql` no esta disponible en `PATH`, define tambien:
+
+- `PSQL_PATH`
+
+## Verificacion sobre Supabase real
+
+Con el proyecto Supabase configurado y una base accesible por Postgres:
+
+1. Completa `.env.local` desde `.env.example`.
+2. Asegura un binario `psql` disponible en `PATH` o configura `PSQL_PATH`.
+3. Ejecuta `pnpm test:sql-smoke` para correr RLS declarativa, aislamiento multiusuario y flujo operativo integrado.
+4. Si necesitas aislar una suite, usa:
+   - `pnpm test:sql-smoke:rls`
+   - `pnpm test:sql-smoke:multiuser`
+   - `pnpm test:sql-smoke:operational`
 
 ## Estado actual
 
@@ -64,10 +94,13 @@ Estado del repositorio al 2026-07-20:
   - pagos manuales
   - bloqueo operativo por estado de cuenta
   - auditoria administrativa
+- Evidencia automatizada actual:
+  - suite E2E local ejecutada el 2026-07-20 con `22 passed` y `1 skipped`
+  - runner reproducible para smokes SQL sobre Supabase real
 
 ## Pendientes principales
 
-- E2E de flujos criticos.
-- Pruebas de aislamiento RLS multiusuario.
+- E2E de fabricante y reventa con persistencia real.
+- Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
 - Mejoras de ergonomia para recetas con multiples insumos.
 - Opciones de exportacion adicionales a JSON.
