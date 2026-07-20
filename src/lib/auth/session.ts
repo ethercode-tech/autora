@@ -4,7 +4,11 @@ import { isOperationalAccountStatus } from "@/lib/auth/account-status";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
-type AdminUserRow = Pick<Database["public"]["Tables"]["admin_users"]["Row"], "user_id" | "active" | "role">;
+type AdminUserRow = {
+  user_id: string;
+  active: boolean;
+  role: string;
+};
 
 async function getAdminUser(
   supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
