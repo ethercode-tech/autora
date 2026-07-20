@@ -4,18 +4,12 @@ import { revalidatePath } from "next/cache";
 import { formatProductionError } from "@/features/operations/lib/operation-feedback";
 import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { recipeSchema } from "@/lib/validation/catalog";
+import { buildRecipeInputFromFormData, recipeSchema } from "@/lib/validation/catalog";
 import { productionSchema } from "@/lib/validation/production";
 import type { ActionResult } from "@/server/actions/auth";
 
 export async function createRecipe(_: ActionResult, formData: FormData): Promise<ActionResult> {
-  const parsed = recipeSchema.safeParse({
-    productId: formData.get("productId"),
-    name: formData.get("name"),
-    yieldQuantity: formData.get("yieldQuantity"),
-    resourceId: formData.get("resourceId"),
-    quantity: formData.get("quantity")
-  });
+  const parsed = recipeSchema.safeParse(buildRecipeInputFromFormData(formData));
 
   if (!parsed.success) {
     writeStructuredLog("warn", "recipe.validation_failed", {
@@ -53,18 +47,20 @@ export async function createRecipe(_: ActionResult, formData: FormData): Promise
     return { success: false, message: "No pudimos crear la receta." };
   }
 
-  const { error: recipeItemError } = await supabase.from("recipe_items").insert({
-    user_id: user.id,
-    recipe_id: recipe.id,
-    resource_id: parsed.data.resourceId,
-    quantity: parsed.data.quantity
-  });
+  const { error: recipeItemError } = await supabase.from("recipe_items").insert(
+    parsed.data.items.map((item) => ({
+      user_id: user.id,
+      recipe_id: recipe.id,
+      resource_id: item.resourceId,
+      quantity: item.quantity
+    }))
+  );
 
   if (recipeItemError) {
     writeStructuredLog("error", "recipe.items_persist_failed", {
       message: recipeItemError.message,
       recipeId: recipe.id,
-      resourceId: parsed.data.resourceId
+      resourceIds: parsed.data.items.map((item) => item.resourceId)
     });
     return { success: false, message: "No pudimos guardar los insumos de la receta." };
   }

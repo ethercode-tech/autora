@@ -79,5 +79,5 @@ Estado consolidado el 2026-07-20.
 
 - E2E end-to-end todavia no implementados.
 - Verificacion automatizada de RLS multiusuario pendiente.
-- Edicion avanzada de recetas y multiples items en un solo formulario pendiente.
+- Edicion avanzada de recetas existente solo en alta inicial; falta un flujo de edicion posterior si se requiere.
 - Exportacion CSV agregada; faltan formatos adicionales si se requieren reportes mas especializados.

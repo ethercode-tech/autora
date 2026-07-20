@@ -97,6 +97,7 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
   - costos
   - dashboard
   - exportacion JSON y CSV
+  - recetas con multiples insumos en un solo alta
 - Flujo comercial base cubierto:
   - planes
   - suscripciones
@@ -115,5 +116,4 @@ Con el proyecto Supabase configurado y una base accesible por Postgres:
 - E2E de fabricante y reventa con persistencia real.
 - Ejecucion real de smokes SQL multiusuario y operativos contra un proyecto Supabase activo.
 - Reaplicar en la base remota los fixes `202607200004_admin_commercial_rls.sql` y `202607200005_fix_is_admin_recursion.sql`, luego rerun de `pnpm test:supabase-live`.
-- Mejoras de ergonomia para recetas con multiples insumos.
 - Opciones de exportacion adicionales a CSV cuando aparezcan necesidades de reporte mas especializadas.

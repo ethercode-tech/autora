@@ -26,9 +26,31 @@ export const recipeSchema = z.object({
   productId: z.string().uuid("Selecciona un producto valido."),
   name: z.string().min(2, "Ingresa un nombre para la receta."),
   yieldQuantity: z.coerce.number().positive("El rendimiento debe ser mayor a cero."),
-  resourceId: z.string().uuid("Selecciona un recurso valido."),
-  quantity: z.coerce.number().positive("La cantidad del recurso debe ser mayor a cero.")
+  items: z
+    .array(
+      z.object({
+        resourceId: z.string().uuid("Selecciona un recurso valido."),
+        quantity: z.coerce.number().positive("La cantidad del recurso debe ser mayor a cero.")
+      })
+    )
+    .min(1, "Agrega al menos un insumo a la receta.")
 });
+
+export function buildRecipeInputFromFormData(formData: FormData) {
+  const resourceIds = formData.getAll("resourceId[]");
+  const quantities = formData.getAll("quantity[]");
+  const items = resourceIds.map((resourceId, index) => ({
+    resourceId,
+    quantity: quantities[index] ?? ""
+  }));
+
+  return {
+    productId: formData.get("productId"),
+    name: formData.get("name"),
+    yieldQuantity: formData.get("yieldQuantity"),
+    items
+  };
+}
 
 export type MeasurementUnitInput = z.infer<typeof measurementUnitSchema>;
 export type ResourceInput = z.infer<typeof resourceSchema>;
