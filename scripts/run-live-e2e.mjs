@@ -22,12 +22,18 @@ export function resolveRequestedSuite(args = process.argv.slice(2)) {
 }
 
 export function buildLiveE2ERunEnv(resolvedEnv) {
-  return {
+  const runEnv = {
     ...resolvedEnv,
     E2E_LIVE_SUPABASE: "1",
     E2E_USE_PROD_SERVER: "1",
     PLAYWRIGHT_PORT: resolvedEnv.PLAYWRIGHT_PORT || "3100"
   };
+
+  if (resolvedEnv.E2E_EXTERNAL_BASE_URL) {
+    runEnv.E2E_EXTERNAL_BASE_URL = resolvedEnv.E2E_EXTERNAL_BASE_URL;
+  }
+
+  return runEnv;
 }
 
 function spawnPlaywrightRun({ specFile, env, cwd }) {
@@ -89,12 +95,18 @@ export async function runLiveE2E({
   const runEnv = buildLiveE2ERunEnv(resolvedEnv);
 
   process.stdout.write(`[live-e2e] suite=${suite}\n`);
-  process.stdout.write("[live-e2e] building production bundle\n");
+  process.stdout.write(
+    runEnv.E2E_EXTERNAL_BASE_URL
+      ? `[live-e2e] using external base url ${runEnv.E2E_EXTERNAL_BASE_URL}\n`
+      : "[live-e2e] building production bundle\n"
+  );
 
-  await spawnNextBuild({
-    env: runEnv,
-    cwd
-  });
+  if (!runEnv.E2E_EXTERNAL_BASE_URL) {
+    await spawnNextBuild({
+      env: runEnv,
+      cwd
+    });
+  }
 
   for (const specFile of LIVE_E2E_SUITES[suite]) {
     process.stdout.write(`[live-e2e] running ${specFile}\n`);
