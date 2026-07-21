@@ -154,6 +154,7 @@ Para marcar el objetivo como completamente cerrado desde este workspace, deberia
 - [14-verification-matrix.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/14-verification-matrix.md)
 - [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 - [README.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/README.md)
+- [19-sql-smoke-unblock-checklist.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/19-sql-smoke-unblock-checklist.md)
 - [check-live-e2e-readiness.mjs](/C:/Users/cecil/proyectosAle/github/origen/webapp/scripts/check-live-e2e-readiness.mjs)
 - [run-live-e2e.mjs](/C:/Users/cecil/proyectosAle/github/origen/webapp/scripts/run-live-e2e.mjs)
 - [check-release-readiness.mjs](/C:/Users/cecil/proyectosAle/github/origen/webapp/scripts/check-release-readiness.mjs)

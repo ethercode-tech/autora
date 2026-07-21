@@ -49,6 +49,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 3. [15-requirement-audit.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/15-requirement-audit.md)
 4. [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 5. [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
+6. [19-sql-smoke-unblock-checklist.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/19-sql-smoke-unblock-checklist.md)
 
 ### Si vas a coordinar subagentes o hacer handoffs
 
@@ -77,6 +78,7 @@ Este archivo es el indice maestro. Su objetivo es reducir tiempo de onboarding p
 - Runbook de release: [16-release-runbook.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/16-release-runbook.md)
 - Evidencia mas reciente: [17-latest-verification-evidence.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/17-latest-verification-evidence.md)
 - Subagentes y handoffs: [18-agent-handoff-map.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/18-agent-handoff-map.md)
+- Desbloqueo del ultimo smoke SQL: [19-sql-smoke-unblock-checklist.md](/C:/Users/cecil/proyectosAle/github/origen/webapp/docs/19-sql-smoke-unblock-checklist.md)
 
 ## Regla operativa
 
