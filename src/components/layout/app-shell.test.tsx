@@ -7,30 +7,36 @@ vi.mock("@/server/actions/auth", () => ({
   signOut: vi.fn()
 }));
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/resources"
+}));
+
 describe("AppShell", () => {
   it("renders the operations navigation by default", () => {
     render(
-      <AppShell>
+      <AppShell businessName="Lumiq" businessType="manufacturer">
         <div>contenido</div>
       </AppShell>
     );
 
-    expect(screen.getByText("Panel operativo")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Dashboard" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Administracion" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Compras" })).toBeInTheDocument();
+    expect(screen.getByText("autora")).toBeInTheDocument();
+    expect(screen.getByText("Lumiq - Produzco")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Modulo 1 - Recursos/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Modulo 2 - Compras/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Mi stock actual/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Administracion" })).not.toBeInTheDocument();
   });
 
   it("renders an admin-only navigation when requested", () => {
     render(
-      <AppShell mode="admin">
+      <AppShell businessName="Autora" mode="admin">
         <div>contenido</div>
       </AppShell>
     );
 
-    expect(screen.getByText("Panel administrativo")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Administracion" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Dashboard" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Compras" })).not.toBeInTheDocument();
+    expect(screen.getByText("Autora - Operacion interna")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Panel interno/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Modulo 2 - Compras/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Mi stock actual/i })).not.toBeInTheDocument();
   });
 });

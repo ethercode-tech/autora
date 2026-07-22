@@ -10,9 +10,9 @@ export default async function SalesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Operaciones"
+        eyebrow="Modulo 5"
         title="Ventas"
-        description="Cada venta debe validar stock disponible, descontar productos y registrar el ingreso económico en una sola operación."
+        description="Registra cada venta para descontar stock y guardar automaticamente el ingreso economico."
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nueva venta</h3>

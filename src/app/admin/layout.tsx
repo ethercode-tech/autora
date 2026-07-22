@@ -13,5 +13,5 @@ export default async function AdminLayout({ children }: PropsWithChildren) {
 
   await requireAdminSession();
 
-  return <AppShell mode="admin">{children}</AppShell>;
+  return <AppShell businessName="Autora" mode="admin">{children}</AppShell>;
 }

@@ -16,9 +16,9 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Dashboard"
-        title="Tu negocio, en un solo vistazo"
-        description="El dashboard consolida ventas, egresos, saldo, alertas y actividad reciente a partir de datos reales."
+        eyebrow="Resumen"
+        title="Mi stock actual"
+        description="Consulta rapidamente el estado general del negocio con datos reales de ventas, gastos, saldo y alertas."
       />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

@@ -11,9 +11,9 @@ export default async function PurchasesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Operaciones"
+        eyebrow="Modulo 2"
         title="Compras"
-        description="Cada compra debe aumentar stock y generar el egreso económico correspondiente en una sola operación."
+        description="Registra cada compra para que el stock aumente y el egreso economico quede guardado en la misma operacion."
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nueva compra</h3>

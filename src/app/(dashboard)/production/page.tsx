@@ -19,9 +19,9 @@ export default async function ProductionPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Operaciones"
+        eyebrow="Modulo 3"
         title="Produccion"
-        description="La produccion valida receta, stock suficiente y ejecuta la operacion completa en una unica transaccion."
+        description="Registra cada lote producido para descontar insumos, calcular costo y sumar stock terminado en una sola confirmacion."
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nueva produccion</h3>

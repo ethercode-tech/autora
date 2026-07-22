@@ -10,13 +10,13 @@ export default async function ResourcesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Catálogo"
+        eyebrow="Modulo 1"
         title="Recursos"
-        description="Administrá insumos, unidades, stock mínimo y trazabilidad de movimientos."
+        description="Registra los insumos base del negocio y dejalos listos para compras, stock y trazabilidad."
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nuevo recurso</h3>
-        <p className="mt-1 text-sm text-autora-ink/70">Cada recurso queda vinculado a una unidad de medida y preparado para compras, recetas y alertas.</p>
+        <p className="mt-1 text-sm text-autora-ink/70">Cada recurso queda vinculado a una unidad de medida y preparado para compras, y alertas.</p>
         <div className="mt-4">
           {measurementUnits.length > 0 ? (
             <ResourceForm measurementUnits={measurementUnits} />

@@ -24,9 +24,9 @@ export default async function PricingPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Herramientas"
-        title="Calculadora de costos"
-        description="Calcula costo unitario, recargo y precio sugerido a partir de recetas y costos vigentes de compra."
+        eyebrow="Modulo 4"
+        title="Precio"
+        description="Calcula costo, recargo y precio sugerido usando recetas y costos reales de compra."
       />
       <Card className="mb-6">
         <h3 className="text-lg font-semibold">Nuevo calculo</h3>

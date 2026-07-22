@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
     return <AppShell><ConfigurationState /></AppShell>;
   }
 
-  await requireActiveAccount();
+  const session = await requireActiveAccount();
 
-  return <AppShell>{children}</AppShell>;
+  return <AppShell businessName={session.profile?.business_name} businessType={session.profile?.business_type}>{children}</AppShell>;
 }
