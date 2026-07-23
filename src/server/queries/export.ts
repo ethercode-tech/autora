@@ -205,12 +205,12 @@ export function buildBusinessExportCsv(payload: BusinessExportPayload) {
       section: "pricing",
       entity: "pricing_calculation",
       id: calculation.id,
-      name: calculation.product_name_snapshot,
+      name: calculation.product_name_snapshot ?? calculation.products?.name ?? "Producto",
       date: calculation.created_at,
       status: "",
       quantity: calculation.profit_percentage,
       amount: calculation.suggested_price,
-      detail: `cost=${calculation.cost}`
+      detail: `cost=${calculation.cost ?? calculation.total_cost ?? 0}`
     });
   }
 

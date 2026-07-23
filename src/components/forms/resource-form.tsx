@@ -16,7 +16,7 @@ export function ResourceForm({ measurementUnits }: ResourceFormProps) {
   const [state, action, pending] = useActionState(createResource, initialState);
 
   return (
-    <form action={action} className="grid gap-3 lg:grid-cols-2">
+    <form action={action} className="grid gap-3 lg:grid-cols-3">
       <input className="rounded-2xl border border-autora-sand px-4 py-3" name="name" placeholder="Nombre del recurso" required />
       <select className="rounded-2xl border border-autora-sand px-4 py-3" defaultValue="" name="measurementUnitId" required>
         <option disabled value="">
@@ -28,9 +28,8 @@ export function ResourceForm({ measurementUnits }: ResourceFormProps) {
           </option>
         ))}
       </select>
-      <input className="rounded-2xl border border-autora-sand px-4 py-3" name="packQuantity" placeholder="Cantidad por pack (opcional)" type="number" min="0" step="0.001" />
-      <input className="rounded-2xl border border-autora-sand px-4 py-3" name="minimumStock" placeholder="Stock minimo (opcional)" type="number" min="0" step="0.001" />
-      <div className="lg:col-span-2">
+      <input className="rounded-2xl border border-autora-sand px-4 py-3" name="packQuantity" placeholder="Cantidad por envase" type="number" min="0.001" step="0.001" required />
+      <div className="lg:col-span-3">
         <Button disabled={pending} type="submit">
           {pending ? "Guardando..." : "Crear recurso"}
         </Button>

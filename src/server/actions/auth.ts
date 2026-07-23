@@ -130,7 +130,7 @@ export async function registerApprovedAccount(_: ActionResult, formData: FormDat
 
   const { data: accessRequest, error: requestError } = await adminClient
     .from("access_requests")
-    .select("id, business_name, status")
+    .select("id, name, business_name, status")
     .eq("email", normalizedEmail)
     .maybeSingle();
 
@@ -154,8 +154,12 @@ export async function registerApprovedAccount(_: ActionResult, formData: FormDat
 
   const { error: profileError } = await adminClient.from("profiles").insert({
     user_id: userResult.data.user.id,
+    full_name: accessRequest.name,
+    email: normalizedEmail,
     business_name: accessRequest.business_name,
-    account_status: "approved_pending_payment",
+    // La aprobación administrativa ya habilita el MVP; la suscripción sigue
+    // siendo un dato administrativo independiente y gestionado manualmente.
+    account_status: "active",
     onboarding_completed: false
   });
 

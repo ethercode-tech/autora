@@ -12,6 +12,7 @@ export type MeasurementUnitRow = {
 
 export type ResourceRow = {
   id: string;
+  measurement_unit_id?: string;
   name: string;
   pack_quantity: number | null;
   minimum_stock: number | null;
@@ -54,10 +55,14 @@ export type AccessRequestRow = {
 
 export type AdminProfileRow = {
   user_id: string;
+  full_name?: string | null;
+  email?: string | null;
   business_name: string | null;
   business_type: "manufacturer" | "reseller" | null;
   account_status: string;
   currency: string | null;
+  created_at?: string;
+  subscription_status?: "pending" | "active" | "past_due" | "suspended" | "cancelled" | null;
 };
 
 export type PlanRow = {
@@ -171,10 +176,21 @@ export type ResourceConsumptionRow = {
 export type PricingHistoryRow = {
   id: string;
   created_at: string;
-  cost: number;
+  total_cost?: number;
   profit_percentage: number;
   suggested_price: number;
-  product_name_snapshot: string;
+  products?: { name: string } | null;
+  /** Legacy export compatibility. */
+  cost?: number;
+  product_name_snapshot?: string;
+};
+
+export type ProductionMvpRow = {
+  id: string;
+  date: string;
+  quantity: number;
+  note: string | null;
+  products: { name: string } | null;
 };
 
 export type PricingPreview = {
@@ -213,11 +229,13 @@ export async function getResources() {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("resources")
-    .select("id, name, pack_quantity, minimum_stock, active, measurement_units(name, symbol)")
+    .select("id, measurement_unit_id, name, pack_quantity, minimum_stock, active, measurement_units(name, symbol)")
+    .eq("active", true)
     .order("created_at", { ascending: false });
 
   return ((data ?? []) as Array<{
     id: string;
+    measurement_unit_id?: string;
     name: string;
     pack_quantity: number | null;
     minimum_stock: number | null;
@@ -250,15 +268,32 @@ export async function getAccessRequests() {
   return (data ?? []) as AccessRequestRow[];
 }
 
-export async function getAdminProfiles() {
+export async function getAdminProfiles(): Promise<AdminProfileRow[]> {
   const supabase = await createSupabaseServerClient();
-  const { data } = await supabase
+  const [{ data: profiles }, { data: subscriptions }] = await Promise.all([
+    supabase
     .from("profiles")
-    .select("user_id, business_name, business_type, account_status, currency")
+    .select("user_id, full_name, email, business_name, business_type, account_status, currency, created_at")
     .order("created_at", { ascending: false })
-    .limit(20);
+    .limit(50),
+    supabase
+      .from("subscriptions")
+      .select("user_id, status, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200)
+  ]);
 
-  return (data ?? []) as AdminProfileRow[];
+  const latestSubscriptionByUser = new Map<string, AdminProfileRow["subscription_status"]>();
+  for (const subscription of subscriptions ?? []) {
+    if (!latestSubscriptionByUser.has(subscription.user_id)) {
+      latestSubscriptionByUser.set(subscription.user_id, subscription.status as AdminProfileRow["subscription_status"]);
+    }
+  }
+
+  return ((profiles ?? []) as Omit<AdminProfileRow, "subscription_status">[]).map((profile) => ({
+    ...profile,
+    subscription_status: latestSubscriptionByUser.get(profile.user_id) ?? null
+  }));
 }
 
 export async function getPlans() {
@@ -479,15 +514,32 @@ export async function getResourceConsumptions() {
   }));
 }
 
-export async function getPricingHistory() {
+export async function getPricingHistory(): Promise<PricingHistoryRow[]> {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
-    .from("pricing_calculations")
-    .select("id, created_at, cost, profit_percentage, suggested_price, product_name_snapshot")
+    .from("pricing_history")
+    .select("id, created_at, total_cost, profit_percentage, suggested_price, products(name)")
     .order("created_at", { ascending: false })
     .limit(12);
 
-  return (data ?? []) as PricingHistoryRow[];
+  return ((data ?? []) as Array<Omit<PricingHistoryRow, "products"> & { products: Array<{ name: string }> | null }>).map((item) => ({
+    ...item,
+    products: item.products?.[0] ?? null
+  }));
+}
+
+export async function getProductions(): Promise<ProductionMvpRow[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("productions")
+    .select("id, date, quantity, note, products(name)")
+    .order("date", { ascending: false })
+    .limit(20);
+
+  return ((data ?? []) as Array<Omit<ProductionMvpRow, "products"> & { products: Array<{ name: string }> | null }>).map((item) => ({
+    ...item,
+    products: item.products?.[0] ?? null
+  }));
 }
 
 export async function getPricingPreview(recipeId: string, producedQuantity: number): Promise<PricingPreview | null> {

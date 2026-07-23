@@ -3,31 +3,26 @@
 import { useActionState } from "react";
 import type { ActionResult } from "@/server/actions/auth";
 import { createPurchase } from "@/server/actions/operations";
-import type { ProductRow, ProfileRow, ResourceRow } from "@/server/queries/catalog";
+import type { ResourceRow } from "@/server/queries/catalog";
 import { Button } from "@/components/ui/button";
 
 const initialState: ActionResult = { success: false, message: "" };
 
 type PurchaseFormProps = {
-  profile: ProfileRow | null;
   resources: ResourceRow[];
-  products: ProductRow[];
 };
 
-export function PurchaseForm({ profile, resources, products }: PurchaseFormProps) {
+export function PurchaseForm({ resources }: PurchaseFormProps) {
   const [state, action, pending] = useActionState(createPurchase, initialState);
-  const isReseller = profile?.business_type === "reseller";
-  const options = isReseller ? products : resources;
-  const purchaseType = isReseller ? "product" : "resource";
 
   return (
     <form action={action} className="grid gap-3 lg:grid-cols-2">
-      <input name="purchaseType" type="hidden" value={purchaseType} />
+      <input name="purchaseType" type="hidden" value="resource" />
       <select className="rounded-2xl border border-autora-sand px-4 py-3" defaultValue="" name="itemId" required>
         <option disabled value="">
-          {isReseller ? "Selecciona un producto" : "Selecciona un recurso"}
+          Selecciona un recurso
         </option>
-        {options.map((item) => (
+        {resources.map((item) => (
           <option key={item.id} value={item.id}>
             {item.name}
           </option>

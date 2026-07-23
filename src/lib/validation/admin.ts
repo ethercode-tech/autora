@@ -11,6 +11,11 @@ export const accountStatusSchema = z.object({
   accountStatus: z.enum(["pending", "approved_pending_payment", "active", "past_due", "blocked", "rejected", "cancelled"])
 });
 
+export const subscriptionStatusSchema = z.object({
+  userId: z.string().uuid("Cuenta invalida."),
+  status: z.enum(["active", "cancelled"])
+});
+
 export const planSchema = z.object({
   name: z.string().min(2, "Ingresa un nombre para el plan."),
   description: z.string().optional(),

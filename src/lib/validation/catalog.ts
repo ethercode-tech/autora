@@ -8,7 +8,7 @@ export const measurementUnitSchema = z.object({
 export const resourceSchema = z.object({
   name: z.string().min(2, "Ingresa un nombre para el recurso."),
   measurementUnitId: z.string().uuid("Selecciona una unidad valida."),
-  packQuantity: z.coerce.number().positive("La cantidad por pack debe ser mayor a cero.").optional(),
+  packQuantity: z.coerce.number().positive("La cantidad por envase debe ser mayor a cero."),
   minimumStock: z.coerce.number().min(0, "El stock minimo no puede ser negativo.").optional()
 });
 

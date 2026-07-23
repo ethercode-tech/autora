@@ -1,59 +1,32 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { writeStructuredLog } from "@/lib/observability/structured-log";
-import { savePricingCalculationSchema } from "@/lib/validation/pricing";
 import { calculateSuggestedPrice } from "@/features/pricing/lib/calculate-price";
-import { getPricingPreview } from "@/server/queries/catalog";
+import { writeStructuredLog } from "@/lib/observability/structured-log";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { savePricingCalculationSchema } from "@/lib/validation/pricing";
 import type { ActionResult } from "@/server/actions/auth";
 
-export async function savePricingCalculation(_: ActionResult, formData: FormData): Promise<ActionResult> {
+type PriceResult = ActionResult & { totalCost?: number; suggestedPrice?: number };
+
+export async function savePricingCalculation(_: PriceResult, formData: FormData): Promise<PriceResult> {
+  let resourceLines: unknown;
+
+  try {
+    resourceLines = JSON.parse(String(formData.get("resourceLines") ?? "[]"));
+  } catch {
+    return { success: false, message: "Revisa los recursos usados." };
+  }
+
   const parsed = savePricingCalculationSchema.safeParse({
     productId: formData.get("productId"),
-    recipeId: formData.get("recipeId"),
-    producedQuantity: formData.get("producedQuantity"),
-    profitPercentage: formData.get("profitPercentage")
+    profitPercentage: formData.get("profitPercentage"),
+    resourceLines
   });
 
   if (!parsed.success) {
-    writeStructuredLog("warn", "pricing.validation_failed", {
-      issue: parsed.error.issues[0]?.message ?? "unknown"
-    });
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar el calculo." };
   }
-
-  const preview = await getPricingPreview(parsed.data.recipeId, parsed.data.producedQuantity);
-
-  if (!preview) {
-    writeStructuredLog("warn", "pricing.preview_missing", {
-      recipeId: parsed.data.recipeId
-    });
-    return { success: false, message: "No encontramos la receta seleccionada." };
-  }
-
-  if (preview.lines.length === 0) {
-    writeStructuredLog("warn", "pricing.preview_without_lines", {
-      recipeId: parsed.data.recipeId
-    });
-    return { success: false, message: "La receta no tiene insumos configurados." };
-  }
-
-  if (preview.lines.some((line) => line.unitCost === null)) {
-    writeStructuredLog("warn", "pricing.preview_missing_costs", {
-      recipeId: parsed.data.recipeId
-    });
-    return { success: false, message: "Falta costo vigente para al menos un recurso de la receta." };
-  }
-
-  const lines = preview.lines.map((line) => ({
-    resourceId: line.resourceId,
-    resourceName: line.resourceName,
-    quantityUsed: line.quantityUsed,
-    unitCost: line.unitCost ?? 0
-  }));
-
-  const calculation = calculateSuggestedPrice(lines, parsed.data.producedQuantity, parsed.data.profitPercentage);
 
   const supabase = await createSupabaseServerClient();
   const {
@@ -61,39 +34,74 @@ export async function savePricingCalculation(_: ActionResult, formData: FormData
   } = await supabase.auth.getUser();
 
   if (!user) {
-    writeStructuredLog("warn", "pricing.session_missing");
     return { success: false, message: "Necesitas iniciar sesion para guardar calculos." };
   }
 
-  const { error } = await supabase.from("pricing_calculations").insert({
+  const [productResult, resourcesResult, purchasesResult] = await Promise.all([
+    supabase.from("products").select("name").eq("id", parsed.data.productId).maybeSingle(),
+    supabase.from("resources").select("id, name").in(
+      "id",
+      parsed.data.resourceLines.map((line) => line.resourceId)
+    ),
+    supabase
+      .from("purchases")
+      .select("resource_id, quantity, price_paid, date, created_at")
+      .in(
+        "resource_id",
+        parsed.data.resourceLines.map((line) => line.resourceId)
+      )
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false })
+  ]);
+
+  if (!productResult.data || productResult.error) {
+    return { success: false, message: "No encontramos el producto seleccionado." };
+  }
+
+  const resourcesById = new Map((resourcesResult.data ?? []).map((resource) => [resource.id, resource.name]));
+  const pricesByResource = new Map<string, number>();
+
+  for (const purchase of purchasesResult.data ?? []) {
+    if (!purchase.resource_id || pricesByResource.has(purchase.resource_id) || Number(purchase.quantity) <= 0) {
+      continue;
+    }
+    pricesByResource.set(purchase.resource_id, Number(purchase.price_paid) / Number(purchase.quantity));
+  }
+
+  const missingCost = parsed.data.resourceLines.find((line) => !resourcesById.has(line.resourceId) || !pricesByResource.has(line.resourceId));
+  if (missingCost) {
+    return { success: false, message: "Cada recurso usado necesita al menos una compra registrada." };
+  }
+
+  const lines = parsed.data.resourceLines.map((line) => ({
+    resourceId: line.resourceId,
+    resourceName: resourcesById.get(line.resourceId) ?? "Recurso",
+    quantityUsed: line.quantity,
+    unitCost: pricesByResource.get(line.resourceId) ?? 0
+  }));
+  const calculation = calculateSuggestedPrice(lines, 1, parsed.data.profitPercentage);
+
+  const { error } = await supabase.from("pricing_history").insert({
     user_id: user.id,
     product_id: parsed.data.productId,
-    product_name_snapshot: preview.productName,
-    cost: calculation.unitCost,
+    total_cost: calculation.totalCost,
     profit_percentage: parsed.data.profitPercentage,
     suggested_price: calculation.suggestedPrice,
-    calculation_detail: {
-      producedQuantity: parsed.data.producedQuantity,
-      lines
-    }
+    resources_used: lines
   });
 
   if (error) {
-    writeStructuredLog("error", "pricing.persist_failed", {
-      message: error.message,
-      productId: parsed.data.productId,
-      recipeId: parsed.data.recipeId
-    });
+    writeStructuredLog("error", "pricing.persist_failed", { message: error.message, productId: parsed.data.productId });
     return { success: false, message: "No pudimos guardar el historial del calculo." };
   }
 
   revalidatePath("/pricing");
+  writeStructuredLog("info", "pricing.calculation_saved", { productId: parsed.data.productId });
 
-  writeStructuredLog("info", "pricing.calculation_saved", {
-    productId: parsed.data.productId,
-    recipeId: parsed.data.recipeId,
-    producedQuantity: parsed.data.producedQuantity
-  });
-
-  return { success: true, message: "Calculo guardado en el historial." };
+  return {
+    success: true,
+    message: "Calculo guardado en el historial.",
+    totalCost: calculation.totalCost,
+    suggestedPrice: calculation.suggestedPrice
+  };
 }

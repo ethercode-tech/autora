@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { resolveCommercialStateAfterPayment, resolveProfilePatchAfterSubscriptionCreation } from "@/features/commercial/lib/account-commercial-state";
 import { writeStructuredLog } from "@/lib/observability/structured-log";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { accessRequestStatusSchema, accountStatusSchema, paymentSchema, planSchema, subscriptionSchema } from "@/lib/validation/admin";
+import { accessRequestStatusSchema, accountStatusSchema, paymentSchema, planSchema, subscriptionSchema, subscriptionStatusSchema } from "@/lib/validation/admin";
 import type { ActionResult } from "@/server/actions/auth";
 import { requireAdminSession } from "@/lib/auth/session";
 
@@ -133,6 +133,70 @@ export async function updateUserAccountStatus(_: ActionResult, formData: FormDat
     accountStatus: parsed.data.accountStatus
   });
   return { success: true, message: "Estado de cuenta actualizado." };
+}
+
+/** Activación manual de la suscripción del MVP, sin depender de pagos ni planes. */
+export async function updateManualSubscriptionStatus(_: ActionResult, formData: FormData): Promise<ActionResult> {
+  const parsed = subscriptionStatusSchema.safeParse({
+    userId: formData.get("userId"),
+    status: formData.get("status")
+  });
+
+  if (!parsed.success) {
+    return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la suscripción." };
+  }
+
+  await requireAdminSession();
+  const supabase = await createSupabaseServerClient();
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("account_status")
+    .eq("user_id", parsed.data.userId)
+    .maybeSingle();
+
+  if (profileError || !profile) {
+    return { success: false, message: "No encontramos la cuenta a actualizar." };
+  }
+
+  const { data: latestSubscription, error: subscriptionLookupError } = await supabase
+    .from("subscriptions")
+    .select("id")
+    .eq("user_id", parsed.data.userId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (subscriptionLookupError) {
+    return { success: false, message: "No pudimos consultar la suscripción actual." };
+  }
+
+  const subscriptionResult = latestSubscription
+    ? await supabase.from("subscriptions").update({ status: parsed.data.status }).eq("id", latestSubscription.id)
+    : await supabase.from("subscriptions").insert({ user_id: parsed.data.userId, status: parsed.data.status });
+
+  if (subscriptionResult.error) {
+    return { success: false, message: "No pudimos actualizar la suscripción." };
+  }
+
+  // Una cuenta bloqueada sólo se restablece explícitamente con la acción de cuenta.
+  if (profile.account_status !== "blocked") {
+    const accountStatus = parsed.data.status === "active" ? "active" : "approved_pending_payment";
+    const { error: accountError } = await supabase
+      .from("profiles")
+      .update({ account_status: accountStatus })
+      .eq("user_id", parsed.data.userId);
+
+    if (accountError) {
+      return { success: false, message: "La suscripción cambió, pero no pudimos sincronizar la cuenta." };
+    }
+  }
+
+  await logAdminAudit("manual_subscription_status_updated", "subscription", latestSubscription?.id ?? null, null, {
+    user_id: parsed.data.userId,
+    status: parsed.data.status
+  });
+  revalidatePath("/admin");
+  return { success: true, message: parsed.data.status === "active" ? "Suscripción activada." : "Suscripción desactivada." };
 }
 
 export async function createPlan(_: ActionResult, formData: FormData): Promise<ActionResult> {

@@ -24,27 +24,16 @@ export async function createPurchase(_: ActionResult, formData: FormData): Promi
     return { success: false, message: parsed.error.issues[0]?.message ?? "No pudimos validar la compra." };
   }
 
-  const supabase = await createSupabaseServerClient();
-  const itemPayload =
-    parsed.data.purchaseType === "resource"
-      ? {
-          resource_id: parsed.data.itemId,
-          quantity: parsed.data.quantity,
-          unit_price: parsed.data.unitPrice,
-          total_price: parsed.data.quantity * parsed.data.unitPrice
-        }
-      : {
-          product_id: parsed.data.itemId,
-          quantity: parsed.data.quantity,
-          unit_price: parsed.data.unitPrice,
-          total_price: parsed.data.quantity * parsed.data.unitPrice
-        };
+  if (parsed.data.purchaseType !== "resource") {
+    return { success: false, message: "En este MVP las compras solo pueden registrarse para recursos." };
+  }
 
-  const { error } = await supabase.rpc("register_purchase", {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.rpc("register_mvp_purchase", {
     purchase_date: parsed.data.date,
-    purchase_type: parsed.data.purchaseType,
-    purchase_notes: parsed.data.notes?.trim() || null,
-    items: [itemPayload]
+    purchase_resource_id: parsed.data.itemId,
+    purchase_quantity: parsed.data.quantity,
+    purchase_price_paid: parsed.data.unitPrice
   });
 
   if (error) {
@@ -85,16 +74,12 @@ export async function createSale(_: ActionResult, formData: FormData): Promise<A
   }
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.rpc("register_sale", {
+  const { error } = await supabase.rpc("register_mvp_sale", {
     sale_date: parsed.data.date,
-    sale_notes: parsed.data.notes?.trim() || null,
-    items: [
-      {
-        product_id: parsed.data.productId,
-        quantity: parsed.data.quantity,
-        unit_price: parsed.data.unitPrice
-      }
-    ]
+    sale_product_id: parsed.data.productId,
+    sale_quantity: parsed.data.quantity,
+    sale_unit_price: parsed.data.unitPrice,
+    sale_note: parsed.data.notes?.trim() || null
   });
 
   if (error) {

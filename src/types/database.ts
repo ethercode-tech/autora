@@ -42,6 +42,9 @@ export type Database = {
       profiles: {
         Row: {
           user_id: string;
+          // Optional while older projects complete the additive profile migration.
+          full_name?: string | null;
+          email?: string | null;
           business_name: string | null;
           currency: string | null;
           business_type: "manufacturer" | "reseller" | null;
@@ -60,6 +63,8 @@ export type Database = {
         };
         Insert: {
           user_id: string;
+          full_name?: string | null;
+          email?: string | null;
           business_name?: string | null;
           currency?: string | null;
           business_type?: "manufacturer" | "reseller" | null;
